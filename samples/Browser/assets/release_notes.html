@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>Release Notes</title>
+<style type="text/css">
+body {
+  background-color: #EEE;
+  margin: 0;
+}
+#content {
+  width: 500px;
+  margin: 45px auto;
+  background-color: white;
+  font-family: Segoe UI, -apple-system, sans-serif;
+  padding: 40px 60px;
+  color: #333;
+  box-shadow: 15px 25px #DDD;
+}
+h3 {
+  border-bottom: 3px solid #EEE;
+}
+h4, dt {
+  margin:0;
+  margin-top: 0.5em;
+  padding:6px;
+  font-weight: bold;
+}
+p {
+  padding: 6px;
+  margin: 0.5em 0;
+  margin-bottom: 1.5em;
+ }
+</style>
+</head>
+<body>
+<div id="content">
+
+<h2>Welcome to the Ultralight 0.9 Beta!</h2>
+<p>Thanks for checking out the Beta! We hope you'll enjoy this release and appreciate any and all feedback as we work towards a stable release.</p>
+<h3>Giving Feedback</h3>
+<dl>
+  <dt>Discussion Community:</dt><dd><a href="https://discuss.ultralig.ht">https://discuss.ultralig.ht</a></dd>
+  <dt>Chat Room (on Slack)</dt><dd><a href="https://chat.ultralig.ht">https://chat.ultralig.ht</a></dd>
+  <dt>Issue Tracker</dt><dd><a href="https://github.com/ultralight-ux/ultralight/issues">https://github.com/ultralight-ux/ultralight/issues</a></dd>
+</dl>
+
+
+<h3>New Features</h3>
+
+<h4>macOS Support</h4>
+
+<p>Ultralight is now available on macOS (via Metal)! Check out the XCode sample project in the SDK for more.</p>
+
+<h4>Application Framework</h4>
+
+<p>To help simplify application development with Ultralight we have provided basic framework code for Windows (Direct3D 11) and macOS (Metal). Feel free to extend or replace the framework code with your own to suit your application.</p>
+
+<h4>Resizable Views</h4>
+
+<p>Views can now be resized on-the-fly, an example has been implemented in the Browser sample on Windows/D3D.</p>
+
+<h4>Scrollbars</h4>
+
+<p>Basic scrollbars are now implemented, we will be providing support for custom scrollbars soon.</p>
+
+<h4>Text Selection</h4>
+
+<p>Text selection and dragging support has now been added.</p>
+
+<h3>Bug Fixes</h3>
+
+<ul>
+<li>Fixed crash when destroying Views that are still loading.</li>
+<li>Fixed issue with wrong font weight being passed to FontLoader.</li>
+<li>Fixed flicker issue due to temporary Textures being destroyed even though GPU geometry still referenced the texture ID.</li>
+<li>Added support for XSLT documents/processing.</li>
+<li>Enabled ephemeral local storage / session support (destroyed upon page navigation or reload). May implement persistent storage later.</li>
+<li>Fixed link issue on Windows with String16 when wchar_t is disabled (/Zc:wchar_t-). Users compiling with this option should use String16::udata() to get internal data instead.</li>
+</ul>
+
+<h3>Future Work</h3>
+
+<p>Some more stuff coming later:</li>
+
+<ul>
+<li>Linux support</li>
+<li>Thread-safe API</li>
+<li>Input Method Editor</li>
+<li>Full GIF support</li>
+<li>CSS Shadows</li>
+<li>CSS Filter Effects</li>
+<li>Child Views</li>
+<li>Complex Text Support</li>
+<li>Performance Improvements</li>
+<li>Memory Usage Improvements</li>
+<li>C# / .NET Bindings</li>
+</ul>
+
+ <p style="text-align: right;">- Ultralight Team</p>
+ </div>
+ </body>
+ </html>
+ 

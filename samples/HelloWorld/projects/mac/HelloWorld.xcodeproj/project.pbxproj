@@ -1,0 +1,357 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6626FBBF21226C8A007CE2CF /* WebCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FBBC21226C8A007CE2CF /* WebCore.framework */; };
+		6626FBC021226C8A007CE2CF /* libUltralightCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */; };
+		6626FBC121226C8A007CE2CF /* Ultralight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FBBE21226C8A007CE2CF /* Ultralight.framework */; };
+		6626FBC321226D08007CE2CF /* libUltralightCore.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		6626FBC421226D08007CE2CF /* Ultralight.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FBBE21226C8A007CE2CF /* Ultralight.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6626FBC521226D08007CE2CF /* WebCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FBBC21226C8A007CE2CF /* WebCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6626FBD021229CE4007CE2CF /* FontLoaderRoboto.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FBCF21229CE4007CE2CF /* FontLoaderRoboto.cc */; };
+		6626FBD421229D2F007CE2CF /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FBD321229D2F007CE2CF /* main.cc */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6626FBAF21226C31007CE2CF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		6626FBC221226CF0007CE2CF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				6626FBC321226D08007CE2CF /* libUltralightCore.dylib in CopyFiles */,
+				6626FBC421226D08007CE2CF /* Ultralight.framework in CopyFiles */,
+				6626FBC521226D08007CE2CF /* WebCore.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6626FBB121226C31007CE2CF /* HelloWorld */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HelloWorld; sourceTree = BUILT_PRODUCTS_DIR; };
+		6626FBBC21226C8A007CE2CF /* WebCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebCore.framework; path = ../../../../bin/mac/WebCore.framework; sourceTree = "<group>"; };
+		6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libUltralightCore.dylib; path = ../../../../bin/mac/libUltralightCore.dylib; sourceTree = "<group>"; };
+		6626FBBE21226C8A007CE2CF /* Ultralight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ultralight.framework; path = ../../../../bin/mac/Ultralight.framework; sourceTree = "<group>"; };
+		6626FBCE21229CE3007CE2CF /* FontLoaderRoboto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontLoaderRoboto.h; path = ../../../../framework/platform/common/FontLoaderRoboto.h; sourceTree = "<group>"; };
+		6626FBCF21229CE4007CE2CF /* FontLoaderRoboto.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontLoaderRoboto.cc; path = ../../../../framework/platform/common/FontLoaderRoboto.cc; sourceTree = "<group>"; };
+		6626FBD321229D2F007CE2CF /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cc; path = ../../src/main.cc; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6626FBAE21226C31007CE2CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6626FBC121226C8A007CE2CF /* Ultralight.framework in Frameworks */,
+				6626FBBF21226C8A007CE2CF /* WebCore.framework in Frameworks */,
+				6626FBC021226C8A007CE2CF /* libUltralightCore.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6626FBA821226C31007CE2CF = {
+			isa = PBXGroup;
+			children = (
+				6626FBCD21229CCB007CE2CF /* Framework */,
+				6626FBCC21229CC5007CE2CF /* Source */,
+				6626FBBB21226C74007CE2CF /* Dependencies */,
+				6626FBB221226C31007CE2CF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6626FBB221226C31007CE2CF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6626FBB121226C31007CE2CF /* HelloWorld */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6626FBBB21226C74007CE2CF /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */,
+				6626FBBE21226C8A007CE2CF /* Ultralight.framework */,
+				6626FBBC21226C8A007CE2CF /* WebCore.framework */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		6626FBCC21229CC5007CE2CF /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				6626FBD321229D2F007CE2CF /* main.cc */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		6626FBCD21229CCB007CE2CF /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				6626FBD121229CF7007CE2CF /* platform */,
+			);
+			name = Framework;
+			sourceTree = "<group>";
+		};
+		6626FBD121229CF7007CE2CF /* platform */ = {
+			isa = PBXGroup;
+			children = (
+				6626FBD221229D0F007CE2CF /* common */,
+			);
+			name = platform;
+			sourceTree = "<group>";
+		};
+		6626FBD221229D0F007CE2CF /* common */ = {
+			isa = PBXGroup;
+			children = (
+				6626FBCF21229CE4007CE2CF /* FontLoaderRoboto.cc */,
+				6626FBCE21229CE3007CE2CF /* FontLoaderRoboto.h */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6626FBB021226C31007CE2CF /* HelloWorld */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6626FBB821226C31007CE2CF /* Build configuration list for PBXNativeTarget "HelloWorld" */;
+			buildPhases = (
+				6626FBAD21226C31007CE2CF /* Sources */,
+				6626FBAE21226C31007CE2CF /* Frameworks */,
+				6626FBAF21226C31007CE2CF /* CopyFiles */,
+				6626FBC221226CF0007CE2CF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HelloWorld;
+			productName = HelloWorld;
+			productReference = 6626FBB121226C31007CE2CF /* HelloWorld */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6626FBA921226C31007CE2CF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = ultralight;
+				TargetAttributes = {
+					6626FBB021226C31007CE2CF = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 6626FBAC21226C31007CE2CF /* Build configuration list for PBXProject "HelloWorld" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6626FBA821226C31007CE2CF;
+			productRefGroup = 6626FBB221226C31007CE2CF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6626FBB021226C31007CE2CF /* HelloWorld */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6626FBAD21226C31007CE2CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6626FBD421229D2F007CE2CF /* main.cc in Sources */,
+				6626FBD021229CE4007CE2CF /* FontLoaderRoboto.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6626FBB621226C31007CE2CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6626FBB721226C31007CE2CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6626FBB921226C31007CE2CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = ../../../../bin/mac;
+				GCC_ENABLE_CPP_RTTI = NO;
+				HEADER_SEARCH_PATHS = ../../../../include;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
+				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = ../../../bin/mac;
+			};
+			name = Debug;
+		};
+		6626FBBA21226C31007CE2CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = ../../../../bin/mac;
+				GCC_ENABLE_CPP_RTTI = NO;
+				HEADER_SEARCH_PATHS = ../../../../include;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
+				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = ../../../bin/mac;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6626FBAC21226C31007CE2CF /* Build configuration list for PBXProject "HelloWorld" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6626FBB621226C31007CE2CF /* Debug */,
+				6626FBB721226C31007CE2CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6626FBB821226C31007CE2CF /* Build configuration list for PBXNativeTarget "HelloWorld" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6626FBB921226C31007CE2CF /* Debug */,
+				6626FBBA21226C31007CE2CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6626FBA921226C31007CE2CF /* Project object */;
+}
