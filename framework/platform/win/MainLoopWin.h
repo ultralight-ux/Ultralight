@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
-#include "../common/Platform.h"
-#include "../common/Window.h"
-#include "../common/Application.h"
+#include "../../Platform.h"
+#include "../../Window.h"
+#include "../../Application.h"
 
 namespace framework {
 

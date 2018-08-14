@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-#define SHADER_PATH L".\\..\\samples\\framework\\shaders\\hlsl\\"
+#define SHADER_PATH L".\\shaders\\hlsl\\"
 
 namespace {
 

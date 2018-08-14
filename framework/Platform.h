@@ -8,13 +8,20 @@ namespace framework {
 }
 
 #ifdef FRAMEWORK_PLATFORM_WIN
-#include "../win/PlatformWin.h"
+#include "platform/win/PlatformWin.h"
 
 namespace framework {
-typedef PlatformGPUContextD3D11 PlatformGPUContext;
 typedef PlatformWindowConfigWin PlatformWindowConfig;
 typedef HWND PlatformWindowHandle;
 }
+
+#ifdef FRAMEWORK_DRIVER_D3D11
+#include "platform/win/d3d11/PlatformD3D11.h"
+
+namespace framework {
+  typedef PlatformGPUContextD3D11 PlatformGPUContext;
+}
+#endif
 
 #elif FRAMEWORK_PLATFORM_MAC
 namespace framework {

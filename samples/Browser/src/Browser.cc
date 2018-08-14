@@ -18,7 +18,7 @@ Browser::Browser(framework::Window& window) : window_(window) {
   config.use_distance_field_paths = true;
 
 #if defined(FRAMEWORK_PLATFORM_WIN)
-  const char* asset_dir = "../samples/Browser/assets/";
+  const char* asset_dir = "./assets/";
 #elif defined(FRAMEWORK_PLATFORM_MAC)
   // Use @resource_path on macOS to use the App Bundle's resource directory
   const char* asset_dir = "@resource_path";

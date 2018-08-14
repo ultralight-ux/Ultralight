@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 #include <memory>
-#include "PlatformWin.h"
+#include "PlatformD3D11.h"
 
 using Microsoft::WRL::ComPtr;
 

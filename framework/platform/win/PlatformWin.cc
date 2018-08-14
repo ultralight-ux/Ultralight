@@ -1,4 +1,4 @@
-#include "../common/Platform.h"
+#include "../../Platform.h"
 #include "FontLoaderWin.h"
 #include "FileSystemWin.h"
 #include <shlwapi.h>
