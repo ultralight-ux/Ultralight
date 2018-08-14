@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -315,6 +315,7 @@
 				TargetAttributes = {
 					6626FB0A2122100F007CE2CF = {
 						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -324,7 +325,7 @@
 				};
 			};
 			buildConfigurationList = 6626FB062122100F007CE2CF /* Build configuration list for PBXProject "Browser" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -525,10 +526,7 @@
 				);
 				HEADER_SEARCH_PATHS = ../../../../include;
 				INFOPLIST_FILE = Browser/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
 				PRODUCT_BUNDLE_IDENTIFIER = ultralight.Browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -549,10 +547,7 @@
 				);
 				HEADER_SEARCH_PATHS = ../../../../include;
 				INFOPLIST_FILE = Browser/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
 				PRODUCT_BUNDLE_IDENTIFIER = ultralight.Browser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
