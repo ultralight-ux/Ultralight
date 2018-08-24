@@ -162,8 +162,8 @@ void GPUDriverD3D11::BindTexture(uint8_t texture_unit,
   uint32_t texture_id) {
   auto i = textures_.find(texture_id);
   if (i == textures_.end()) {
-    MessageBox(nullptr,
-      L"GPUDriverD3D11::BindTexture, texture id doesn't exist.", L"Error", MB_OK);
+    //MessageBox(nullptr,
+    //  L"GPUDriverD3D11::BindTexture, texture id doesn't exist.", L"Error", MB_OK);
     return;
   }
 
