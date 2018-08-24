@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <assert.h>
 #include <Ultralight/Vector.h>
+#include <tchar.h>
+#include <vector>
 
 struct MatchImprovingProcData {
   MatchImprovingProcData(LONG desiredWeight, bool desiredItalic)
@@ -106,8 +108,20 @@ HFONT createGDIFont(const std::wstring& family, LONG desiredWeight, bool desired
   LOGFONT logFont;
   memset(&logFont, 0, sizeof(LOGFONT));
   logFont.lfCharSet = DEFAULT_CHARSET;
+#ifdef UNICODE
   std::wstring truncatedFamily = family.substr(0, static_cast<unsigned>(LF_FACESIZE - 1));
   memcpy(logFont.lfFaceName, truncatedFamily.data(), truncatedFamily.length() * sizeof(wchar_t));
+#else
+  std::vector<char> family_utf8;
+  int sz = WideCharToMultiByte(CP_UTF8, 0, family.c_str(), -1, NULL, 0, NULL, NULL);
+  if (sz <= 0)
+    return nullptr;
+  family_utf8.resize(sz);
+  WideCharToMultiByte(CP_UTF8, 0, family.c_str(), -1, &family_utf8[0], family_utf8.size(), NULL, NULL);
+  std::string family_utf8Str = std::string(&family_utf8[0]);
+  std::string truncatedFamily = family_utf8Str.substr(0, static_cast<unsigned>(LF_FACESIZE - 1));
+  memcpy(logFont.lfFaceName, truncatedFamily.data(), truncatedFamily.length() * sizeof(char));
+#endif
   logFont.lfFaceName[truncatedFamily.length()] = 0;
   logFont.lfPitchAndFamily = 0;
 
@@ -137,11 +151,11 @@ HFONT createGDIFont(const std::wstring& family, LONG desiredWeight, bool desired
 
   SaveDC(hdc);
   SelectObject(hdc, chosenFont);
-  WCHAR actualName[LF_FACESIZE];
+  TCHAR actualName[LF_FACESIZE];
   GetTextFace(hdc, LF_FACESIZE, actualName);
   RestoreDC(hdc, -1);
 
-  if (_wcsicmp(matchData.m_chosen.lfFaceName, actualName))
+  if (_tcsicmp(matchData.m_chosen.lfFaceName, actualName))
     return nullptr;
 
   return chosenFont;

@@ -42,7 +42,7 @@ public:
     HRESULT hr;
     hr = swap_chain_->ResizeBuffers(0, client_width, client_height, DXGI_FORMAT_UNKNOWN, 0);
     if (FAILED(hr)) {
-      MessageBox(nullptr,
+      MessageBoxW(nullptr,
         L"GPUContextD3D11::Resize, unable to resize, IDXGISwapChain::ResizeBuffers failed.", L"Error", MB_OK);
       exit(-1);
     }
@@ -52,7 +52,7 @@ public:
     hr = swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
     if (FAILED(hr))
     {
-      MessageBox(nullptr,
+      MessageBoxW(nullptr,
         L"GPUContextD3D11::Resize, unable to get back buffer.", L"Error", MB_OK);
       exit(-1);
     }
@@ -61,7 +61,7 @@ public:
     pBackBuffer->Release();
     if (FAILED(hr))
     {
-      MessageBox(nullptr,
+      MessageBoxW(nullptr,
         L"GPUContextD3D11::Resize, unable to create new render target view.", L"Error", MB_OK);
       exit(-1);
     }

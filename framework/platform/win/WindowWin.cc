@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <ShellScalingAPI.h>
 #include "Windowsx.h"
+#include <tchar.h>
 
 static ultralight::MouseEvent::Button g_cur_btn = ultralight::MouseEvent::kButton_None;
 bool g_is_resizing_modal = false;
@@ -124,7 +125,7 @@ class WindowWin : public Window {
     HRESULT hr = SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 
     if (hr != S_OK) {
-      MessageBox(NULL, (LPCWSTR)L"SetProcessDpiAwareness failed", (LPCWSTR)L"Notification", MB_OK);
+      MessageBoxW(NULL, (LPCWSTR)L"SetProcessDpiAwareness failed", (LPCWSTR)L"Notification", MB_OK);
       return FALSE;
     }
 
@@ -136,7 +137,7 @@ class WindowWin : public Window {
     hr = GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpix, &dpiy);
 
     if (hr != S_OK) {
-      MessageBox(NULL, (LPCWSTR)L"GetDpiForMonitor failed", (LPCWSTR)L"Notification", MB_OK);
+      MessageBoxW(NULL, (LPCWSTR)L"GetDpiForMonitor failed", (LPCWSTR)L"Notification", MB_OK);
       return FALSE;
     }
 
@@ -146,7 +147,7 @@ class WindowWin : public Window {
     int height = config.height;
     is_fullscreen_ = config.fullscreen;
 
-    wchar_t* class_name = L"UltralightWindow";
+    TCHAR* class_name = _T("UltralightWindow");
 
     WNDCLASSEX wcex;
     wcex.cbSize = sizeof(WNDCLASSEX);
@@ -169,7 +170,7 @@ class WindowWin : public Window {
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
     hwnd_ = ::CreateWindowEx(NULL
       , class_name
-      , L""
+      , _T("")
       , is_fullscreen_ ? (WS_EX_TOPMOST | WS_POPUP) : WS_OVERLAPPEDWINDOW
       , is_fullscreen_ ? 0 : CW_USEDEFAULT
       , is_fullscreen_ ? 0 : CW_USEDEFAULT

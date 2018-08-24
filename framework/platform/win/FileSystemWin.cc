@@ -47,10 +47,10 @@ namespace ultralight {
 class PathWalker {
 public:
   PathWalker(LPCWSTR directory, LPCWSTR pattern) {
-    TCHAR szDir[MAX_PATH];
+    WCHAR szDir[MAX_PATH];
 
-    StringCchCopy(szDir, MAX_PATH, directory);
-    StringCchCat(szDir, MAX_PATH, pattern);
+    StringCchCopyW(szDir, MAX_PATH, directory);
+    StringCchCatW(szDir, MAX_PATH, pattern);
 
     m_handle = ::FindFirstFileW(szDir, &m_data);
   }
@@ -176,7 +176,7 @@ std::wstring GetMimeType(const std::wstring &szExtension)
   std::wstring szResult = L"application/unknown";
 
   // open registry key
-  if (RegOpenKeyEx(HKEY_CLASSES_ROOT, szExtension.c_str(),
+  if (RegOpenKeyExW(HKEY_CLASSES_ROOT, szExtension.c_str(),
     0, KEY_READ, &hKey) == ERROR_SUCCESS)
   {
     // define buffer
@@ -184,7 +184,7 @@ std::wstring GetMimeType(const std::wstring &szExtension)
     DWORD dwBuffSize = sizeof(szBuffer);
 
     // get content type
-    if (RegQueryValueEx(hKey, L"Content Type", NULL, NULL,
+    if (RegQueryValueExW(hKey, L"Content Type", NULL, NULL,
       (LPBYTE)szBuffer, &dwBuffSize) == ERROR_SUCCESS)
     {
       // success
@@ -201,7 +201,7 @@ std::wstring GetMimeType(const std::wstring &szExtension)
 
 FileSystemWin::FileSystemWin(LPCWSTR baseDir) {
   baseDir_.reset(new WCHAR[_MAX_PATH]);
-  StringCchCopy(baseDir_.get(), MAX_PATH, baseDir);
+  StringCchCopyW(baseDir_.get(), MAX_PATH, baseDir);
 }
 
 FileSystemWin::~FileSystemWin() {}
@@ -220,7 +220,7 @@ bool FileSystemWin::DeleteEmptyDirectory(const String16& path) {
 }
 
 bool FileSystemWin::MoveFile_(const String16& old_path, const String16& new_path) {
-  return !!::MoveFileEx(GetRelative(old_path).get(), GetRelative(new_path).get(), MOVEFILE_COPY_ALLOWED | MOVEFILE_REPLACE_EXISTING);
+  return !!::MoveFileExW(GetRelative(old_path).get(), GetRelative(new_path).get(), MOVEFILE_COPY_ALLOWED | MOVEFILE_REPLACE_EXISTING);
 }
 
 bool FileSystemWin::GetFileSize(const String16& path, int64_t& result) {
@@ -233,7 +233,7 @@ bool FileSystemWin::GetFileSize(const String16& path, int64_t& result) {
 
 bool FileSystemWin::GetFileMimeType(const String16& path, String16& result)
 {
-  LPWSTR ext = PathFindExtension(path.data());
+  LPWSTR ext = PathFindExtensionW(path.data());
   std::wstring mimetype = GetMimeType(ext);
   result = String16(mimetype.c_str(), mimetype.length());
   return true;
@@ -287,7 +287,7 @@ String16 FileSystemWin::GetPathByAppendingComponent(const String16& path, const 
 }
 
 bool FileSystemWin::CreateDirectory_(const String16& path) {
-  if (SHCreateDirectoryEx(0, GetRelative(path).get(), 0) != ERROR_SUCCESS) {
+  if (SHCreateDirectoryExW(0, GetRelative(path).get(), 0) != ERROR_SUCCESS) {
     DWORD error = GetLastError();
     if (error != ERROR_FILE_EXISTS && error != ERROR_ALREADY_EXISTS) {
       Vector<char> utf8 = String(path).utf8();
@@ -303,14 +303,14 @@ String16 FileSystemWin::GetHomeDirectory() {
 }
 
 String16 FileSystemWin::GetFilenameFromPath(const String16& path) {
-  LPTSTR filename = ::PathFindFileName(path.data());
+  LPWSTR filename = ::PathFindFileNameW(path.data());
   return String16(filename, wcslen(filename));
 }
 
 String16 FileSystemWin::GetDirectoryNameFromPath(const String16& path) {
   Vector<Char16> utf16(path.length());
   memcpy(utf16.data(), path.data(), utf16.size() * sizeof(Char16));
-  if (::PathRemoveFileSpec(utf16.data()))
+  if (::PathRemoveFileSpecW(utf16.data()))
     return String16(utf16.data(), wcslen(utf16.data()));
 
   return path;
@@ -400,7 +400,7 @@ FileHandle FileSystemWin::OpenFile(const String16& path, bool open_for_writing) 
     shareMode = FILE_SHARE_READ;
   }
 
-  return (FileHandle)CreateFile(GetRelative(path).get(), desiredAccess, shareMode, 
+  return (FileHandle)CreateFileW(GetRelative(path).get(), desiredAccess, shareMode, 
     0, creationDisposition, FILE_ATTRIBUTE_NORMAL, 0);
 }
 
@@ -459,12 +459,12 @@ int64_t FileSystemWin::ReadFromFile(FileHandle handle, char* data, int64_t lengt
 }
 
 bool FileSystemWin::CopyFile_(const String16& source, const String16& destination) {
-  return !!::CopyFile(GetRelative(source).get(), GetRelative(destination).get(), TRUE);
+  return !!::CopyFileW(GetRelative(source).get(), GetRelative(destination).get(), TRUE);
 }
 
 std::unique_ptr<WCHAR[]> FileSystemWin::GetRelative(const String16& path) {
   std::unique_ptr<WCHAR[]> relPath(new WCHAR[_MAX_PATH]);
-  PathCombine(relPath.get(), baseDir_.get(), path.data());
+  PathCombineW(relPath.get(), baseDir_.get(), path.data());
   return relPath;
 }
 
