@@ -23,11 +23,18 @@ namespace framework {
 }
 #endif
 
-#elif FRAMEWORK_PLATFORM_MAC || FRAMEWORK_PLATFORM_GLFW
+#elif FRAMEWORK_PLATFORM_MAC
 namespace framework {
 class PlatformGPUContext;
 struct PlatformWindowConfig;
 struct PlatformWindowHandle;
+}
+#elif FRAMEWORK_PLATFORM_GLFW
+struct GLFWwindow;
+namespace framework {
+class PlatformGPUContext;
+struct PlatformWindowConfig;
+typedef GLFWwindow* PlatformWindowHandle;
 }
 
 #else

@@ -221,3 +221,11 @@ Ref<Buffer> FontLoaderWin::Load(const String16& family, int weight, bool italic,
 }
 
 }  // namespace ultralight
+
+namespace framework {
+
+ultralight::FontLoader* CreatePlatformFontLoader() {
+  return new ultralight::FontLoaderWin();
+}
+
+}  // namespace framework

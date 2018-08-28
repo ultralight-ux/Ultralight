@@ -17,27 +17,45 @@ set(FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/Application.h"
                   "${FRAMEWORK_SOURCE_DIR}/Overlay.cpp"
                   "${FRAMEWORK_SOURCE_DIR}/Platform.h"
                   "${FRAMEWORK_SOURCE_DIR}/Window.h"
-				  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/main.cpp"
-				  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/MainLoopGLFW.h"
-				  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/MainLoopGLFW.cpp"
-				  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/PlatformGLFW.h"
-				  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/WindowGLFW.cpp")
+                  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/main.cpp"
+                  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/PlatformGLFW.h"
+                  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/WindowGLFW.cpp"
+                  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUContextGL.cpp"
+                  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUDriverGL.h"
+                  "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUDriverGL.cpp")
 				  
 if (WIN32)
     list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.cpp"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderWin.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderWin.cpp")
+                              
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/lib/win/x64")
+        set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/win/x64")
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/lib/win/x86")
+        set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/win/x86")
+    endif()
+    
 elseif (APPLE)
     list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.h"
 	                          "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.mm"
 							  "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.h"
 	                          "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.mm")
+                              
+    set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/bin/mac")
+    set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/mac")
+    
 elseif (UNIX)
     list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/linux/FileSystemLinux.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/linux/FileSystemLinux.cpp"
                               "${FRAMEWORK_SOURCE_DIR}/platform/linux/FontLoaderLinux.h"
 	                          "${FRAMEWORK_SOURCE_DIR}/platform/linux/FontLoaderLinux.cpp")
+                              
+    set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/bin/linux")
+    set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/linux")
+    
 endif ()
 
 add_subdirectory(deps)

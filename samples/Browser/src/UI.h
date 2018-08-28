@@ -1,7 +1,7 @@
 #pragma once
-#include "../../../framework/Overlay.h"
-#include "../../../framework/Window.h"
-#include "../../../framework/JSHelpers.h"
+#include <Framework/Overlay.h>
+#include <Framework/Window.h>
+#include <Framework/JSHelpers.h>
 #include "Tab.h"
 #include <map>
 #include <memory>

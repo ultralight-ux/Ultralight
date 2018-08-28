@@ -19,6 +19,7 @@ UI::UI(ultralight::Ref<ultralight::Renderer> renderer, ultralight::GPUDriver* dr
 
   view()->set_load_listener(this);
   view()->LoadURL("file:///ui.html");
+  //view()->LoadHTML("Hello");
 }
 
 UI::~UI() {

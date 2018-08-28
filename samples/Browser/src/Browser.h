@@ -1,5 +1,5 @@
-#include "../../../framework/Application.h"
-#include "../../../framework/GPUContext.h"
+#include <Framework/Application.h>
+#include <Framework/GPUContext.h>
 #include <Ultralight/Renderer.h>
 #include "UI.h"
 
