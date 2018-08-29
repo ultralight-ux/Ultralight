@@ -17,14 +17,15 @@ set(FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/Application.h"
                   "${FRAMEWORK_SOURCE_DIR}/Overlay.cpp"
                   "${FRAMEWORK_SOURCE_DIR}/Platform.h"
                   "${FRAMEWORK_SOURCE_DIR}/Window.h"
-                  "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/ps/fill.frag"
-                  "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/vs/v2f_c4f_t2f_t2f_d28f.vert"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/main.cpp"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/PlatformGLFW.h"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/WindowGLFW.cpp"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUContextGL.cpp"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUDriverGL.h"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUDriverGL.cpp")
+                  
+set(FRAMEWORK_SHADER_SRC "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/ps/fill.frag"
+                         "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/vs/v2f_c4f_t2f_t2f_d28f.vert")
 				  
 if (WIN32)
     list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.h"

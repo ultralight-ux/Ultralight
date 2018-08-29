@@ -31,10 +31,10 @@ set(BROWSER_SRC "src/Browser.h"
 				
 source_group(GLAD FILES ${GLAD_SRC})
 source_group(Framework FILES ${FRAMEWORK_SRC})
+source_group(Shaders FILES ${FRAMEWORK_SHADER_SRC})
 		 
-#add_executable(Browser WIN32 MACOSX_BUNDLE ${BROWSER_SRC} ${FRAMEWORK_SRC} ${GLAD_SRC})
-add_executable(Browser ${BROWSER_SRC} ${FRAMEWORK_SRC} ${GLAD_SRC})
-
+#add_executable(Browser WIN32 MACOSX_BUNDLE ${BROWSER_SRC} ${FRAMEWORK_SRC} ${FRAMEWORK_SHADER_SRC} ${GLAD_SRC})
+add_executable(Browser ${BROWSER_SRC} ${FRAMEWORK_SRC} ${FRAMEWORK_SHADER_SRC} ${GLAD_SRC})
 
 add_custom_command(TARGET Browser POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIRS}" $<TARGET_FILE_DIR:Browser>)  
