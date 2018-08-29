@@ -8,6 +8,7 @@ int main() {
   framework::PlatformWindowConfig config;
   config.width = 800;
   config.height = 600;
+  config.title = "SET THIS TITLE IN Application::InitWindow()";
 
   auto window = framework::Application::InitWindow(config);
   if (!window)

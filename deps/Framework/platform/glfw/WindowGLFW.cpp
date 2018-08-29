@@ -120,7 +120,6 @@ static void WindowGLFW_window_size_callback(GLFWwindow* window, int width, int h
   }
 }
 
-
 } // extern "C"
 
 namespace framework {
@@ -147,7 +146,7 @@ public:
     float xscale, yscale;
     glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &xscale, &yscale);
     
-    GLFWwindow* win = glfwCreateWindow(config.width * xscale, config.height * xscale, "Simple example", NULL, NULL);
+    GLFWwindow* win = glfwCreateWindow(config.width * xscale, config.height * xscale, config.title, NULL, NULL);
     window_ = win;
     if (!window_)
     {
@@ -176,10 +175,10 @@ public:
   virtual ~WindowGLFW() {
     glfwSetKeyCallback(window_, nullptr);
     glfwSetCharCallback(window_, nullptr);
-    glfwSetCharModsCallback(window_, nullptr);
     glfwSetCursorPosCallback(window_, nullptr);
     glfwSetMouseButtonCallback(window_, nullptr);
     glfwSetScrollCallback(window_, nullptr);
+    glfwSetWindowSizeCallback(window_, nullptr);
 
     glfwDestroyCursor(cursor_ibeam_);
     glfwDestroyCursor(cursor_crosshair_);

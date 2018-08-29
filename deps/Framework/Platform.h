@@ -33,7 +33,11 @@ struct PlatformWindowHandle;
 struct GLFWwindow;
 namespace framework {
 class PlatformGPUContext;
-struct PlatformWindowConfig;
+struct PlatformWindowConfig {
+  int width;
+  int height;
+  const char* title;
+};
 typedef GLFWwindow* PlatformWindowHandle;
 }
 

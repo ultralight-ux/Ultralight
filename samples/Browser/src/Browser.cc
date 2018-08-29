@@ -90,7 +90,11 @@ void Browser::OnResize(int width, int height) {
 namespace framework {
 
 std::unique_ptr<Window> Application::InitWindow(PlatformWindowConfig& config) {
-#ifdef FRAMEWORK_PLATFORM_WIN
+#ifdef FRAMEWORK_PLATFORM_GLFW
+  config.width = 1024;
+  config.height = 768;
+  config.title = "Ultralight - Browser Sample - GLFW";
+#elif FRAMEWORK_PLATFORM_WIN
   config.width = 1024;
   config.height = 768;
   config.fullscreen = false;
