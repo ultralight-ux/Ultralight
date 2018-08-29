@@ -32,7 +32,10 @@ public:
     glfwSwapBuffers(window_);
   }
 
-  virtual void Resize(int width, int height) override {}
+  virtual void Resize(int width, int height) override {
+    ultralight::GPUDriverGL* driver_gl = static_cast<ultralight::GPUDriverGL*>(driver_.get());
+    driver_gl->ResizeViewport(width, height);
+  }
 };
 
 std::unique_ptr<GPUContext> GPUContext::Create(const Window& window, bool enable_vsync) {

@@ -71,6 +71,8 @@ public:
 
   int batch_count() { return batch_count_; }
 
+  void ResizeViewport(int width, int height);
+
   void BindUltralightTexture(uint32_t ultralight_texture_id);
 
   void LoadPrograms();

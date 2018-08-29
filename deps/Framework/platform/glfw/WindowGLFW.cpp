@@ -112,6 +112,15 @@ static void WindowGLFW_scroll_callback(GLFWwindow* window, double xoffset, doubl
   }
 }
 
+static void WindowGLFW_window_size_callback(GLFWwindow* window, int width, int height)
+{
+  framework::Window* win = static_cast<framework::Window*>(glfwGetWindowUserPointer(window));
+  if (win->listener()) {
+    win->listener()->OnResize(win->PixelsToDevice(width), win->PixelsToDevice(height));
+  }
+}
+
+
 } // extern "C"
 
 namespace framework {
@@ -154,6 +163,7 @@ public:
     glfwSetCursorPosCallback(window_, WindowGLFW_cursor_pos_callback);
     glfwSetMouseButtonCallback(window_, WindowGLFW_mouse_button_callback);
     glfwSetScrollCallback(window_, WindowGLFW_scroll_callback);
+    glfwSetWindowSizeCallback(window_, WindowGLFW_window_size_callback);
 
     // Create standard cursors
     cursor_ibeam_ = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);

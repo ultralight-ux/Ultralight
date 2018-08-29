@@ -630,6 +630,10 @@ void GPUDriverGL::BindUltralightTexture(uint32_t ultralight_texture_id) {
   glBindTexture(GL_TEXTURE_2D, tex_id);
 }
 
+void GPUDriverGL::ResizeViewport(int width, int height) {
+  SetRenderBufferViewport(0, width, height);
+}
+
 void GPUDriverGL::LoadPrograms(void) {
   const char* vert_program = "vs/v2f_c4f_t2f_t2f_d28f.vert";
   LoadProgram(ultralight::kShaderType_Fill, vert_program, "ps/fill.frag");
