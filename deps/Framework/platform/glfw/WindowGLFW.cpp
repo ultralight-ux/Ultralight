@@ -61,8 +61,8 @@ static void WindowGLFW_cursor_pos_callback(GLFWwindow* window, double xpos, doub
   if (win->listener()) {
     ultralight::MouseEvent evt;
     evt.type = ultralight::MouseEvent::kType_MouseMoved;
-    evt.x = win->PixelsToDevice(xpos);
-    evt.y = win->PixelsToDevice(ypos);
+    evt.x = win->PixelsToDevice((int)xpos);
+    evt.y = win->PixelsToDevice((int)ypos);
     evt.button = ultralight::MouseEvent::kButton_None;
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
       evt.button = ultralight::MouseEvent::kButton_Left;
@@ -82,8 +82,8 @@ static void WindowGLFW_mouse_button_callback(GLFWwindow* window, int button, int
     evt.type = action == GLFW_PRESS ? ultralight::MouseEvent::kType_MouseDown : ultralight::MouseEvent::kType_MouseUp;
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
-    evt.x = win->PixelsToDevice(xpos);
-    evt.y = win->PixelsToDevice(ypos);
+    evt.x = win->PixelsToDevice((int)xpos);
+    evt.y = win->PixelsToDevice((int)ypos);
     evt.button = ultralight::MouseEvent::kButton_None;
     switch (button) {
     case GLFW_MOUSE_BUTTON_LEFT:
@@ -106,8 +106,8 @@ static void WindowGLFW_scroll_callback(GLFWwindow* window, double xoffset, doubl
   if (win->listener()) {
     ultralight::ScrollEvent evt;
     evt.type = ultralight::ScrollEvent::kType_ScrollByPixel;
-    evt.delta_x = win->PixelsToDevice(xoffset * 32);
-    evt.delta_y = win->PixelsToDevice(yoffset * 32);
+    evt.delta_x = win->PixelsToDevice((int)xoffset * 32);
+    evt.delta_y = win->PixelsToDevice((int)yoffset * 32);
     win->listener()->OnScrollEvent(evt);
   }
 }
@@ -146,7 +146,9 @@ public:
     float xscale, yscale;
     glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &xscale, &yscale);
     
-    GLFWwindow* win = glfwCreateWindow(config.width * xscale, config.height * xscale, config.title, NULL, NULL);
+    GLFWwindow* win = glfwCreateWindow(static_cast<int>(config.width * xscale), 
+                                       static_cast<int>(config.height * xscale), 
+                                       config.title, NULL, NULL);
     window_ = win;
     if (!window_)
     {

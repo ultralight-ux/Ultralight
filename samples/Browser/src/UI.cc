@@ -13,8 +13,8 @@ UI::UI(ultralight::Ref<ultralight::Renderer> renderer, ultralight::GPUDriver* dr
   screen_width_(window.width()),
   ui_height_(UI_HEIGHT),
   tab_height_(window.height() - UI_HEIGHT),
-  scale_(window.scale()),
-  Overlay(renderer, driver, window.width(), UI_HEIGHT, 0, 0, window.scale()) {
+  scale_((float)window.scale()),
+  Overlay(renderer, driver, window.width(), UI_HEIGHT, 0, 0, (float)window.scale()) {
   g_ui = this;
 
   view()->set_load_listener(this);

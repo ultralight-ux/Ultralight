@@ -61,7 +61,7 @@ ultralight::Vector<uint8_t> GetFontData(const HFONT fontHandle)
   if (hdc != NULL && fontHandle != NULL)
   {
     ::SelectObject(hdc, fontHandle);
-    const size_t size = ::GetFontData(hdc, 0, 0, NULL, 0);
+    const DWORD size = ::GetFontData(hdc, 0, 0, NULL, 0);
     if (size > 0)
     {
       char* buffer = new char[size];
@@ -117,7 +117,7 @@ HFONT createGDIFont(const std::wstring& family, LONG desiredWeight, bool desired
   if (sz <= 0)
     return nullptr;
   family_utf8.resize(sz);
-  WideCharToMultiByte(CP_UTF8, 0, family.c_str(), -1, &family_utf8[0], family_utf8.size(), NULL, NULL);
+  WideCharToMultiByte(CP_UTF8, 0, family.c_str(), -1, &family_utf8[0], (int)family_utf8.size(), NULL, NULL);
   std::string family_utf8Str = std::string(&family_utf8[0]);
   std::string truncatedFamily = family_utf8Str.substr(0, static_cast<unsigned>(LF_FACESIZE - 1));
   memcpy(logFont.lfFaceName, truncatedFamily.data(), truncatedFamily.length() * sizeof(char));

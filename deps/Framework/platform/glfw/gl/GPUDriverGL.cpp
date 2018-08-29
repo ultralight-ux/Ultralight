@@ -21,17 +21,17 @@
 #endif
 
 #if _WIN32
-#define ERROR(x) { std::cerr << "[ERROR] " << __FUNCSIG__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
-  __debugbreak; std::cin.get(); exit(-1); }
+#define FATAL(x) { std::cerr << "[ERROR] " << __FUNCSIG__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
+  __debugbreak(); std::cin.get(); exit(-1); }
 #else
-#define ERROR(x) { std::cerr << "[ERROR] " << __PRETTY_FUNCTION__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
+#define FATAL(x) { std::cerr << "[ERROR] " << __PRETTY_FUNCTION__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
   std::cin.get(); exit(-1); }
 #endif
 
 static void ReadFile(const char* filepath, std::string& result) {
   std::ifstream filestream(filepath, std::ios::binary);
   if (!filestream)
-    ERROR("Could not open file path: " << filepath)
+    FATAL("Could not open file path: " << filepath)
   std::stringstream ostrm;
   ostrm << filestream.rdbuf();
   result = ostrm.str();
@@ -59,7 +59,7 @@ inline std::string GetShaderLog(GLuint shader_id) {
   GLint length, result;
   glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &length);
   std::string str(length, ' ');
-  glGetShaderInfoLog(shader_id, str.length(), &result, &str[0]);
+  glGetShaderInfoLog(shader_id, (GLsizei)str.length(), &result, &str[0]);
   return str;
 }
 
@@ -67,7 +67,7 @@ inline std::string GetProgramLog(GLuint program_id) {
   GLint length, result;
   glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &length);
   std::string str(length, ' ');
-  glGetProgramInfoLog(program_id, str.length(), &result, &str[0]);
+  glGetProgramInfoLog(program_id, (GLsizei)str.length(), &result, &str[0]);
   return str;
 }
 
@@ -82,13 +82,13 @@ static GLuint LoadShaderFromFile(GLenum shader_type, const char* filename) {
   glCompileShader(shader_id);
   glGetShaderiv(shader_id, GL_COMPILE_STATUS, &compileStatus);
   if (compileStatus == GL_FALSE)
-    ERROR("Unable to compile shader. Filename: " << filename << "\n\tError:" 
+    FATAL("Unable to compile shader. Filename: " << filename << "\n\tError:" 
       << glErrorString(glGetError()) << "\n\tLog: " << GetShaderLog(shader_id))
   return shader_id;
 }
 
 #ifdef _DEBUG
-#define CHECK_GL()  {if (GLenum err = glGetError()) ERROR(glErrorString(err)) }                                                     
+#define CHECK_GL()  {if (GLenum err = glGetError()) FATAL(glErrorString(err)) }                                                     
 #else
 #define CHECK_GL()
 #endif   
@@ -131,7 +131,7 @@ void GPUDriverGL::CreateTexture(uint32_t texture_id,
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->width(), bitmap->height(), 0,
       GL_BGRA, GL_UNSIGNED_BYTE, bitmap->pixels());
   } else {
-    ERROR("Unhandled texture format: " << bitmap->format())
+    FATAL("Unhandled texture format: " << bitmap->format())
   }
 
   CHECK_GL();
@@ -155,7 +155,7 @@ void GPUDriverGL::UpdateTexture(uint32_t texture_id,
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->width(), bitmap->height(), 0,
         GL_BGRA, GL_UNSIGNED_BYTE, bitmap->pixels());
     else
-      ERROR("Unhandled texture format: " << bitmap->format());
+      FATAL("Unhandled texture format: " << bitmap->format());
 
     CHECK_GL();
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -204,7 +204,7 @@ void GPUDriverGL::CreateRenderBuffer(uint32_t render_buffer_id,
 
   GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if (result != GL_FRAMEBUFFER_COMPLETE)
-    ERROR("Error creating FBO: " << result);
+    FATAL("Error creating FBO: " << result);
   CHECK_GL();
 }
 
@@ -212,9 +212,10 @@ void GPUDriverGL::BindRenderBuffer(uint32_t render_buffer_id) {
   FrameBufferInfo framebuffer = frame_buffer_map[render_buffer_id];
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.id);
   CHECK_GL();
-  render_buffer_width_ = framebuffer.width;
-  render_buffer_height_ = framebuffer.height;
-  glViewport(0, 0, framebuffer.width * scale_, framebuffer.height * scale_);
+  render_buffer_width_ = (GLfloat)framebuffer.width;
+  render_buffer_height_ = (GLfloat)framebuffer.height;
+  glViewport(0, 0, static_cast<GLsizei>(framebuffer.width * scale_),
+                   static_cast<GLsizei>(framebuffer.height * scale_));
 }
 
 void GPUDriverGL::SetRenderBufferViewport(uint32_t render_buffer_id, uint32_t width, uint32_t height) {
@@ -255,7 +256,7 @@ void GPUDriverGL::CreateGeometry(uint32_t geometry_id,
   glBufferData(GL_ARRAY_BUFFER, vertices.size, vertices.data, GL_DYNAMIC_DRAW);
 
   if (vertices.format == kVertexBufferFormat_2f_4ub_2f_2f_28f) {
-    size_t stride = 140;
+    GLsizei stride = 140;
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
     glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (GLvoid*)8);
@@ -283,7 +284,7 @@ void GPUDriverGL::CreateGeometry(uint32_t geometry_id,
 
     CHECK_GL();
   } else {
-    ERROR("Unhandled vertex format: " << vertices.format);
+    FATAL("Unhandled vertex format: " << vertices.format);
   }
 
   glGenBuffers(1, &geometry.vbo_indices);
@@ -474,7 +475,7 @@ void GPUDriverGL::LoadProgram(ProgramType type,
   glUniform1i(glGetUniformLocation(prog.program_id, "Texture3"), 2);
 
   if (glGetError())
-    ERROR("Unable to link shader.\n\tError:" << glErrorString(glGetError()) << "\n\tLog: " << GetProgramLog(prog.program_id))
+    FATAL("Unable to link shader.\n\tError:" << glErrorString(glGetError()) << "\n\tLog: " << GetProgramLog(prog.program_id))
  
   programs_[type] = prog;
 }
@@ -485,12 +486,12 @@ void GPUDriverGL::SelectProgram(ProgramType type) {
     cur_program_id_ = i->second.program_id;
     glUseProgram(i->second.program_id);
   } else {
-    ERROR("Missing shader type: " << type);
+    FATAL("Missing shader type: " << type);
   }
 }
 
 void GPUDriverGL::SetUniformDefaults() {
-  float params[4] = { glfwGetTime() / 1000.0f, (float)render_buffer_width_, (float)render_buffer_height_, scale_ };
+  float params[4] = { (float)(glfwGetTime() / 1000.0), (float)render_buffer_width_, (float)render_buffer_height_, scale_ };
   SetUniform4f("State", params);
 }
 
@@ -503,7 +504,7 @@ void GPUDriverGL::SetUniform1f(const char* name, float val) {
 }
 
 void GPUDriverGL::SetUniform1fv(const char* name, size_t count, const float* val) {
-  glUniform1fv(glGetUniformLocation(cur_program_id_, name), count, val);
+  glUniform1fv(glGetUniformLocation(cur_program_id_, name), (GLsizei)count, val);
 }
 
 void GPUDriverGL::SetUniform4f(const char* name, const float val[4]) {
@@ -512,11 +513,11 @@ void GPUDriverGL::SetUniform4f(const char* name, const float val[4]) {
 }
 
 void GPUDriverGL::SetUniform4fv(const char* name, size_t count, const float* val) {
-  glUniform4fv(glGetUniformLocation(cur_program_id_, name), count, val);
+  glUniform4fv(glGetUniformLocation(cur_program_id_, name), (GLsizei)count, val);
 }
 
 void GPUDriverGL::SetUniformMatrix4fv(const char* name, size_t count, const float* val) {
-  glUniformMatrix4fv(glGetUniformLocation(cur_program_id_, name), count, false, val);
+  glUniformMatrix4fv(glGetUniformLocation(cur_program_id_, name), (GLsizei)count, false, val);
 }
 
 }  // namespace ultralight

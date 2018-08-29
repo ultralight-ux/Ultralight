@@ -100,10 +100,10 @@ void Overlay::UpdateGeometry() {
   v.color[2] = 255;
   v.color[3] = 255;
 
-  float left = x_;
-  float top = y_;
-  float right = x_ + width();
-  float bottom = y_ + height();
+  float left = static_cast<float>(x_);
+  float top = static_cast<float>(y_);
+  float right = static_cast<float>(x_ + width());
+  float bottom = static_cast<float>(y_ + height());
 
   ultralight::RenderTarget target = view_->render_target();
   float tex_width_ratio = target.width / (float)target.texture_width;
@@ -149,11 +149,11 @@ void Overlay::UpdateGeometry() {
 
   ultralight::VertexBuffer vbuffer;
   vbuffer.format = ultralight::kVertexBufferFormat_2f_4ub_2f_2f_28f;
-  vbuffer.size = sizeof(ultralight::Vertex_2f_4ub_2f_2f_28f) * vertices_.size();
+  vbuffer.size = static_cast<uint32_t>(sizeof(ultralight::Vertex_2f_4ub_2f_2f_28f) * vertices_.size());
   vbuffer.data = (uint8_t*)vertices_.data();
 
   ultralight::IndexBuffer ibuffer;
-  ibuffer.size = sizeof(ultralight::IndexType) * indices_.size();
+  ibuffer.size = static_cast<uint32_t>(sizeof(ultralight::IndexType) * indices_.size());
   ibuffer.data = (uint8_t*)indices_.data();
 
   if (initial_creation) {

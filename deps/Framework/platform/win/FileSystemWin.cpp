@@ -65,7 +65,7 @@ public:
   const WIN32_FIND_DATAW& data() const { return m_data; }
 
   bool step() {
-    return ::FindNextFileW(m_handle, &m_data);
+    return !!::FindNextFileW(m_handle, &m_data);
   }
 
 private:
@@ -439,7 +439,7 @@ int64_t FileSystemWin::WriteToFile(FileHandle handle, const char* data, int64_t 
     return -1;
 
   DWORD bytesWritten;
-  bool success = WriteFile((HANDLE)handle, data, length, &bytesWritten, 0);
+  bool success = !!WriteFile((HANDLE)handle, data, (DWORD)length, &bytesWritten, 0);
 
   if (!success)
     return -1;
@@ -451,7 +451,7 @@ int64_t FileSystemWin::ReadFromFile(FileHandle handle, char* data, int64_t lengt
     return -1;
 
   DWORD bytesRead;
-  bool success = ::ReadFile((HANDLE)handle, data, length, &bytesRead, 0);
+  bool success = !!::ReadFile((HANDLE)handle, data, (DWORD)length, &bytesRead, 0);
 
   if (!success)
     return -1;
