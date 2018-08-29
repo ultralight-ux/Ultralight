@@ -67,6 +67,14 @@ static void WindowGLFW_mouse_button_callback(GLFWwindow* window, int button, int
 
 static void WindowGLFW_scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+  framework::Window* win = static_cast<framework::Window*>(glfwGetWindowUserPointer(window));
+  if (win->listener()) {
+    ultralight::ScrollEvent evt;
+    evt.type = ultralight::ScrollEvent::kType_ScrollByPixel;
+    evt.delta_x = win->PixelsToDevice(xoffset * 32);
+    evt.delta_y = win->PixelsToDevice(yoffset * 32);
+    win->listener()->OnScrollEvent(evt);
+  }
 }
 
 } // extern "C"

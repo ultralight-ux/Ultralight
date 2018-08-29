@@ -77,6 +77,7 @@ void Overlay::UpdateGeometry() {
     memset(&gpu_state_, 0, sizeof(gpu_state_));
     ultralight::Matrix identity;
     identity.SetIdentity();
+
     gpu_state_.transform = ultralight::ConvertAffineTo4x4(identity);
     gpu_state_.enable_blend = true;
     gpu_state_.enable_texturing = true;
@@ -109,7 +110,7 @@ void Overlay::UpdateGeometry() {
   float tex_height_ratio = target.height / (float)target.texture_height;
 
 #ifdef FRAMEWORK_PLATFORM_GLFW
-  const float flip_y = true;
+  const float flip_y = false;
 #else
   const float flip_y = false;
 #endif

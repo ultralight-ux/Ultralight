@@ -41,7 +41,9 @@ add_custom_command(TARGET Browser POST_BUILD
 
 if (MSVC)
     add_custom_command(TARGET Browser POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:Browser>/assets")  
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:Browser>/assets")
+    add_custom_command(TARGET Browser POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${FRAMEWORK_INCLUDE_DIRS}/Framework/shaders/glsl/" "$<TARGET_FILE_DIR:Browser>/assets/glsl/")          
     
     # Tell MSVC to use main instead of WinMain for Windows subsystem executables
     set_target_properties(Browser PROPERTIES

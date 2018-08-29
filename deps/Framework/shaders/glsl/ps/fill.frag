@@ -56,14 +56,14 @@ GradientStop GetGradientStop(uint offset) {
   GradientStop result;
   if (offset < 4u) {
     result.percent = ex_Data2[offset];
-	if (offset == 0u)
-	  result.color = ex_Data3;
-	else if (offset == 1u)
-	  result.color = ex_Data4;
-	else if (offset == 2u)
-	  result.color = ex_Data5;
-	else if (offset == 3u)
-	  result.color = ex_Data6;
+    if (offset == 0u)
+      result.color = ex_Data3;
+    else if (offset == 1u)
+      result.color = ex_Data4;
+    else if (offset == 2u)
+      result.color = ex_Data5;
+    else if (offset == 3u)
+      result.color = ex_Data6;
   } else {
     result.percent = Scalar(offset - 4u);
     result.color = Vector[offset - 4u];
@@ -103,17 +103,17 @@ float sdEllipse( vec2 p, in vec2 ab ) {
   if (abs(ab.x - ab.y) < 0.1)
     return length(p) - ab.x;
 
-	p = abs(p); if (p.x > p.y) { p=p.yx; ab=ab.yx; }
-	
-	float l = ab.y*ab.y - ab.x*ab.x;
-	
+    p = abs(p); if (p.x > p.y) { p=p.yx; ab=ab.yx; }
+    
+    float l = ab.y*ab.y - ab.x*ab.x;
+    
   float m = ab.x*p.x/l; 
-	float n = ab.y*p.y/l; 
-	float m2 = m*m;
-	float n2 = n*n;
-	
+    float n = ab.y*p.y/l; 
+    float m2 = m*m;
+    float n2 = n*n;
+    
   float c = (m2 + n2 - 1.0)/3.0; 
-	float c3 = c*c*c;
+    float c3 = c*c*c;
 
   float q = c3 + m2*n2*2.0;
   float d = c3 + m2*n2;
@@ -143,7 +143,7 @@ float sdEllipse( vec2 p, in vec2 ab ) {
   float si = sqrt(1.0 - co*co);
  
   vec2 r = vec2(ab.x*co, ab.y*si);
-	
+    
   return length(r - p) * sign(p.y-r.y);
 }
 
@@ -364,17 +364,17 @@ void applyClip() {
     vec4 radii_x, radii_y;
     Unpack(data[1], radii_x, radii_y);
     bool inverse = bool(data[3].z);
-	
+    
     vec2 p = ex_ObjectCoord;
     p = transformAffine(p, data[2].xy, data[2].zw, data[3].xy);
     p -= origin;
-		
+        
     float d_clip = sdRoundRect(p, size, radii_x, radii_y) * (inverse? -1.0 : 1.0);
     float alpha = antialias2(-d_clip);
     out_Color = vec4(out_Color.rgb * alpha, out_Color.a * alpha);
-	
-	//if (abs(d_clip) < 2.0)
-	// out_Color = vec4(0.9, 1.0, 0.0, 1.0);
+    
+    //if (abs(d_clip) < 2.0)
+    // out_Color = vec4(0.9, 1.0, 0.0, 1.0);
   }
 }
 

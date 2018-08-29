@@ -45,6 +45,13 @@ vec2 ScreenToDeviceCoords(vec2 screen_coord)
 {
   screen_coord *= 2.0 / vec2(ScreenWidth(), -ScreenHeight());
   screen_coord += vec2(-1.0, 1.0);
+
+  // We compensate for OpenGL's vertically-flipped coordinate system by flipping
+  // device coordinates here so all FBOs are rendered correctly without modifying
+  // texture coordinates. We do a final flip when drawing overlays to screen by
+  // modifying transforms (see GPUDriverGL::DrawGeometry).
+  screen_coord *= vec2(1.0, -1.0);
+
   return screen_coord;
 }
 
@@ -52,8 +59,6 @@ void main(void)
 {
   ex_ObjectCoord = in_ObjCoord;
   ex_ScreenCoord = (Transform * vec4(in_Position, 1.0, 1.0)).xy;
-  //ex_ScreenCoord = (vec4(in_Position, 1.0, 1.0)).xy;
-
   gl_Position = vec4(ScreenToDeviceCoords(ex_ScreenCoord), 1.0, 1.0);
   ex_Color = in_Color;
   ex_TexCoord = in_TexCoord;

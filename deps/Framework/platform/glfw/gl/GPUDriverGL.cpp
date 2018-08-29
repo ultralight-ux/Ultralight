@@ -5,7 +5,7 @@
 
 #define VISUALIZE_BATCH 0
 #if _WIN32
-#define SHADER_PATH "C:\\Users\\adam\\dev\\ultralight\\deps\\Framework\\shaders\\glsl\\"
+#define SHADER_PATH "assets\\glsl\\"
 #else
 #define SHADER_PATH "/Users/adam/Dev/ultralight/Source/Samples/common/shaders/glsl/"
 #endif
@@ -520,7 +520,18 @@ void GPUDriverGL::DrawGeometry(uint32_t geometry_id,
   SelectProgram((ProgramType)state.shader_type);
   SetUniformDefaults();
   CHECK_GL();
-  SetUniformMatrix4fv("Transform", 1, &state.transform.data[0]);
+  if (state.render_buffer_id == 0) {
+    // Anything drawn to screen needs to be flipped vertically to compensate for
+    // flipping in vertex shader.
+    ultralight::Matrix4x4 mat = state.transform;
+    mat.data[4] *= -1.0;
+    mat.data[5] *= -1.0;
+    mat.data[12] += -render_buffer_height_ * mat.data[4];
+    mat.data[13] += -render_buffer_height_ * mat.data[5];
+    SetUniformMatrix4fv("Transform", 1, &mat.data[0]);
+  } else {
+    SetUniformMatrix4fv("Transform", 1, &state.transform.data[0]);
+  }
   CHECK_GL();
   SetUniform4fv("Scalar4", 2, &state.uniform_scalar[0]);
   CHECK_GL();

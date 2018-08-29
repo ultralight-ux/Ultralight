@@ -1,6 +1,8 @@
 #include <Framework/Window.h>
 #include <Framework/Application.h>
 #include <Framework/platform/glfw/PlatformGLFW.h>
+#include <chrono>
+#include <thread>
 
 int main() {
   framework::PlatformWindowConfig config;
@@ -14,8 +16,9 @@ int main() {
   auto app = framework::Application::Create(*window.get());
 
   while (!glfwWindowShouldClose(window->handle())) {
-    app->Update();
     glfwPollEvents();
+    app->Update();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 
   app.reset();
