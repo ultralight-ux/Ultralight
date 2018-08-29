@@ -319,6 +319,27 @@ float antialias2 (float d) {
   return smoothstep (-epsilon, +epsilon, d);
 }
 
+// Returns two values:
+// [0] = distance of p to line segment.
+// [1] = closest t on line segment, clamped to [0, 1]
+vec2 sdSegment(in vec2 p, in vec2 a, in vec2 b)
+{
+  vec2 pa = p - a, ba = b - a;
+  float t = dot(pa, ba) / dot(ba, ba);
+  return vec2(length(pa - ba * t), t);
+}
+
+float testCross(vec2 a, vec2 b, vec2 p) {
+  return (b.y - a.y) * (p.x - a.x) - (b.x - a.x) * (p.y - a.y);
+}
+
+float sdLine(in vec2 a, in vec2 b, in vec2 p)
+{
+  vec2 pa = p - a, ba = b - a;
+  float t = dot(pa, ba) / dot(ba, ba);
+  return length(pa - ba*t) * sign(testCross(a, b, p));
+}
+
 vec4 blend(vec4 src, vec4 dest) {
   vec4 result;
   result.rgb = src.rgb + dest.rgb * (1.0 - src.a);
@@ -326,8 +347,113 @@ vec4 blend(vec4 src, vec4 dest) {
   return result;
 }
 
+float minBorderLine(float d_border, float d_line, float width) {
+  return (d_border < width) ? d_line : ((d_line > 0.0) ? 1e9 : d_border);
+}
+
+void drawBorderSide(inout vec4 out_Color, vec4 color, vec2 p, float border_alpha, bool is_horiz,
+                    vec2 a, vec2 b, vec2 outer_a, vec2 outer_b, inout float offset_px, float width) {
+  vec2 seg = sdSegment(p, a, b);
+  float len = distance(a, b);
+
+  vec2 middle_a = is_horiz ? vec2(a.x, 0.0) : vec2(0.0, a.y);
+  vec2 middle_b = is_horiz ? vec2(b.x, 0.0) : vec2(0.0, b.y);
+
+  // We already have an SDF representing the total interior border SDF (border alpha).
+  // Let's clip it by 3 lines to obtain the (trapezoid) SDF for this side.
+  float line_alpha;
+  line_alpha = antialias(-sdLine(a, outer_a, p), width, 0.0);
+  border_alpha = min(border_alpha, line_alpha);
+  line_alpha = antialias(-sdLine(outer_b, b, p), width, 0.0);
+  border_alpha = min(border_alpha, line_alpha);
+  line_alpha = antialias(-sdLine(middle_b, middle_a, p), width, 0.0);
+  border_alpha = min(border_alpha, line_alpha);
+
+  float alpha = border_alpha * color.a;
+  vec4 border = vec4(color.rgb * alpha, alpha);
+  out_Color = blend(border, out_Color);
+
+  offset_px += len;
+}
+
+void drawBorder(inout vec4 out_Color, vec2 p, float border_alpha, vec2 outer_size, vec2 inner_size, vec2 inner_offset,
+                vec4 color_top, vec4 color_right, vec4 color_bottom, vec4 color_left, float width) {
+  outer_size *= 0.5;
+  inner_size *= 0.5;
+  
+  // We shrink the inner size just a tiny bit so that we can calculate
+  // the trapezoid even when the border width for a side is zero.
+  inner_size.x -= (outer_size.x - inner_size.x) < 1.0 ? 0.5 : 0.0;
+  inner_size.y -= (outer_size.y - inner_size.y) < 1.0 ? 0.5 : 0.0;
+
+  vec2 outerTopLeft = vec2(-outer_size.x, -outer_size.y);
+  vec2 outerTopRight = vec2(outer_size.x, -outer_size.y);
+  vec2 outerBottomRight = vec2(outer_size.x, outer_size.y);
+  vec2 outerBottomLeft = vec2(-outer_size.x, outer_size.y);
+
+  vec2 innerTopLeft = vec2(-inner_size.x, -inner_size.y) + inner_offset;
+  vec2 innerTopRight = vec2(inner_size.x, -inner_size.y) + inner_offset;
+  vec2 innerBottomRight = vec2(inner_size.x, inner_size.y) + inner_offset;
+  vec2 innerBottomLeft = vec2(-inner_size.x, inner_size.y) + inner_offset;
+
+  float offset_px = 0.0f;
+
+  // Top, Right, Bottom, Left
+  drawBorderSide(out_Color, color_top, p, border_alpha, true, innerTopLeft, innerTopRight, outerTopLeft, outerTopRight, offset_px, width);
+  drawBorderSide(out_Color, color_right, p, border_alpha, false, innerTopRight, innerBottomRight, outerTopRight, outerBottomRight, offset_px, width);
+  drawBorderSide(out_Color, color_bottom, p, border_alpha, true, innerBottomRight, innerBottomLeft, outerBottomRight, outerBottomLeft, offset_px, width);
+  drawBorderSide(out_Color, color_left, p, border_alpha, false, innerBottomLeft, innerTopLeft, outerBottomLeft, outerTopLeft, offset_px, width);
+}
+
+float sdRoundBox(in vec2 p, in vec2 b, in float r)
+{
+  b *= 0.5;
+  r = min(min(b.x, b.y), r);
+  b = b - r;
+  vec2 q = abs(p) - b;
+  vec2 m = vec2(min(q.x, q.y), max(q.x, q.y));
+  float d = (m.x > 0.0) ? length(q) : m.y;
+  return d - r;
+}
+
 void fillBoxDecorations() {
-  out_Color = ex_Color;
+  vec2 outer_size = ex_Data0.zw;
+  vec2 inner_offset = ex_Data1.xy;
+  vec2 inner_size = ex_Data1.zw;
+
+  vec4 outer_radii_x, outer_radii_y;
+  Unpack(ex_Data2, outer_radii_x, outer_radii_y);
+
+  vec4 inner_radii_x, inner_radii_y;
+  Unpack(ex_Data3, inner_radii_x, inner_radii_y);
+
+  vec4 color_top, color_right;
+  Unpack(ex_Data4, color_top, color_right);
+  color_top /= 255.0f;
+  color_right /= 255.0f;
+
+  vec4 color_bottom, color_left;
+  Unpack(ex_Data5, color_bottom, color_left);
+  color_bottom /= 255.0f;
+  color_left /= 255.0f;
+
+  float width = 0.3;
+
+  vec2 p = ex_TexCoord * outer_size - (outer_size * 0.5);
+
+  float d_outer = sdRoundRect(p, outer_size, outer_radii_x, outer_radii_y);
+  float d_inner = sdRoundRect(p - inner_offset, inner_size, inner_radii_x, inner_radii_y);
+
+  float outer_alpha = antialias(-d_outer, width, 0.0);
+  float inner_alpha = antialias(-d_inner, width, 0.0);
+  float border_alpha = min(outer_alpha, 1.0 - inner_alpha);
+
+  // Draw background fill
+  float alpha = antialias(-d_outer, width, 0.0) * ex_Color.a;
+  out_Color = vec4(ex_Color.rgb * alpha, alpha);
+
+  // Draw border
+  drawBorder(out_Color, p, border_alpha, outer_size, inner_size, inner_offset, color_top, color_right, color_bottom, color_left, 0.5);
 }
 
 float innerStroke(float stroke_width, float d) {
