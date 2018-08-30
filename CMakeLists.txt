@@ -1,10 +1,13 @@
 project(Ultralight C CXX)
 
 cmake_minimum_required(VERSION 2.8.12)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(ULTRALIGHT_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 set(FRAMEWORK_SOURCE_DIR "${PROJECT_SOURCE_DIR}/deps/Framework")
 set(FRAMEWORK_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/deps")
+set(GLFW_SOURCE_DIR "${PROJECT_SOURCE_DIR}/deps/glfw")
 
 set(GLAD_SRC "${GLFW_SOURCE_DIR}/deps/glad/glad.h"
              "${GLFW_SOURCE_DIR}/deps/glad.c")
