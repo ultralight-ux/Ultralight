@@ -7,6 +7,8 @@
 #endif
 
 #include <cstdint>
+#include <cstddef>
+#include <limits.h>
 
 // Require C++11 Support
 #if defined(_MSC_VER)
@@ -33,4 +35,4 @@
 #define _thread_local __thread
 #endif
 
-#define ULTRALIGHT_VERSION "0.8.0"
+#define ULTRALIGHT_VERSION "0.9.1"

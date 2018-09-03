@@ -4,7 +4,7 @@
 
 namespace ultralight {
 
-class Config;
+struct Config;
 class GPUDriver;
 class FontLoader;
 class FileSystem;

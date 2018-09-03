@@ -1,6 +1,7 @@
 // Copyright 2018 Ultralight, Inc. All rights reserved.
 #pragma once
 #include <Ultralight/Defines.h>
+#include <Ultralight/RefPtr.h>
 #include <stddef.h>
 
 namespace ultralight {
@@ -27,17 +28,17 @@ public:
   // Make an empty String16
   String16();
 
-  // Make a String16 from null-terminated C-string
+  // Make a String16 from null-terminated ASCII C-string
   String16(const char* c_str);
 
-  // Make a String16 from C-string with certain length
+  // Make a String16 from ASCII C-string with certain length
   String16(const char* c_str, size_t len);
 
-  // Make a String16 from raw Char16 buffer with certain length
+  // Make a String16 from raw UTF-16 buffer with certain length
   String16(const Char16* str, size_t len);
 
-  // Make a String16 from raw unsigned short buffer with certain length. Useful on Windows when
-  // native support for wchar_t is disabled (eg, /Zc:wchar_t-).
+  // Make a String16 from raw unsigned short UTF-16 buffer with certain length. Useful on Windows
+  // when native support for wchar_t is disabled (eg, /Zc:wchar_t-).
   String16(const unsigned short* str, size_t len);
 
   // Make a deep copy of String16
@@ -54,11 +55,17 @@ public:
   // Concatenation operator
   inline friend String16 operator+(String16 lhs, const String16& rhs) { lhs += rhs; return lhs; }
 
-  // Get raw Char16 data
+  // Get raw UTF-16 data
+  Char16* data() { return data_; }
+
+  // Get raw UTF-16 data (const)
   const Char16* data() const { return data_; }
 
-  // Get raw data (as unsigned short). This is useful on Windows if you compile without native
+  // Get raw UTF-16 data as unsigned short. This is useful on Windows if you compile without native
   // support for wchar_t (eg, /Zc:wchar_t-)
+  unsigned short* udata() { return reinterpret_cast<unsigned short*>(data_); }
+
+  // Get raw UTF-16 data as unsigned short (const).
   const unsigned short* udata() const { return reinterpret_cast<const unsigned short*>(data_); }
 
   // Get length in characters.
@@ -70,6 +77,33 @@ public:
 private:
   Char16* data_;
   size_t length_;
+};
+
+/**
+* UTF-16 String Vector.
+*/
+class UExport String16Vector : public RefCounted {
+public:
+  // Create an empty string vector
+  static Ref<String16Vector> Create();
+
+  // Create a string vector from an existing array (a deep copy is made)
+  static Ref<String16Vector> Create(const String16* stringArray, size_t len);
+
+  // Add an element to the back of the string vector
+  virtual void push_back(const String16& val) = 0;
+
+  // Get raw String16 vector array
+  virtual String16* data() = 0;
+
+  // Get the number of elements in vector
+  virtual size_t size() const = 0;
+
+protected:
+  String16Vector();
+  virtual ~String16Vector();
+  String16Vector(const String16Vector&);
+  void operator=(const String16Vector&);
 };
 
 }  // namespace ultralight

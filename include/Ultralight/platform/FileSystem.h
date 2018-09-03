@@ -2,7 +2,6 @@
 #pragma once
 #include <Ultralight/Defines.h>
 #include <Ultralight/String16.h>
-#include <Ultralight/Vector.h>
 #include <time.h>
 
 namespace ultralight {
@@ -107,7 +106,7 @@ public:
   virtual int32_t GetVolumeId(const String16& path) = 0;
 
   // Get file listing for directory path with optional filter, return vector of file paths.
-  virtual Vector<String16> ListDirectory(const String16& path, const String16& filter) = 0;
+  virtual Ref<String16Vector> ListDirectory(const String16& path, const String16& filter) = 0;
 
   // Open a temporary file with suggested prefix, store handle in 'handle'. Return path of temporary file.
   virtual String16 OpenTemporaryFile(const String16& prefix, FileHandle& handle) = 0;

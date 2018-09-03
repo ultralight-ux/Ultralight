@@ -100,16 +100,18 @@ struct UExport vec2 {
     return !(a == b);
   }
 
-  inline friend vec2 min(const vec2& a, const vec2& b) {
-    return{ std::min(a.x, b.x), std::min(a.y, b.y) };
+  inline friend vec2 min_(const vec2& a, const vec2& b) {
+    return{ (b.x < a.x) ? b.x : a.x, 
+            (b.y < a.y) ? b.y : a.y };
   }
 
-  inline friend vec2 max(const vec2& a, const vec2& b) {
-    return{ std::max(a.x, b.x), std::max(a.y, b.y) };
+  inline friend vec2 max_(const vec2& a, const vec2& b) {
+    return{ (a.x < b.x) ? b.x : a.x, 
+            (a.y < b.y) ? b.y : a.y };
   }
 
   inline friend vec2 clamp(const vec2& x, const vec2& minVal, const vec2& maxVal) {
-    return min(max(x, minVal), maxVal);
+    return min_(max_(x, minVal), maxVal);
   }
 
   inline friend vec2 mix(const vec2& a, const vec2& b, float t) {
@@ -238,16 +240,19 @@ struct UExport vec3 {
     return !(a == b);
   }
 
-  inline friend vec3 min(const vec3& a, const vec3& b) {
-    return{ std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z) };
+  inline friend vec3 min_(const vec3& a, const vec3& b) {
+    return{ (b.x < a.x) ? b.x : a.x,
+            (b.y < a.y) ? b.y : a.y,
+            (b.z < a.z) ? b.z : a.z };
   }
 
-  inline friend vec3 max(const vec3& a, const vec3& b) {
-    return{ std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z) };
+  inline friend vec3 max_(const vec3& a, const vec3& b) {
+    return{ (a.x < b.x) ? b.x : a.x,
+            (a.y < b.y) ? b.y : a.y,
+            (a.z < b.z) ? b.z : a.z };
   }
-
   inline friend vec3 clamp(const vec3& x, const vec3& minVal, const vec3& maxVal) {
-    return min(max(x, minVal), maxVal);
+    return min_(max_(x, minVal), maxVal);
   }
 
   inline friend vec3 mix(const vec3& a, const vec3& b, float t) {
@@ -376,12 +381,18 @@ struct UExport vec4 {
     return *this;
   }
 
-  inline friend vec4 min(const vec4& a, const vec4& b) {
-    return{ std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z), std::min(a.w, b.w) };
+  inline friend vec4 min_(const vec4& a, const vec4& b) {
+    return{ (b.x < a.x) ? b.x : a.x,
+            (b.y < a.y) ? b.y : a.y,
+            (b.z < a.z) ? b.z : a.z,
+            (b.w < a.w) ? b.w : a.w };
   }
 
-  inline friend vec4 max(const vec4& a, const vec4& b) {
-    return{ std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z), std::max(a.z, b.z) };
+  inline friend vec4 max_(const vec4& a, const vec4& b) {
+    return{ (a.x < b.x) ? b.x : a.x,
+            (a.y < b.y) ? b.y : a.y,
+            (a.z < b.z) ? b.z : a.z,
+            (a.w < b.w) ? b.w : a.w };
   }
 };
 
@@ -490,8 +501,10 @@ struct UExport Rect {
   }
 
   inline Rect Intersect(const Rect& other) const {
-    return{ std::max(left, other.left), std::max(top, other.top),
-            std::min(right, other.right), std::min(bottom, other.bottom) };
+    return{ (left         < other.left) ? other.left   : left,
+            (top          < other.top)  ? other.top    : top,
+            (other.right  < right)      ? other.right  : right,
+            (other.bottom < bottom)     ? other.bottom : bottom };
   }
 
   friend inline bool operator==(const Rect& a, const Rect& b) {
@@ -607,8 +620,10 @@ struct UExport IntRect {
   }
 
   inline IntRect Intersect(const IntRect& other) const {
-    return{ std::max(left, other.left), std::max(top, other.top),
-      std::min(right, other.right), std::min(bottom, other.bottom) };
+    return{ (left         < other.left) ? other.left   : left,
+            (top          < other.top)  ? other.top    : top,
+            (other.right  < right)      ? other.right  : right,
+            (other.bottom < bottom)     ? other.bottom : bottom };
   }
 
   friend inline bool operator==(const IntRect& a, const IntRect& b) {
