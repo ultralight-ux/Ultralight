@@ -31,8 +31,11 @@ set(FRAMEWORK_SHADER_SRC "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/ps/fill.frag"
                          "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/vs/v2f_c4f_t2f_t2f_d28f.vert")
 				  
 if (WIN32)
-    list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.h"
-                              "${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.cpp"
+    list(APPEND FRAMEWORK_SRC
+                              #"${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.h"
+                              #"${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.cpp"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.h"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.cpp"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderWin.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderWin.cpp")
                               

@@ -1,5 +1,9 @@
 #pragma once
 #include <Ultralight/platform/FileSystem.h>
+#include <string>
+#include <map>
+#include <fstream>
+#include <memory>
 
 namespace ultralight {
 
@@ -16,7 +20,7 @@ namespace ultralight {
  */
 class FileSystemBasic : public FileSystem {
  public:
-    FileSystemBasic(const String16& baseDir);
+    FileSystemBasic(const char* baseDir);
     virtual ~FileSystemBasic() {}
     
     virtual bool FileExists(const String16& path);
@@ -39,7 +43,7 @@ class FileSystemBasic : public FileSystem {
 
     virtual MetadataType GetMetadataType(const String16& path) { return kMetadataType_Unknown; }
 
-    virtual String16 GetPathByAppendingComponent(const String16& path, const String16& component); { return String16(); }
+    virtual String16 GetPathByAppendingComponent(const String16& path, const String16& component) { return String16(); }
 
     virtual bool CreateDirectory_(const String16& path) { return false; }
 
@@ -53,7 +57,7 @@ class FileSystemBasic : public FileSystem {
 
     virtual int32_t GetVolumeId(const String16& path) { return 0; }
 
-    virtual Vector<String16> ListDirectory(const String16& path, const String16& filter) { return Vector<String16>(); }
+    virtual Ref<String16Vector> ListDirectory(const String16& path, const String16& filter) { return String16Vector::Create(); }
 
     virtual String16 OpenTemporaryFile(const String16& prefix, FileHandle& handle) { return String16(); }
 
@@ -72,8 +76,10 @@ class FileSystemBasic : public FileSystem {
     virtual bool CopyFile_(const String16& source_path, const String16& destination_path) { return false; }
     
 protected:
-    String16 base_dir_;
-    String16 getRelative(const String16& path);
+    std::string baseDir_;
+    std::string getRelative(const String16& path);
+    FileHandle next_handle_ = 0;
+    std::map<FileHandle, std::unique_ptr<std::ifstream>> open_files_;
 };
     
 }  // namespace ultralight

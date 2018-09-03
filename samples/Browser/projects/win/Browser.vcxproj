@@ -89,7 +89,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;FRAMEWORK_PLATFORM_WIN;FRAMEWORK_DRIVER_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
@@ -101,7 +101,7 @@
     <PostBuildEvent>
       <Command>xcopy "..\..\assets\*" "$(TargetDir)assets\" /Y /E
 xcopy "..\..\..\..\bin\win\x86\*" "$(TargetDir)" /Y /E
-xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
+xcopy "..\..\..\..\deps\Framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,7 +109,7 @@ xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;FRAMEWORK_PLATFORM_WIN;FRAMEWORK_DRIVER_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
@@ -121,7 +121,7 @@ xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</
     <PostBuildEvent>
       <Command>xcopy "..\..\assets\*" "$(TargetDir)assets\" /Y /E
 xcopy "..\..\..\..\bin\win\x64\*" "$(TargetDir)" /Y /E
-xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
+xcopy "..\..\..\..\deps\Framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,7 +131,7 @@ xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;FRAMEWORK_PLATFORM_WIN;FRAMEWORK_DRIVER_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
@@ -145,7 +145,7 @@ xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</
     <PostBuildEvent>
       <Command>xcopy "..\..\assets\*" "$(TargetDir)assets\" /Y /E
 xcopy "..\..\..\..\bin\win\x86\*" "$(TargetDir)" /Y /E
-xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
+xcopy "..\..\..\..\deps\Framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +155,7 @@ xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\deps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;FRAMEWORK_PLATFORM_WIN;FRAMEWORK_DRIVER_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
@@ -169,37 +169,37 @@ xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</
     <PostBuildEvent>
       <Command>xcopy "..\..\assets\*" "$(TargetDir)assets\" /Y /E
 xcopy "..\..\..\..\bin\win\x64\*" "$(TargetDir)" /Y /E
-xcopy "..\..\..\..\framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
+xcopy "..\..\..\..\deps\Framework\shaders\hlsl\*" "$(TargetDir)shaders\hlsl\" /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\framework\JSHelpers.cpp" />
-    <ClCompile Include="..\..\..\..\framework\Overlay.cpp" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\d3d11\GPUContextD3D11.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\d3d11\GPUDriverD3D11.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\FileSystemWin.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\FontLoaderWin.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\main.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\MainLoopWin.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\PlatformWin.cc" />
-    <ClCompile Include="..\..\..\..\framework\platform\win\WindowWin.cc" />
+    <ClCompile Include="..\..\..\..\deps\Framework\JSHelpers.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\Overlay.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\d3d11\GPUContextD3D11.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\d3d11\GPUDriverD3D11.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\FileSystemWin.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\FontLoaderWin.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\main.cc" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\MainLoopWin.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\PlatformWin.cpp" />
+    <ClCompile Include="..\..\..\..\deps\Framework\platform\win\WindowWin.cpp" />
     <ClCompile Include="..\..\src\Browser.cc" />
     <ClCompile Include="..\..\src\Tab.cc" />
     <ClCompile Include="..\..\src\UI.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\framework\Application.h" />
-    <ClInclude Include="..\..\..\..\framework\GPUContext.h" />
-    <ClInclude Include="..\..\..\..\framework\JSHelpers.h" />
-    <ClInclude Include="..\..\..\..\framework\Overlay.h" />
-    <ClInclude Include="..\..\..\..\framework\Platform.h" />
-    <ClInclude Include="..\..\..\..\framework\platform\win\d3d11\GPUDriverD3D11.h" />
-    <ClInclude Include="..\..\..\..\framework\platform\win\d3d11\PlatformD3D11.h" />
-    <ClInclude Include="..\..\..\..\framework\platform\win\FileSystemWin.h" />
-    <ClInclude Include="..\..\..\..\framework\platform\win\FontLoaderWin.h" />
-    <ClInclude Include="..\..\..\..\framework\platform\win\MainLoopWin.h" />
-    <ClInclude Include="..\..\..\..\framework\platform\win\PlatformWin.h" />
-    <ClInclude Include="..\..\..\..\framework\Window.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\Application.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\GPUContext.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\JSHelpers.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\Overlay.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\Platform.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\platform\win\d3d11\GPUDriverD3D11.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\platform\win\d3d11\PlatformD3D11.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\platform\win\FileSystemWin.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\platform\win\FontLoaderWin.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\platform\win\MainLoopWin.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\platform\win\PlatformWin.h" />
+    <ClInclude Include="..\..\..\..\deps\Framework\Window.h" />
     <ClInclude Include="..\..\src\Browser.h" />
     <ClInclude Include="..\..\src\Tab.h" />
     <ClInclude Include="..\..\src\UI.h" />

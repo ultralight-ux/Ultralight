@@ -277,20 +277,20 @@ String16 FileSystemWin::GetPathByAppendingComponent(const String16& path, const 
   if (path.length() > MAX_PATH)
     return String16();
 
-  Vector<Char16> buffer(MAX_PATH);
-  memcpy(buffer.data(), path.data(), path.length() * sizeof(Char16));
+  std::unique_ptr<Char16[]> buffer(new Char16[MAX_PATH]);
+  memcpy(buffer.get(), path.data(), path.length() * sizeof(Char16));
 
-  if (!PathAppendW(buffer.data(), component.data()))
+  if (!PathAppendW(buffer.get(), component.data()))
     return String16();
 
-  return String16(buffer.data(), wcslen(buffer.data()));
+  return String16(buffer.get(), wcslen(buffer.get()));
 }
 
 bool FileSystemWin::CreateDirectory_(const String16& path) {
   if (SHCreateDirectoryExW(0, GetRelative(path).get(), 0) != ERROR_SUCCESS) {
     DWORD error = GetLastError();
     if (error != ERROR_FILE_EXISTS && error != ERROR_ALREADY_EXISTS) {
-      Vector<char> utf8 = String(path).utf8();
+      String8 utf8 = String(path).utf8();
       fprintf(stderr, "FileSystemWin::CreateDirectory_, Failed to create path %s", utf8.data());
       return false;
     }
@@ -308,10 +308,10 @@ String16 FileSystemWin::GetFilenameFromPath(const String16& path) {
 }
 
 String16 FileSystemWin::GetDirectoryNameFromPath(const String16& path) {
-  Vector<Char16> utf16(path.length());
-  memcpy(utf16.data(), path.data(), utf16.size() * sizeof(Char16));
-  if (::PathRemoveFileSpecW(utf16.data()))
-    return String16(utf16.data(), wcslen(utf16.data()));
+  std::unique_ptr<Char16[]> utf16(new Char16[path.length()]);
+  memcpy(utf16.get(), path.data(), path.length() * sizeof(Char16));
+  if (::PathRemoveFileSpecW(utf16.get()))
+    return String16(utf16.get(), wcslen(utf16.get()));
 
   return path;
 }
@@ -336,8 +336,8 @@ int32_t FileSystemWin::GetVolumeId(const String16& path) {
   return fileInformation.dwVolumeSerialNumber;
 }
 
-Vector<String16> FileSystemWin::ListDirectory(const String16& path, const String16& filter) {
-  Vector<String16> entries;
+Ref<String16Vector> FileSystemWin::ListDirectory(const String16& path, const String16& filter) {
+  Ref<String16Vector> entries = String16Vector::Create();
 
   PathWalker walker(GetRelative(path).get(), filter.data());
   if (!walker.isValid())
@@ -348,7 +348,7 @@ Vector<String16> FileSystemWin::ListDirectory(const String16& path, const String
       continue;
 
     String16 filename(walker.data().cFileName, wcslen(walker.data().cFileName));
-    entries.push_back(path + "\\" + filename);
+    entries->push_back(path + "\\" + filename);
   } while (walker.step());
 
   return entries;

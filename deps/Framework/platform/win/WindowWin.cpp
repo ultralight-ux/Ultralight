@@ -1,4 +1,4 @@
-#include "../../Window.h"
+#include <Framework/Window.h>
 #include <Windows.h>
 #include <ShellScalingAPI.h>
 #include "Windowsx.h"

@@ -4,7 +4,6 @@
 #include <string>
 #include <windows.h>
 #include <assert.h>
-#include <Ultralight/Vector.h>
 #include <tchar.h>
 #include <vector>
 
@@ -55,7 +54,7 @@ static int CALLBACK matchImprovingEnumProc(CONST LOGFONT* candidate, CONST TEXTM
   return 1;
 }
 
-ultralight::Vector<uint8_t> GetFontData(const HFONT fontHandle)
+ultralight::Ref<ultralight::Buffer> GetFontData(const HFONT fontHandle)
 {
   HDC hdc = ::CreateCompatibleDC(NULL);
   if (hdc != NULL && fontHandle != NULL)
@@ -67,8 +66,7 @@ ultralight::Vector<uint8_t> GetFontData(const HFONT fontHandle)
       char* buffer = new char[size];
       if (::GetFontData(hdc, 0, 0, buffer, size) == size)
       {
-        ultralight::Vector<uint8_t> result(size);
-        memcpy(result.data(), buffer, size);
+        auto result = ultralight::Buffer::Create(buffer, size);
         delete[] buffer;
         ::DeleteDC(hdc);
         return result;
@@ -77,7 +75,7 @@ ultralight::Vector<uint8_t> GetFontData(const HFONT fontHandle)
     }
     ::DeleteDC(hdc);
   }
-  return ultralight::Vector<uint8_t>();
+  return ultralight::Buffer::Create(nullptr, 0);
 }
 
 static LONG toGDIFontWeight(LONG fontWeight)
@@ -207,13 +205,12 @@ String16 FontLoaderWin::fallback_font() const {
 
 Ref<Buffer> FontLoaderWin::Load(const String16& family, int weight, bool italic, float size) {
   HFONT font = createGDIFont(family.data(), weight, italic, (int)size, false);
-  Vector<uint8_t> data = GetFontData(font);
-  uint64_t hash = (uint64_t)murmur3_32(data.data(), data.size(), 0xBEEF);
+  ultralight::Ref<ultralight::Buffer> data = GetFontData(font);
+  uint64_t hash = (uint64_t)murmur3_32((const uint8_t*)data->data(), data->size(), 0xBEEF);
   auto i = fonts_.find(hash);
   if (i == fonts_.end()) {
-    auto result = Buffer::Create(data.data(), data.size());
-    fonts_.insert({ hash, result });
-    return result;
+    fonts_.insert({ hash, data });
+    return data;
   }
   else {
     return *i->second.get();

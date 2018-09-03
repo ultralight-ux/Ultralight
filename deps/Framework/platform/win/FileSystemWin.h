@@ -52,7 +52,7 @@ public:
 
   virtual int32_t GetVolumeId(const String16& path) override;
 
-  virtual Vector<String16> ListDirectory(const String16& path, const String16& filter) override;
+  virtual Ref<String16Vector> ListDirectory(const String16& path, const String16& filter) override;
 
   virtual String16 OpenTemporaryFile(const String16& prefix, FileHandle& handle) override;
 

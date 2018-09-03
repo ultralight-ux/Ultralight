@@ -45,8 +45,7 @@ static void WindowGLFW_char_callback(GLFWwindow* window, unsigned int codepoint)
     ultralight::KeyEvent evt;
     evt.type = ultralight::KeyEvent::kType_Char;
 
-    // TODO: Expose UTF-32 conversion routine in ultralight::String instead of truncating to UTF-16
-    ultralight::String text = ultralight::String((const ultralight::Char16*)&codepoint, 1);
+    ultralight::String text = ultralight::String32((const char32_t*)&codepoint, 1);
 
     evt.text = text;
     evt.unmodified_text = text;
