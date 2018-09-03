@@ -1,6 +1,7 @@
 #include <Framework/Window.h>
 #include "PlatformGLFW.h"
 #include <Ultralight/KeyCodes.h>
+#include <cmath>
 
 static int GLFWModsToUltralightMods(int mods);
 static int GLFWKeyCodeToUltralightKeyCode(int key);

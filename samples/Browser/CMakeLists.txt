@@ -19,15 +19,17 @@ add_definitions(-DFRAMEWORK_PLATFORM_GLFW)
 
 if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
+elseif (UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fno-rtti")
 endif()
 
 set(BROWSER_SRC "src/Browser.h"
                 "src/Browser.cc"
-				"src/Tab.h"
-				"src/Tab.cc"
-				"src/UI.h"
-				"src/UI.cc")
+                "src/Tab.h"
+                "src/Tab.cc"
+                "src/UI.h"
+                "src/UI.cc")
 				
 source_group(GLAD FILES ${GLAD_SRC})
 source_group(Framework FILES ${FRAMEWORK_SRC})
@@ -39,18 +41,20 @@ add_executable(Browser ${BROWSER_SRC} ${FRAMEWORK_SRC} ${FRAMEWORK_SHADER_SRC} $
 add_custom_command(TARGET Browser POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIRS}" $<TARGET_FILE_DIR:Browser>)  
 
-if (MSVC)
+if (NOT APPLE)
     add_custom_command(TARGET Browser POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:Browser>/assets")
     add_custom_command(TARGET Browser POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${FRAMEWORK_INCLUDE_DIRS}/Framework/shaders/glsl/" "$<TARGET_FILE_DIR:Browser>/assets/glsl/")          
     
-    # Tell MSVC to use main instead of WinMain for Windows subsystem executables
-    set_target_properties(Browser PROPERTIES
-                          LINK_FLAGS "/ENTRY:mainCRTStartup")
-endif()
+    if (MSVC)
+        # Tell MSVC to use main instead of WinMain for Windows subsystem executables
+        set_target_properties(Browser PROPERTIES LINK_FLAGS "/ENTRY:mainCRTStartup")
+    endif()
 
-if (APPLE)
-    # TODO Bundle stuff
+else()
+
+    # TODO macOS Bundle stuff
+
 endif ()
 

@@ -31,10 +31,7 @@ set(FRAMEWORK_SHADER_SRC "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/ps/fill.frag"
                          "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/vs/v2f_c4f_t2f_t2f_d28f.vert")
 				  
 if (WIN32)
-    list(APPEND FRAMEWORK_SRC
-                              #"${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.h"
-                              #"${FRAMEWORK_SOURCE_DIR}/platform/win/FileSystemWin.cpp"
-                              "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.h"
+    list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.cpp"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderWin.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderWin.cpp")
@@ -49,18 +46,18 @@ if (WIN32)
     
 elseif (APPLE)
     list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.h"
-	                          "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.mm"
-							  "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.h"
-	                          "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.mm")
+                              "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.mm"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.h"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.mm")
                               
     set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/bin/mac")
     set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/mac")
     
 elseif (UNIX)
-    list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/linux/FileSystemLinux.h"
-                              "${FRAMEWORK_SOURCE_DIR}/platform/linux/FileSystemLinux.cpp"
-                              "${FRAMEWORK_SOURCE_DIR}/platform/linux/FontLoaderLinux.h"
-	                          "${FRAMEWORK_SOURCE_DIR}/platform/linux/FontLoaderLinux.cpp")
+    list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.h"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/common/FileSystemBasic.cpp"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/common/FontLoaderRoboto.h"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/common/FontLoaderRoboto.cpp")
                               
     set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/bin/linux")
     set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/linux")

@@ -1,7 +1,7 @@
 #include "Overlay.h"
 #include <Ultralight/Renderer.h>
-#include <Ultralight/Platform/Platform.h>
-#include <Ultralight/Platform/Config.h>
+#include <Ultralight/platform/Platform.h>
+#include <Ultralight/platform/Config.h>
 
 namespace framework {
 

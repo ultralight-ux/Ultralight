@@ -13232,3 +13232,11 @@ Ref<Buffer> FontLoaderRoboto::Load(const String16& family, int weight, bool ital
 }
 
 }  // namespace ultralight
+
+namespace framework {
+
+ultralight::FontLoader* CreatePlatformFontLoader() {
+  return new ultralight::FontLoaderRoboto();
+}
+
+}  // namespace framework

@@ -7,7 +7,7 @@
 #if _WIN32
 #define SHADER_PATH "assets\\glsl\\"
 #else
-#define SHADER_PATH "/Users/adam/Dev/ultralight/Source/Samples/common/shaders/glsl/"
+#define SHADER_PATH "assets/glsl/"
 #endif
 
 #ifdef _DEBUG
@@ -195,7 +195,7 @@ void GPUDriverGL::CreateRenderBuffer(uint32_t render_buffer_id,
   GLuint rbuf_texture_id = texture_map[buffer.texture_id];
   glBindTexture(GL_TEXTURE_2D, rbuf_texture_id);
   CHECK_GL();
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rbuf_texture_id, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rbuf_texture_id, 0);
   CHECK_GL();
 
   GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };

@@ -1,6 +1,7 @@
 #include <Framework/platform/common/FileSystemBasic.h>
 #include <Ultralight/String.h>
 #include <fstream>
+#include <cstring>
 
 static const char* FileExtensionToMimeType(const char* ext);
 
