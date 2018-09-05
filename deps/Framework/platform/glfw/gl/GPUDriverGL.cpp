@@ -5,11 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-#if __APPLE__
 #define SHADER_PATH "glsl/"
-#else
-#define SHADER_PATH "assets/glsl/"
-#endif
 
 #ifdef _DEBUG
 #if _WIN32

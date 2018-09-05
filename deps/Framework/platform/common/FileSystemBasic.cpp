@@ -76,8 +76,7 @@ bool FileSystemBasic::GetFileMimeType(const String16& path, String16& result) {
 }
 
 FileHandle FileSystemBasic::OpenFile(const String16& path, bool open_for_writing) {
-  std::unique_ptr<std::ifstream> file =
-    std::make_unique<std::ifstream>(getRelative(path), std::ifstream::ate | std::ifstream::binary);
+  std::unique_ptr<std::ifstream> file(new std::ifstream(getRelative(path), std::ifstream::ate | std::ifstream::binary));
   if (!file->good())
     return invalidFileHandle;
 
