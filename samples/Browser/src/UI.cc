@@ -36,7 +36,7 @@ void UI::OnDOMReady(ultralight::View* caller) {
   func_update_tab_ = JSGetFunction(ctx, "updateTab");
   func_close_tab_ = JSGetFunction(ctx, "closeTab");
 
-  callback_helper_ = std::make_unique<JSCallbackHelper>(ctx);
+  callback_helper_.reset(new JSCallbackHelper(ctx));
   callback_helper_->Bind("OnBack", std::bind(&UI::OnBack, this, _1, _2, _3));
   callback_helper_->Bind("OnForward", std::bind(&UI::OnForward, this, _1, _2, _3));
   callback_helper_->Bind("OnRefresh", std::bind(&UI::OnRefresh, this, _1, _2, _3));
@@ -197,7 +197,7 @@ void UI::Resize(int width, int height) {
 
 void UI::CreateNewTab() {
   size_t id = tab_id_counter_++;
-  tabs_[id] = std::make_unique<Tab>(this, id);
+  tabs_[id].reset(new Tab(this, id));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
   JSContextRef ctx = view()->js_context();

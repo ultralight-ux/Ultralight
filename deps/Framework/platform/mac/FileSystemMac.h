@@ -42,7 +42,7 @@ class FileSystemMac : public FileSystem {
 
     virtual int32_t GetVolumeId(const String16& path);
 
-    virtual Vector<String16> ListDirectory(const String16& path, const String16& filter);
+    virtual Ref<String16Vector> ListDirectory(const String16& path, const String16& filter);
 
     virtual String16 OpenTemporaryFile(const String16& prefix, FileHandle& handle);
 

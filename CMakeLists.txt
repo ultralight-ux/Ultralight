@@ -1,13 +1,19 @@
 project(Ultralight C CXX)
 
 cmake_minimum_required(VERSION 2.8.12)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(ULTRALIGHT_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 set(FRAMEWORK_SOURCE_DIR "${PROJECT_SOURCE_DIR}/deps/Framework")
 set(FRAMEWORK_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/deps")
 set(GLFW_SOURCE_DIR "${PROJECT_SOURCE_DIR}/deps/glfw")
+
+# Disable various GLFW options
+option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
+option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
+option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+option(GLFW_INSTALL "Generate installation target" OFF)
 
 set(GLAD_SRC "${GLFW_SOURCE_DIR}/deps/glad/glad.h"
              "${GLFW_SOURCE_DIR}/deps/glad.c")
@@ -47,8 +53,8 @@ if (WIN32)
 elseif (APPLE)
     list(APPEND FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.h"
                               "${FRAMEWORK_SOURCE_DIR}/platform/mac/FileSystemMac.mm"
-                              "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.h"
-                              "${FRAMEWORK_SOURCE_DIR}/platform/win/FontLoaderMac.mm")
+                              "${FRAMEWORK_SOURCE_DIR}/platform/mac/FontLoaderMac.h"
+                              "${FRAMEWORK_SOURCE_DIR}/platform/mac/FontLoaderMac.mm")
                               
     set(ULTRALIGHT_LIBRARY_DIRS "${PROJECT_SOURCE_DIR}/bin/mac")
     set(ULTRALIGHT_BINARY_DIRS "${PROJECT_SOURCE_DIR}/bin/mac")

@@ -8,7 +8,7 @@ String16 FontLoaderMac::fallback_font() const {
     return "Helvetica";
 }
 
-static auto ToNSString(const String16& str) {
+static NSString* ToNSString(const String16& str) {
     auto pathData = [[NSData alloc] initWithBytesNoCopy:const_cast<void*>(reinterpret_cast<const void*>(str.data()))
                                                  length:str.length() * sizeof(Char16) - 1
                                            freeWhenDone:NO];
@@ -110,3 +110,11 @@ Ref<Buffer> FontLoaderMac::Load(const String16& family, int weight, bool italic,
 }
 
 }  // namespace ultralight
+
+namespace framework {
+    
+ultralight::FontLoader* CreatePlatformFontLoader() {
+    return new ultralight::FontLoaderMac();
+}
+    
+}  // namespace framework

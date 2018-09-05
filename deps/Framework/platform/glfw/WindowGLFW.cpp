@@ -140,8 +140,13 @@ public:
     if (!glfwInit())
       exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
 
     float xscale, yscale;
     glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &xscale, &yscale);
@@ -262,7 +267,7 @@ public:
 };
 
 std::unique_ptr<Window> Window::Create(const PlatformWindowConfig& config) {
-  return std::make_unique<WindowGLFW>(config);
+  return std::unique_ptr<Window>(new WindowGLFW(config));
 }
 
 }  // namespace framework

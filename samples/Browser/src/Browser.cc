@@ -103,7 +103,7 @@ std::unique_ptr<Window> Application::InitWindow(PlatformWindowConfig& config) {
 }
 
 std::unique_ptr<Application> Application::Create(Window& window) {
-  return std::make_unique<Browser>(window);
+  return std::unique_ptr<Application>(new Browser(window));
 }
 
 }  // namespace framework

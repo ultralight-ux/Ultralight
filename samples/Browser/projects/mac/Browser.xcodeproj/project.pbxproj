@@ -7,26 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66221E6D213F2C9A00BB6693 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66221E60213F2C9900BB6693 /* AppDelegate.m */; };
+		66221E6E213F2C9A00BB6693 /* MainLoopMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E66213F2C9A00BB6693 /* MainLoopMetal.mm */; };
+		66221E6F213F2C9A00BB6693 /* PlatformMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E67213F2C9A00BB6693 /* PlatformMetal.mm */; };
+		66221E70213F2C9A00BB6693 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E68213F2C9A00BB6693 /* ViewController.mm */; };
+		66221E71213F2C9A00BB6693 /* GPUContextMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E69213F2C9A00BB6693 /* GPUContextMetal.mm */; };
+		66221E72213F2C9A00BB6693 /* CustomMTKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66221E6A213F2C9A00BB6693 /* CustomMTKView.m */; };
+		66221E73213F2C9A00BB6693 /* GPUDriverMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E6B213F2C9A00BB6693 /* GPUDriverMetal.mm */; };
+		66221E74213F2C9A00BB6693 /* WindowMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E6C213F2C9A00BB6693 /* WindowMetal.mm */; };
+		66221E79213F2CD900BB6693 /* FileSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E75213F2CD900BB6693 /* FileSystemMac.mm */; };
+		66221E7A213F2CD900BB6693 /* FontLoaderMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66221E78213F2CD900BB6693 /* FontLoaderMac.mm */; };
+		66221E7D213F2DB500BB6693 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66221E7C213F2DB500BB6693 /* Shaders.metal */; };
+		66221E86213F2DC900BB6693 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66221E7F213F2DC800BB6693 /* Overlay.cpp */; };
+		66221E87213F2DC900BB6693 /* JSHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66221E82213F2DC900BB6693 /* JSHelpers.cpp */; };
 		6626FB1521221010007CE2CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6626FB1421221010007CE2CF /* Assets.xcassets */; };
 		6626FB1821221010007CE2CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6626FB1621221010007CE2CF /* Main.storyboard */; };
 		6626FB1B21221010007CE2CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB1A21221010007CE2CF /* main.m */; };
 		6626FB4721221C07007CE2CF /* Tab.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB4121221C07007CE2CF /* Tab.cc */; };
 		6626FB4821221C07007CE2CF /* UI.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB4221221C07007CE2CF /* UI.cc */; };
 		6626FB4921221C07007CE2CF /* Browser.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB4621221C07007CE2CF /* Browser.cc */; };
-		6626FB6221221CCE007CE2CF /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB5A21221CCE007CE2CF /* Overlay.cpp */; };
-		6626FB6321221CCE007CE2CF /* JSHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB5F21221CCE007CE2CF /* JSHelpers.cpp */; };
-		6626FB6F21221D07007CE2CF /* PlatformMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB6721221D07007CE2CF /* PlatformMetal.mm */; };
-		6626FB7021221D07007CE2CF /* WindowMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB6821221D07007CE2CF /* WindowMetal.mm */; };
-		6626FB7121221D07007CE2CF /* GPUContextMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB6A21221D07007CE2CF /* GPUContextMetal.mm */; };
-		6626FB7221221D07007CE2CF /* GPUDriverMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB6B21221D07007CE2CF /* GPUDriverMetal.mm */; };
-		6626FB7321221D07007CE2CF /* MainLoopMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB6D21221D07007CE2CF /* MainLoopMetal.mm */; };
-		6626FB7821221D1B007CE2CF /* FileSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB7421221D1B007CE2CF /* FileSystemMac.mm */; };
-		6626FB7921221D1B007CE2CF /* FontLoaderMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB7721221D1B007CE2CF /* FontLoaderMac.mm */; };
-		6626FB7C21221D57007CE2CF /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB7A21221D57007CE2CF /* Shaders.metal */; };
 		6626FB852122211A007CE2CF /* Ultralight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FB812122211A007CE2CF /* Ultralight.framework */; };
-		6626FB8B2122231E007CE2CF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB862122231D007CE2CF /* AppDelegate.m */; };
-		6626FB8C2122231E007CE2CF /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB872122231D007CE2CF /* ViewController.mm */; };
-		6626FB8D2122231E007CE2CF /* CustomMTKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6626FB892122231D007CE2CF /* CustomMTKView.m */; };
 		6626FB9021222EFE007CE2CF /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FB8F21222EFE007CE2CF /* MetalKit.framework */; };
 		6626FB9421226503007CE2CF /* Ultralight.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FB812122211A007CE2CF /* Ultralight.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6626FB9F212265EE007CE2CF /* ui.css in Resources */ = {isa = PBXBuildFile; fileRef = 6626FB96212265EE007CE2CF /* ui.css */; };
@@ -60,6 +60,33 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		66221E60213F2C9900BB6693 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../../../../deps/Framework/platform/mac/metal/AppDelegate.m; sourceTree = "<group>"; };
+		66221E61213F2C9900BB6693 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../deps/Framework/platform/mac/metal/AppDelegate.h; sourceTree = "<group>"; };
+		66221E62213F2C9900BB6693 /* MainLoopMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainLoopMetal.h; path = ../../../../deps/Framework/platform/mac/metal/MainLoopMetal.h; sourceTree = "<group>"; };
+		66221E63213F2C9900BB6693 /* GPUDriverMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPUDriverMetal.h; path = ../../../../deps/Framework/platform/mac/metal/GPUDriverMetal.h; sourceTree = "<group>"; };
+		66221E64213F2C9900BB6693 /* PlatformMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformMetal.h; path = ../../../../deps/Framework/platform/mac/metal/PlatformMetal.h; sourceTree = "<group>"; };
+		66221E65213F2C9900BB6693 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../../../../deps/Framework/platform/mac/metal/ViewController.h; sourceTree = "<group>"; };
+		66221E66213F2C9A00BB6693 /* MainLoopMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MainLoopMetal.mm; path = ../../../../deps/Framework/platform/mac/metal/MainLoopMetal.mm; sourceTree = "<group>"; };
+		66221E67213F2C9A00BB6693 /* PlatformMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PlatformMetal.mm; path = ../../../../deps/Framework/platform/mac/metal/PlatformMetal.mm; sourceTree = "<group>"; };
+		66221E68213F2C9A00BB6693 /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ViewController.mm; path = ../../../../deps/Framework/platform/mac/metal/ViewController.mm; sourceTree = "<group>"; };
+		66221E69213F2C9A00BB6693 /* GPUContextMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GPUContextMetal.mm; path = ../../../../deps/Framework/platform/mac/metal/GPUContextMetal.mm; sourceTree = "<group>"; };
+		66221E6A213F2C9A00BB6693 /* CustomMTKView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomMTKView.m; path = ../../../../deps/Framework/platform/mac/metal/CustomMTKView.m; sourceTree = "<group>"; };
+		66221E6B213F2C9A00BB6693 /* GPUDriverMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GPUDriverMetal.mm; path = ../../../../deps/Framework/platform/mac/metal/GPUDriverMetal.mm; sourceTree = "<group>"; };
+		66221E6C213F2C9A00BB6693 /* WindowMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WindowMetal.mm; path = ../../../../deps/Framework/platform/mac/metal/WindowMetal.mm; sourceTree = "<group>"; };
+		66221E75213F2CD900BB6693 /* FileSystemMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FileSystemMac.mm; path = ../../../../deps/Framework/platform/mac/FileSystemMac.mm; sourceTree = "<group>"; };
+		66221E76213F2CD900BB6693 /* FontLoaderMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontLoaderMac.h; path = ../../../../deps/Framework/platform/mac/FontLoaderMac.h; sourceTree = "<group>"; };
+		66221E77213F2CD900BB6693 /* FileSystemMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSystemMac.h; path = ../../../../deps/Framework/platform/mac/FileSystemMac.h; sourceTree = "<group>"; };
+		66221E78213F2CD900BB6693 /* FontLoaderMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FontLoaderMac.mm; path = ../../../../deps/Framework/platform/mac/FontLoaderMac.mm; sourceTree = "<group>"; };
+		66221E7B213F2DB500BB6693 /* ShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderTypes.h; path = ../../../../deps/Framework/shaders/metal/ShaderTypes.h; sourceTree = "<group>"; };
+		66221E7C213F2DB500BB6693 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = ../../../../deps/Framework/shaders/metal/Shaders.metal; sourceTree = "<group>"; };
+		66221E7E213F2DC800BB6693 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Overlay.h; path = ../../../../deps/Framework/Overlay.h; sourceTree = "<group>"; };
+		66221E7F213F2DC800BB6693 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Overlay.cpp; path = ../../../../deps/Framework/Overlay.cpp; sourceTree = "<group>"; };
+		66221E80213F2DC900BB6693 /* GPUContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPUContext.h; path = ../../../../deps/Framework/GPUContext.h; sourceTree = "<group>"; };
+		66221E81213F2DC900BB6693 /* JSHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSHelpers.h; path = ../../../../deps/Framework/JSHelpers.h; sourceTree = "<group>"; };
+		66221E82213F2DC900BB6693 /* JSHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSHelpers.cpp; path = ../../../../deps/Framework/JSHelpers.cpp; sourceTree = "<group>"; };
+		66221E83213F2DC900BB6693 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = ../../../../deps/Framework/Window.h; sourceTree = "<group>"; };
+		66221E84213F2DC900BB6693 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = ../../../../deps/Framework/Application.h; sourceTree = "<group>"; };
+		66221E85213F2DC900BB6693 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../../../../deps/Framework/Platform.h; sourceTree = "<group>"; };
 		6626FB0B2122100F007CE2CF /* Browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Browser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6626FB1421221010007CE2CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6626FB1721221010007CE2CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -72,34 +99,7 @@
 		6626FB4421221C07007CE2CF /* Tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tab.h; path = ../../src/Tab.h; sourceTree = "<group>"; };
 		6626FB4521221C07007CE2CF /* Browser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Browser.h; path = ../../src/Browser.h; sourceTree = "<group>"; };
 		6626FB4621221C07007CE2CF /* Browser.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Browser.cc; path = ../../src/Browser.cc; sourceTree = "<group>"; };
-		6626FB5A21221CCE007CE2CF /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Overlay.cpp; path = ../../../../framework/Overlay.cpp; sourceTree = "<group>"; };
-		6626FB5B21221CCE007CE2CF /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = ../../../../framework/Window.h; sourceTree = "<group>"; };
-		6626FB5C21221CCE007CE2CF /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = ../../../../framework/Application.h; sourceTree = "<group>"; };
-		6626FB5D21221CCE007CE2CF /* GPUContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPUContext.h; path = ../../../../framework/GPUContext.h; sourceTree = "<group>"; };
-		6626FB5E21221CCE007CE2CF /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../../../../framework/Platform.h; sourceTree = "<group>"; };
-		6626FB5F21221CCE007CE2CF /* JSHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSHelpers.cpp; path = ../../../../framework/JSHelpers.cpp; sourceTree = "<group>"; };
-		6626FB6021221CCE007CE2CF /* JSHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSHelpers.h; path = ../../../../framework/JSHelpers.h; sourceTree = "<group>"; };
-		6626FB6121221CCE007CE2CF /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Overlay.h; path = ../../../../framework/Overlay.h; sourceTree = "<group>"; };
-		6626FB6721221D07007CE2CF /* PlatformMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PlatformMetal.mm; path = ../../../../framework/platform/mac/metal/PlatformMetal.mm; sourceTree = "<group>"; };
-		6626FB6821221D07007CE2CF /* WindowMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WindowMetal.mm; path = ../../../../framework/platform/mac/metal/WindowMetal.mm; sourceTree = "<group>"; };
-		6626FB6921221D07007CE2CF /* PlatformMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformMetal.h; path = ../../../../framework/platform/mac/metal/PlatformMetal.h; sourceTree = "<group>"; };
-		6626FB6A21221D07007CE2CF /* GPUContextMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GPUContextMetal.mm; path = ../../../../framework/platform/mac/metal/GPUContextMetal.mm; sourceTree = "<group>"; };
-		6626FB6B21221D07007CE2CF /* GPUDriverMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GPUDriverMetal.mm; path = ../../../../framework/platform/mac/metal/GPUDriverMetal.mm; sourceTree = "<group>"; };
-		6626FB6C21221D07007CE2CF /* GPUDriverMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPUDriverMetal.h; path = ../../../../framework/platform/mac/metal/GPUDriverMetal.h; sourceTree = "<group>"; };
-		6626FB6D21221D07007CE2CF /* MainLoopMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MainLoopMetal.mm; path = ../../../../framework/platform/mac/metal/MainLoopMetal.mm; sourceTree = "<group>"; };
-		6626FB6E21221D07007CE2CF /* MainLoopMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainLoopMetal.h; path = ../../../../framework/platform/mac/metal/MainLoopMetal.h; sourceTree = "<group>"; };
-		6626FB7421221D1B007CE2CF /* FileSystemMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FileSystemMac.mm; path = ../../../../framework/platform/mac/FileSystemMac.mm; sourceTree = "<group>"; };
-		6626FB7521221D1B007CE2CF /* FileSystemMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSystemMac.h; path = ../../../../framework/platform/mac/FileSystemMac.h; sourceTree = "<group>"; };
-		6626FB7621221D1B007CE2CF /* FontLoaderMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontLoaderMac.h; path = ../../../../framework/platform/mac/FontLoaderMac.h; sourceTree = "<group>"; };
-		6626FB7721221D1B007CE2CF /* FontLoaderMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FontLoaderMac.mm; path = ../../../../framework/platform/mac/FontLoaderMac.mm; sourceTree = "<group>"; };
-		6626FB7A21221D57007CE2CF /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = ../../../../framework/shaders/metal/Shaders.metal; sourceTree = "<group>"; };
-		6626FB7B21221D57007CE2CF /* ShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderTypes.h; path = ../../../../framework/shaders/metal/ShaderTypes.h; sourceTree = "<group>"; };
 		6626FB812122211A007CE2CF /* Ultralight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ultralight.framework; path = ../../../../bin/mac/Ultralight.framework; sourceTree = "<group>"; };
-		6626FB862122231D007CE2CF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../../../../framework/platform/mac/metal/AppDelegate.m; sourceTree = "<group>"; };
-		6626FB872122231D007CE2CF /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ViewController.mm; path = ../../../../framework/platform/mac/metal/ViewController.mm; sourceTree = "<group>"; };
-		6626FB882122231D007CE2CF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../framework/platform/mac/metal/AppDelegate.h; sourceTree = "<group>"; };
-		6626FB892122231D007CE2CF /* CustomMTKView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomMTKView.m; path = ../../../../framework/platform/mac/metal/CustomMTKView.m; sourceTree = "<group>"; };
-		6626FB8A2122231E007CE2CF /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../../../../framework/platform/mac/metal/ViewController.h; sourceTree = "<group>"; };
 		6626FB8F21222EFE007CE2CF /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		6626FB96212265EE007CE2CF /* ui.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = ui.css; path = ../../assets/ui.css; sourceTree = "<group>"; };
 		6626FB97212265EE007CE2CF /* chrome-tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "chrome-tabs.js"; path = "../../assets/chrome-tabs.js"; sourceTree = "<group>"; };
@@ -180,14 +180,14 @@
 			children = (
 				6626FB5821221C95007CE2CF /* platform */,
 				6626FB5921221CB7007CE2CF /* shaders */,
-				6626FB5C21221CCE007CE2CF /* Application.h */,
-				6626FB5D21221CCE007CE2CF /* GPUContext.h */,
-				6626FB5F21221CCE007CE2CF /* JSHelpers.cpp */,
-				6626FB6021221CCE007CE2CF /* JSHelpers.h */,
-				6626FB5A21221CCE007CE2CF /* Overlay.cpp */,
-				6626FB6121221CCE007CE2CF /* Overlay.h */,
-				6626FB5E21221CCE007CE2CF /* Platform.h */,
-				6626FB5B21221CCE007CE2CF /* Window.h */,
+				66221E84213F2DC900BB6693 /* Application.h */,
+				66221E80213F2DC900BB6693 /* GPUContext.h */,
+				66221E82213F2DC900BB6693 /* JSHelpers.cpp */,
+				66221E81213F2DC900BB6693 /* JSHelpers.h */,
+				66221E7F213F2DC800BB6693 /* Overlay.cpp */,
+				66221E7E213F2DC800BB6693 /* Overlay.h */,
+				66221E85213F2DC900BB6693 /* Platform.h */,
+				66221E83213F2DC900BB6693 /* Window.h */,
 			);
 			name = Framework;
 			sourceTree = "<group>";
@@ -212,10 +212,10 @@
 			isa = PBXGroup;
 			children = (
 				6626FB6521221CE5007CE2CF /* metal */,
-				6626FB7521221D1B007CE2CF /* FileSystemMac.h */,
-				6626FB7421221D1B007CE2CF /* FileSystemMac.mm */,
-				6626FB7621221D1B007CE2CF /* FontLoaderMac.h */,
-				6626FB7721221D1B007CE2CF /* FontLoaderMac.mm */,
+				66221E77213F2CD900BB6693 /* FileSystemMac.h */,
+				66221E75213F2CD900BB6693 /* FileSystemMac.mm */,
+				66221E76213F2CD900BB6693 /* FontLoaderMac.h */,
+				66221E78213F2CD900BB6693 /* FontLoaderMac.mm */,
 			);
 			name = mac;
 			sourceTree = "<group>";
@@ -223,19 +223,19 @@
 		6626FB6521221CE5007CE2CF /* metal */ = {
 			isa = PBXGroup;
 			children = (
-				6626FB882122231D007CE2CF /* AppDelegate.h */,
-				6626FB862122231D007CE2CF /* AppDelegate.m */,
-				6626FB892122231D007CE2CF /* CustomMTKView.m */,
-				6626FB8A2122231E007CE2CF /* ViewController.h */,
-				6626FB872122231D007CE2CF /* ViewController.mm */,
-				6626FB6A21221D07007CE2CF /* GPUContextMetal.mm */,
-				6626FB6C21221D07007CE2CF /* GPUDriverMetal.h */,
-				6626FB6B21221D07007CE2CF /* GPUDriverMetal.mm */,
-				6626FB6E21221D07007CE2CF /* MainLoopMetal.h */,
-				6626FB6D21221D07007CE2CF /* MainLoopMetal.mm */,
-				6626FB6921221D07007CE2CF /* PlatformMetal.h */,
-				6626FB6721221D07007CE2CF /* PlatformMetal.mm */,
-				6626FB6821221D07007CE2CF /* WindowMetal.mm */,
+				66221E61213F2C9900BB6693 /* AppDelegate.h */,
+				66221E60213F2C9900BB6693 /* AppDelegate.m */,
+				66221E6A213F2C9A00BB6693 /* CustomMTKView.m */,
+				66221E69213F2C9A00BB6693 /* GPUContextMetal.mm */,
+				66221E63213F2C9900BB6693 /* GPUDriverMetal.h */,
+				66221E6B213F2C9A00BB6693 /* GPUDriverMetal.mm */,
+				66221E62213F2C9900BB6693 /* MainLoopMetal.h */,
+				66221E66213F2C9A00BB6693 /* MainLoopMetal.mm */,
+				66221E64213F2C9900BB6693 /* PlatformMetal.h */,
+				66221E67213F2C9A00BB6693 /* PlatformMetal.mm */,
+				66221E65213F2C9900BB6693 /* ViewController.h */,
+				66221E68213F2C9A00BB6693 /* ViewController.mm */,
+				66221E6C213F2C9A00BB6693 /* WindowMetal.mm */,
 			);
 			name = metal;
 			sourceTree = "<group>";
@@ -243,8 +243,8 @@
 		6626FB6621221CED007CE2CF /* metal */ = {
 			isa = PBXGroup;
 			children = (
-				6626FB7A21221D57007CE2CF /* Shaders.metal */,
-				6626FB7B21221D57007CE2CF /* ShaderTypes.h */,
+				66221E7C213F2DB500BB6693 /* Shaders.metal */,
+				66221E7B213F2DB500BB6693 /* ShaderTypes.h */,
 			);
 			name = metal;
 			sourceTree = "<group>";
@@ -368,23 +368,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6626FB7821221D1B007CE2CF /* FileSystemMac.mm in Sources */,
 				6626FB4821221C07007CE2CF /* UI.cc in Sources */,
-				6626FB7921221D1B007CE2CF /* FontLoaderMac.mm in Sources */,
 				6626FB4921221C07007CE2CF /* Browser.cc in Sources */,
-				6626FB7121221D07007CE2CF /* GPUContextMetal.mm in Sources */,
-				6626FB8D2122231E007CE2CF /* CustomMTKView.m in Sources */,
-				6626FB7221221D07007CE2CF /* GPUDriverMetal.mm in Sources */,
+				66221E7A213F2CD900BB6693 /* FontLoaderMac.mm in Sources */,
+				66221E73213F2C9A00BB6693 /* GPUDriverMetal.mm in Sources */,
+				66221E7D213F2DB500BB6693 /* Shaders.metal in Sources */,
+				66221E6D213F2C9A00BB6693 /* AppDelegate.m in Sources */,
 				6626FB4721221C07007CE2CF /* Tab.cc in Sources */,
-				6626FB7C21221D57007CE2CF /* Shaders.metal in Sources */,
-				6626FB8C2122231E007CE2CF /* ViewController.mm in Sources */,
+				66221E72213F2C9A00BB6693 /* CustomMTKView.m in Sources */,
+				66221E70213F2C9A00BB6693 /* ViewController.mm in Sources */,
+				66221E6E213F2C9A00BB6693 /* MainLoopMetal.mm in Sources */,
 				6626FB1B21221010007CE2CF /* main.m in Sources */,
-				6626FB6F21221D07007CE2CF /* PlatformMetal.mm in Sources */,
-				6626FB6221221CCE007CE2CF /* Overlay.cpp in Sources */,
-				6626FB7321221D07007CE2CF /* MainLoopMetal.mm in Sources */,
-				6626FB6321221CCE007CE2CF /* JSHelpers.cpp in Sources */,
-				6626FB7021221D07007CE2CF /* WindowMetal.mm in Sources */,
-				6626FB8B2122231E007CE2CF /* AppDelegate.m in Sources */,
+				66221E74213F2C9A00BB6693 /* WindowMetal.mm in Sources */,
+				66221E87213F2DC900BB6693 /* JSHelpers.cpp in Sources */,
+				66221E71213F2C9A00BB6693 /* GPUContextMetal.mm in Sources */,
+				66221E6F213F2C9A00BB6693 /* PlatformMetal.mm in Sources */,
+				66221E86213F2DC900BB6693 /* Overlay.cpp in Sources */,
+				66221E79213F2CD900BB6693 /* FileSystemMac.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,7 +524,10 @@
 					FRAMEWORK_PLATFORM_MAC,
 					"DEBUG=1",
 				);
-				HEADER_SEARCH_PATHS = ../../../../include;
+				HEADER_SEARCH_PATHS = (
+					../../../../include,
+					../../../../deps,
+				);
 				INFOPLIST_FILE = Browser/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
@@ -545,7 +548,10 @@
 					FRAMEWORK_PLATFORM_MAC,
 					FRAMEWORK_DRIVER_METAL,
 				);
-				HEADER_SEARCH_PATHS = ../../../../include;
+				HEADER_SEARCH_PATHS = (
+					../../../../include,
+					../../../../deps,
+				);
 				INFOPLIST_FILE = Browser/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;

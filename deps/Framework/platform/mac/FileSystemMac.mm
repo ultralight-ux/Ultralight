@@ -27,7 +27,7 @@
 
 namespace ultralight {
     
-static auto ToNSString(const String16& str) {
+static NSString* ToNSString(const String16& str) {
     auto pathData = [[NSData alloc] initWithBytesNoCopy:const_cast<void*>(reinterpret_cast<const void*>(str.data()))
                                                  length:str.length() * sizeof(Char16) - 1
                                            freeWhenDone:NO];
@@ -302,8 +302,8 @@ int32_t FileSystemMac::GetVolumeId(const String16& path) {
     return 0;
 }
 
-Vector<String16> FileSystemMac::ListDirectory(const String16& path, const String16& filter) {
-    Vector<String16> entries;
+Ref<String16Vector> FileSystemMac::ListDirectory(const String16& path, const String16& filter) {
+    Ref<String16Vector> entries = String16Vector::Create();
     std::string cpath = fileSystemRepresentation(getRelative(path));
     std::string cfilter = fileSystemRepresentation(filter);
     DIR* dir = opendir(cpath.data());
@@ -324,7 +324,7 @@ Vector<String16> FileSystemMac::ListDirectory(const String16& path, const String
             // Some file system representations cannot be represented as a UTF-16 string,
             // so this string might be null.
             if (!string.empty())
-                entries.push_back(string);
+                entries->push_back(string);
         }
         closedir(dir);
     }
@@ -348,12 +348,11 @@ String16 FileSystemMac::OpenTemporaryFile(const String16& prefix, FileHandle& ha
     
     // Append the file name.
     auto str = ultralight::String(prefix);
-    Vector<char> prefixUTF8 = ultralight::String(prefix).utf8();
-    path.insert(path.end(), prefixUTF8.data(), prefixUTF8.data() + prefixUTF8.size());
+    String8 prefixUTF8 = ultralight::String(prefix).utf8();
+    path.insert(path.end(), prefixUTF8.data(), prefixUTF8.data() + prefixUTF8.length());
     const char* xxx = "XXXXXX";
     path.insert(path.end(), xxx, xxx + strlen(xxx));
     path.push_back('\0');
-    
     
     handle = mkstemp(path.data());
     if (handle == invalidFileHandle)
@@ -464,17 +463,17 @@ bool FileSystemMac::appendFileContentsToFileHandle(const String16& path, FileHan
         return false;
     
     static int bufferSize = 1 << 19;
-    Vector<char> buffer(bufferSize);
+    std::unique_ptr<char[]> buffer(new char[bufferSize]);
     
     do {
-        int64_t readBytes = ReadFromFile(source, buffer.data(), bufferSize);
+        int64_t readBytes = ReadFromFile(source, buffer.get(), bufferSize);
         
         if (readBytes < 0) {
             CloseFile(source);
             return false;
         }
         
-        if (WriteToFile(target, buffer.data(), readBytes) != readBytes) {
+        if (WriteToFile(target, buffer.get(), readBytes) != readBytes) {
             CloseFile(source);
             return false;
         }
@@ -491,3 +490,10 @@ bool FileSystemMac::appendFileContentsToFileHandle(const String16& path, FileHan
     
 } // namespace ultralight
 
+namespace framework {
+    
+ultralight::FileSystem* CreatePlatformFileSystem(const char* baseDir) {
+    return new ultralight::FileSystemMac(baseDir);
+}
+    
+}  // namespace framework

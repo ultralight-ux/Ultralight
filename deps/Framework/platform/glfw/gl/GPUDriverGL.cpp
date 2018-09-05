@@ -1,11 +1,12 @@
 #include "GPUDriverGL.h"
+#include <Ultralight/platform/Platform.h>
+#include <Ultralight/platform/FileSystem.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
-#define VISUALIZE_BATCH 0
-#if _WIN32
-#define SHADER_PATH "assets\\glsl\\"
+#if __APPLE__
+#define SHADER_PATH "glsl/"
 #else
 #define SHADER_PATH "assets/glsl/"
 #endif
@@ -29,12 +30,21 @@
 #endif
 
 static void ReadFile(const char* filepath, std::string& result) {
-  std::ifstream filestream(filepath, std::ios::binary);
-  if (!filestream)
-    FATAL("Could not open file path: " << filepath)
-  std::stringstream ostrm;
-  ostrm << filestream.rdbuf();
-  result = ostrm.str();
+  // To maintain predictable behavior across platforms we use
+  // whatever FileSystem that Ultralight is using:
+  ultralight::FileSystem* fs = ultralight::Platform::instance().file_system();
+  if (!fs)
+    FATAL("No FileSystem defined.");
+
+  auto handle = fs->OpenFile(filepath, false);
+  if (handle == ultralight::invalidFileHandle)
+    FATAL("Could not open file path: " << filepath);
+
+  int64_t fileSize = 0;
+  fs->GetFileSize(handle, fileSize);
+  result.resize((size_t)fileSize);
+  fs->ReadFromFile(handle, &result[0], fileSize);
+  fs->CloseFile(handle);
 }
 
 inline char const* glErrorString(GLenum const err) noexcept
@@ -101,7 +111,6 @@ GPUDriverGL::GPUDriverGL(GLuint viewport_width, GLuint viewport_height, GLfloat 
   scale_(scale) {
   // Render Buffer ID 0 is reserved for the screen, set its viewport dimensions now.
   frame_buffer_map[0] = { 0, viewport_width, viewport_height };
-  LoadPrograms();
 }
 
 void GPUDriverGL::CreateTexture(uint32_t texture_id,
@@ -318,6 +327,9 @@ void GPUDriverGL::DrawGeometry(uint32_t geometry_id,
   uint32_t indices_count,
   uint32_t indices_offset,
   const GPUState& state) {
+  if (programs_.empty())
+    LoadPrograms();
+
   BindRenderBuffer(state.render_buffer_id);
 
   GeometryEntry& geometry = geometry_map[geometry_id];

@@ -14,7 +14,7 @@ public:
     glfwMakeContextCurrent(window_);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glfwSwapInterval(enable_vsync? 1 : 0);
-    driver_ = std::make_unique<ultralight::GPUDriverGL>(window.width(), window.height(), (GLfloat)window.scale());
+    driver_.reset(new ultralight::GPUDriverGL(window.width(), window.height(), (GLfloat)window.scale()));
   }
 
   virtual ~GPUContextGL() {}
@@ -39,7 +39,7 @@ public:
 };
 
 std::unique_ptr<GPUContext> GPUContext::Create(const Window& window, bool enable_vsync) {
-  return std::make_unique<GPUContextGL>(window, enable_vsync);
+  return std::unique_ptr<GPUContext>(new GPUContextGL(window, enable_vsync));
 }
 
 }  // namespace framework

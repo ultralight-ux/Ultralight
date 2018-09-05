@@ -28,7 +28,7 @@ JSClassRef NativeFunctionClass() {
 JSCallbackHelper::JSCallbackHelper(JSContextRef ctx) : ctx_(ctx) {}
 
 void JSCallbackHelper::Bind(const char* str, const JSCallback& callback) {
-  std::unique_ptr<JSCallback> callbackCopy = std::make_unique<JSCallback>(callback);
+  std::unique_ptr<JSCallback> callbackCopy(new JSCallback(callback));
   JSObjectRef globalObject = JSContextGetGlobalObject(ctx_);
   JSStringRef funcName = JSStr(str);
   JSObjectRef nativeFunction = JSObjectMake(ctx_, NativeFunctionClass(), nullptr);
