@@ -82,6 +82,40 @@ All platforms include an __OpenGL-based sample (powered by GLFW)__. To build the
 
 ## Building Samples with CMake (All Platforms)
 
+To generate projects for your platform, run the following from this directory:
+
+```
+mkdir build
+cd build
+cmake ..
+```
+
+On __macOS__ and __Linux__ you can then simply build the generated Makefile:
+
+```
+make
+```
+
+On __Windows__, a Visual Studio solution will be generated in the `build` directory which you can then open and build.
+
+```
+Ultralight.sln
+```
+
+### Running the Samples
+
+On __macOS__ and __Linux__ the projects will be built to:
+
+```
+/build/samples/Browser/
+```
+
+On __Windows__ the projects will be built to:
+
+```
+/build/samples/Browser/$(Configuration)
+```
+
 ## Building Samples (Windows Only)
 
 ## Building Samples (macOS Only)
