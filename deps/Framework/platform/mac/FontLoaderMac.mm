@@ -10,7 +10,7 @@ String16 FontLoaderMac::fallback_font() const {
 
 static NSString* ToNSString(const String16& str) {
     auto pathData = [[NSData alloc] initWithBytesNoCopy:const_cast<void*>(reinterpret_cast<const void*>(str.data()))
-                                                 length:str.length() * sizeof(Char16) - 1
+                                                 length:str.length() * sizeof(Char16)
                                            freeWhenDone:NO];
     return [[NSString alloc] initWithData:pathData
                                  encoding:NSUTF16LittleEndianStringEncoding];
