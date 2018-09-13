@@ -4,7 +4,7 @@
 #include <Ultralight/Renderer.h>
 
 Browser::Browser(framework::Window& window) : window_(window) {
-  bool enable_vsync = false;
+  bool enable_vsync = true;
   window_.set_listener(this);
   gpu_context_ = framework::GPUContext::Create(window, enable_vsync);
 

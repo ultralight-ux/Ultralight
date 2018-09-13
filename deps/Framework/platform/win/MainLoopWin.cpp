@@ -22,6 +22,9 @@ void MainLoopWin::Run() {
     }
     else {
       application_->Update();
+
+      // Sleep a tiny bit to reduce CPU usage
+      Sleep(1);
     }
   }
 }

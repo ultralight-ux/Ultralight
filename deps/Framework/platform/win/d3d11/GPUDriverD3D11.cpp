@@ -34,10 +34,18 @@ struct Uniforms {
 HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint,
   LPCSTR szShaderModel, ID3DBlob** ppBlobOut) {
   DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-  //#ifdef _DEBUG
+#ifdef _DEBUG
   dwShaderFlags |= D3DCOMPILE_DEBUG;
   dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-  //#endif
+#else
+  dwShaderFlags |= D3DCOMPILE_PARTIAL_PRECISION;
+
+  // Note that this may cause slow Application startup because the Shader Compiler
+  // must perform heavy optimizations. In a production build you should use D3D's
+  // HLSL Effect Compiler (fxc.exe) to compile the HLSL files offline which grants
+  // near-instantaneous load times.
+  dwShaderFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL2;
+#endif
 
   ComPtr<ID3DBlob> pErrorBlob;
   std::wstring path = SHADER_PATH;
