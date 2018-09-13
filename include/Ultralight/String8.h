@@ -42,8 +42,17 @@ public:
   // Get length in characters.
   size_t length() const { return length_; }
 
+  // Get size in characters (synonym for length)
+  size_t size() const { return length_; }
+
   // Check if string is empty.
   bool empty() const { return !data_ || length_ == 0; }
+
+  // Get character at specific position
+  char& operator[](size_t pos) { return data_[pos]; }
+
+  // Get character at specific position (const)
+  const char& operator[](size_t pos) const { return data_[pos]; }
 
 private:
   char* data_;
