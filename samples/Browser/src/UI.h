@@ -6,6 +6,10 @@
 #include <map>
 #include <memory>
 
+using framework::JSObject;
+using framework::JSArgs;
+using framework::JSFunction;
+
 /**
 * Browser UI implementation. Renders the toolbar/addressbar/tabs in top pane.
 */
@@ -19,14 +23,14 @@ public:
   virtual void OnDOMReady(ultralight::View* caller) override;
 
   // Called by UI JavaScript
-  JSValueRef OnBack(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnForward(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnRefresh(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnStop(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnRequestNewTab(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnRequestTabClose(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnActiveTabChange(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
-  JSValueRef OnRequestChangeURL(JSContextRef ctx, size_t numArgs, const JSValueRef args[]);
+  void OnBack(const JSObject& obj, const JSArgs& args);
+  void OnForward(const JSObject& obj, const JSArgs& args);
+  void OnRefresh(const JSObject& obj, const JSArgs& args);
+  void OnStop(const JSObject& obj, const JSArgs& args);
+  void OnRequestNewTab(const JSObject& obj, const JSArgs& args);
+  void OnRequestTabClose(const JSObject& obj, const JSArgs& args);
+  void OnActiveTabChange(const JSObject& obj, const JSArgs& args);
+  void OnRequestChangeURL(const JSObject& obj, const JSArgs& args);
 
   // Inhrerited from Overlay, we may dispatch input to a focused tab instead
   virtual void Draw() override;
@@ -63,15 +67,13 @@ protected:
   bool tab_has_focus_ = false;
   ultralight::Cursor cur_cursor_;
 
-  std::unique_ptr<JSCallbackHelper> callback_helper_;
-
-  JSObjectRef func_update_back_ = nullptr;
-  JSObjectRef func_update_forward_ = nullptr;
-  JSObjectRef func_update_loading_ = nullptr;
-  JSObjectRef func_update_url_ = nullptr;
-  JSObjectRef func_add_tab_ = nullptr;
-  JSObjectRef func_update_tab_ = nullptr;
-  JSObjectRef func_close_tab_ = nullptr;
+  JSFunction updateBack;
+  JSFunction updateForward;
+  JSFunction updateLoading;
+  JSFunction updateURL;
+  JSFunction addTab;
+  JSFunction updateTab;
+  JSFunction closeTab;
 
   friend class Tab;
 };

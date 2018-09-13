@@ -2,7 +2,7 @@
 
 static UI* g_ui = 0;
 
-using namespace std::placeholders;
+using namespace framework;
 
 #define UI_HEIGHT 79
 
@@ -27,69 +27,61 @@ UI::~UI() {
 }
 
 void UI::OnDOMReady(ultralight::View* caller) {
-  JSContextRef ctx = view()->js_context();
-  func_update_back_ = JSGetFunction(ctx, "updateBack");
-  func_update_forward_ = JSGetFunction(ctx, "updateForward");
-  func_update_loading_ = JSGetFunction(ctx, "updateLoading");
-  func_update_url_ = JSGetFunction(ctx, "updateURL");
-  func_add_tab_ = JSGetFunction(ctx, "addTab");
-  func_update_tab_ = JSGetFunction(ctx, "updateTab");
-  func_close_tab_ = JSGetFunction(ctx, "closeTab");
+  // Set the context for all subsequent JS* calls
+  SetJSContext(view()->js_context());
 
-  callback_helper_.reset(new JSCallbackHelper(ctx));
-  callback_helper_->Bind("OnBack", std::bind(&UI::OnBack, this, _1, _2, _3));
-  callback_helper_->Bind("OnForward", std::bind(&UI::OnForward, this, _1, _2, _3));
-  callback_helper_->Bind("OnRefresh", std::bind(&UI::OnRefresh, this, _1, _2, _3));
-  callback_helper_->Bind("OnStop", std::bind(&UI::OnStop, this, _1, _2, _3));
-  callback_helper_->Bind("OnRequestNewTab", std::bind(&UI::OnRequestNewTab, this, _1, _2, _3));
-  callback_helper_->Bind("OnRequestTabClose", std::bind(&UI::OnRequestTabClose, this, _1, _2, _3));
-  callback_helper_->Bind("OnActiveTabChange", std::bind(&UI::OnActiveTabChange, this, _1, _2, _3));
-  callback_helper_->Bind("OnRequestChangeURL", std::bind(&UI::OnRequestChangeURL, this, _1, _2, _3));
+  JSObject global = JSGlobalObject();
+  updateBack = global["updateBack"];
+  updateForward = global["updateForward"];
+  updateLoading = global["updateLoading"];
+  updateURL = global["updateURL"];
+  addTab = global["addTab"];
+  updateTab = global["updateTab"];
+  closeTab = global["closeTab"];
+
+  global["OnBack"] = BindJSCallback(&UI::OnBack);
+  global["OnForward"] = BindJSCallback(&UI::OnForward);
+  global["OnRefresh"] = BindJSCallback(&UI::OnRefresh);
+  global["OnStop"] = BindJSCallback(&UI::OnStop);
+  global["OnRequestNewTab"] = BindJSCallback(&UI::OnRequestNewTab);
+  global["OnRequestTabClose"] = BindJSCallback(&UI::OnRequestTabClose);
+  global["OnActiveTabChange"] = BindJSCallback(&UI::OnActiveTabChange);
+  global["OnRequestChangeURL"] = BindJSCallback(&UI::OnRequestChangeURL);
 
   CreateNewTab();
 }
 
-JSValueRef UI::OnBack(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
+void UI::OnBack(const JSObject& obj, const JSArgs& args) {
   if (active_tab())
     active_tab()->view()->GoBack();
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnForward(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
+void UI::OnForward(const JSObject& obj, const JSArgs& args) {
   if (active_tab())
     active_tab()->view()->GoForward();
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnRefresh(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
+void UI::OnRefresh(const JSObject& obj, const JSArgs& args) {
   if (active_tab())
     active_tab()->view()->Reload();
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnStop(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
+void UI::OnStop(const JSObject& obj, const JSArgs& args) {
   if (active_tab())
     active_tab()->view()->Stop();
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnRequestNewTab(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
+void UI::OnRequestNewTab(const JSObject& obj, const JSArgs& args) {
   CreateNewTab();
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnRequestTabClose(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
-  if (numArgs == 1) {
-    size_t id = (size_t)JSValueToNumber(ctx, args[0], 0);
+void UI::OnRequestTabClose(const JSObject& obj, const JSArgs& args) {
+  if (args.size() == 1) {
+    size_t id = args[0];
 
     auto& tab = tabs_[id];
     if (!tab)
-      return JSValueMakeNull(ctx);
+      return;
 
     if (tabs_.size() == 1)
       window_.Close();
@@ -102,21 +94,20 @@ JSValueRef UI::OnRequestTabClose(JSContextRef ctx, size_t numArgs, const JSValue
       tab->set_ready_to_close(true);
     }
 
-    CallJS(view()->js_context(), func_close_tab_, (double)id);
+    closeTab({ id });
   }
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnActiveTabChange(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
-  if (numArgs == 1) {
-    size_t id = (size_t)JSValueToNumber(ctx, args[0], 0);
+void UI::OnActiveTabChange(const JSObject& obj, const JSArgs& args) {
+  if (args.size() == 1) {
+    size_t id = args[0];
+
     if (id == active_tab_id_)
-      return JSValueMakeNull(ctx);
+      return;
 
     auto& tab = tabs_[id];
     if (!tab)
-      return JSValueMakeNull(ctx);
+      return;
 
     if (tabs_[active_tab_id_]->ready_to_close()) {
       tabs_[active_tab_id_].reset();
@@ -130,21 +121,17 @@ JSValueRef UI::OnActiveTabChange(JSContextRef ctx, size_t numArgs, const JSValue
     SetCanGoForward(tab_view->CanGoBack());
     SetURL(tab_view->url());
   }
-
-  return JSValueMakeNull(ctx);
 }
 
-JSValueRef UI::OnRequestChangeURL(JSContextRef ctx, size_t numArgs, const JSValueRef args[]) {
-  if (numArgs == 1) {
-    ultralight::String url = FromJSStr(JSValueToStringCopy(ctx, args[0], 0));
+void UI::OnRequestChangeURL(const JSObject& obj, const JSArgs& args) {
+  if (args.size() == 1) {
+    ultralight::String url = args[0];
 
     if (!tabs_.empty()) {
       auto& tab = tabs_[active_tab_id_];
       tab->view()->LoadURL(url);
     }
   }
-
-  return JSValueMakeNull(ctx);
 }
 
 void UI::Draw() {
@@ -200,19 +187,11 @@ void UI::CreateNewTab() {
   tabs_[id].reset(new Tab(this, id));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
-  JSContextRef ctx = view()->js_context();
-  JSValueRef args[] = { JSValueMakeNumber(ctx, (double)id),
-    JSValueMakeString(ctx, JSStr("New Tab")),
-    JSValueMakeString(ctx, JSStr("")) };
-  CallJS(ctx, func_add_tab_, 3, args);
+  addTab({ id, "New Tab", "" });
 }
 
 void UI::UpdateTabTitle(size_t id, const ultralight::String& title) {
-  JSContextRef ctx = view()->js_context();
-  JSValueRef args[] = { JSValueMakeNumber(ctx, (double)id),
-    JSValueMakeString(ctx, JSStr(title)),
-    JSValueMakeString(ctx, JSStr("")) };
-  CallJS(ctx, func_update_tab_, 3, args);
+  updateTab({ id, title, "" });
 }
 
 void UI::UpdateTabURL(size_t id, const ultralight::String& url) {
@@ -229,19 +208,20 @@ void UI::UpdateTabNavigation(size_t id, bool is_loading, bool can_go_back, bool 
 }
 
 void UI::SetLoading(bool is_loading) {
-  CallJS(view()->js_context(), func_update_loading_, is_loading);
+  JSContextRef ctx = view()->js_context();
+  updateLoading({ is_loading });
 }
 
 void UI::SetCanGoBack(bool can_go_back) {
-  CallJS(view()->js_context(), func_update_back_, can_go_back);
+  updateBack({ can_go_back });
 }
 
 void UI::SetCanGoForward(bool can_go_forward) {
-  CallJS(view()->js_context(), func_update_forward_, can_go_forward);
+  updateForward({ can_go_forward });
 }
 
 void UI::SetURL(const ultralight::String& url) {
-  CallJS(view()->js_context(), func_update_url_, url);
+  updateURL({ url });
 }
 
 void UI::SetCursor(ultralight::Cursor cursor) {
