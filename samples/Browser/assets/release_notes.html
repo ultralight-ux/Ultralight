@@ -6,6 +6,12 @@ body {
   background-color: #EEE;
   margin: 0;
 }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  background-color: #F2F2F2;
+  padding: 2px;
+  margin: 2px;
+}
 #content {
   width: 500px;
   margin: 45px auto;
@@ -18,6 +24,7 @@ body {
 h3 {
   border-bottom: 3px solid #EEE;
 }
+
 h4, dt {
   margin:0;
   margin-top: 0.5em;
@@ -34,47 +41,43 @@ p {
 <body>
 <div id="content">
 
-<h2>Welcome to the Ultralight 0.9 Beta!</h2>
+<h2>Welcome to the Ultralight 0.9.1 Beta!</h2>
 <p>Thanks for checking out the Beta! We hope you'll enjoy this release and appreciate any and all feedback as we work towards a stable release.</p>
-<h3>Giving Feedback</h3>
+
 <dl>
   <dt>Discussion Community:</dt><dd><a href="https://discuss.ultralig.ht">https://discuss.ultralig.ht</a></dd>
   <dt>Chat Room (on Slack)</dt><dd><a href="https://chat.ultralig.ht">https://chat.ultralig.ht</a></dd>
   <dt>Issue Tracker</dt><dd><a href="https://github.com/ultralight-ux/ultralight/issues">https://github.com/ultralight-ux/ultralight/issues</a></dd>
 </dl>
+<br/>
 
+<h3>News</h3>
 
-<h3>New Features</h3>
+<h4>Linux 64-bit and Windows 32-bit Support</h4>
 
-<h4>macOS Support</h4>
+<p>We are now officially on all three major desktop platforms! We now support Linux 64-bit (Debian 9.5.0+ / Ubuntu) as well as Windows 32-bit.</p>
 
-<p>Ultralight is now available on macOS (via Metal)! Check out the XCode sample project in the SDK for more.</p>
+<h4>OpenGL Support</h4>
 
-<h4>Application Framework</h4>
+<p>We now support OpenGL 3.2 and up (in addition to D3D11 and Metal2) and it's just as fast as our other drivers. This work was done as part of the new GLFW port, check out <code>GPUDriverGL.h</code> and the GLSL shader code within the Framework directory.</p>
 
-<p>To help simplify application development with Ultralight we have provided basic framework code for Windows (Direct3D 11) and macOS (Metal). Feel free to extend or replace the framework code with your own to suit your application.</p>
+<h4>New CMake / GLFW Projects</h4>
 
-<h4>Resizable Views</h4>
+<p>We've ported the Framework code over to GLFW (a lightweight, cross-platform OpenGL/Vulkan toolkit) and set up cross-platform CMake projects for the samples so you can generate projects for your favorite platform with a single click.
+</p>
 
-<p>Views can now be resized on-the-fly, an example has been implemented in the Browser sample on Windows/D3D.</p>
+<h4>New C++ JavaScriptCore Bindings</h4>
 
-<h4>Scrollbars</h4>
+<p>We've created C++ bindings for JavaScriptCore that provide automatic memory management and helpful conversions between common types. This should save loads of time integrating your native code with JavaScript and is safer to boot. See JSHelpers.h in the Framework code.</p>
 
-<p>Basic scrollbars are now implemented, we will be providing support for custom scrollbars soon.</p>
-
-<h4>Text Selection</h4>
-
-<p>Text selection and dragging support has now been added.</p>
-
-<h3>Bug Fixes</h3>
+<h3>Bug Fixes / Major API Changes</h3>
 
 <ul>
-<li>Fixed crash when destroying Views that are still loading.</li>
-<li>Fixed issue with wrong font weight being passed to FontLoader.</li>
-<li>Fixed flicker issue due to temporary Textures being destroyed even though GPU geometry still referenced the texture ID.</li>
-<li>Added support for XSLT documents/processing.</li>
-<li>Enabled ephemeral local storage / session support (destroyed upon page navigation or reload). May implement persistent storage later.</li>
-<li>Fixed link issue on Windows with String16 when wchar_t is disabled (/Zc:wchar_t-). Users compiling with this option should use String16::udata() to get internal data instead.</li>
+<li>Fixed crash that occurs when destroing a View with active JavaScript.</li>
+<li>Fixed memory leak with decoded images.</li>
+<li>Renamed min and max functions so we don't require NOMINMAX on Windows.</li>
+<li>Removed Vector template, added String8 and String32 and made String use them for all UTF conversions.</li>
+<li>Made String16::length() return number of characters minus the trailing null (it previously included it).</li>
 </ul>
 
 <h3>Future Work</h3>
@@ -82,17 +85,16 @@ p {
 <p>Some more stuff coming later:</li>
 
 <ul>
-<li>Linux support</li>
-<li>Thread-safe API</li>
-<li>Input Method Editor</li>
-<li>Full GIF support</li>
-<li>CSS Shadows</li>
-<li>CSS Filter Effects</li>
-<li>Child Views</li>
+<li>C Bindings</li>
+<li>C# Bindings</li>
+<li>Node.js Bindings</li>
 <li>Complex Text Support</li>
+<li>IME Support</li>
+<li>CSS Shadows</li>
+<li>CSS Masks / Filter Effects</li>
+<li>Child Views</li>
 <li>Performance Improvements</li>
 <li>Memory Usage Improvements</li>
-<li>C# / .NET Bindings</li>
 </ul>
 
  <p style="text-align: right;">- Ultralight Team</p>
