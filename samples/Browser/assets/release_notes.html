@@ -3,14 +3,23 @@
 <title>Release Notes</title>
 <style type="text/css">
 body {
-  background-color: #EEE;
+  background-color: #6d59fb;
   margin: 0;
+  line-height: 1.4;
+}
+a, a:link, a:visited {
+  color: #6d59fb;
+}
+a:hover { 
+  color: #8676ff;
+}
+a:active {
+  color: black;
 }
 code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  background-color: #F2F2F2;
+  background-color: rgb(255, 250, 223);
   padding: 2px;
-  margin: 2px;
 }
 #content {
   width: 500px;
@@ -19,10 +28,10 @@ code {
   font-family: Segoe UI, -apple-system, sans-serif;
   padding: 40px 60px;
   color: #333;
-  box-shadow: 15px 25px #DDD;
+  box-shadow: 15px 25px #4937d5;
 }
 h3 {
-  border-bottom: 3px solid #EEE;
+  border-bottom: 6px solid #EEE;
 }
 
 h4, dt {
@@ -68,16 +77,16 @@ p {
 
 <h4>New C++ JavaScriptCore Bindings</h4>
 
-<p>We've created C++ bindings for JavaScriptCore that provide automatic memory management and helpful conversions between common types. This should save loads of time integrating your native code with JavaScript and is safer to boot. See JSHelpers.h in the Framework code.</p>
+<p>We've created C++ bindings for JavaScriptCore that provide automatic memory management and helpful conversions between common types. This should save loads of time integrating your native code with JavaScript and is safer to boot. See <code>JSHelpers.h</code> in the Framework code.</p>
 
 <h3>Bug Fixes / Major API Changes</h3>
 
 <ul>
-<li>Fixed crash that occurs when destroing a View with active JavaScript.</li>
+<li>Fixed crash that occurs when destroying a View with active JavaScript.</li>
 <li>Fixed memory leak with decoded images.</li>
-<li>Renamed min and max functions so we don't require NOMINMAX on Windows.</li>
-<li>Removed Vector template, added String8 and String32 and made String use them for all UTF conversions.</li>
-<li>Made String16::length() return number of characters minus the trailing null (it previously included it).</li>
+<li>Renamed min and max functions so we don't require <code>NOMINMAX</code> on Windows.</li>
+<li>Removed <code>Vector</code> template, added <code>String8</code> and <code>String32</code> and made <code>String</code> use them for all UTF conversions.</li>
+<li>Made <code>String16::length()</code> return number of characters minus the trailing null (it previously included it).</li>
 </ul>
 
 <h3>Future Work</h3>
