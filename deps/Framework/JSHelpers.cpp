@@ -533,4 +533,8 @@ JSObject JSGlobalObject() {
   return JSContextGetGlobalObject(GetJSContext());
 }
 
+JSValue JSEval(const JSString& str) {
+  return JSEvaluateScript(GetJSContext(), str, 0, 0, 0, 0);
+}
+
 }  // namespace framework

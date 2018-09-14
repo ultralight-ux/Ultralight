@@ -381,4 +381,9 @@ protected:
  */
 JSObject JSGlobalObject();
 
+/**
+ * Evaluate a string of JavaScript and return a result.
+ */
+JSValue JSEval(const JSString& str);
+
 }  // namespace framework
