@@ -87,7 +87,7 @@ JSValue::JSValue(int64_t val) : ctx_(GetJSContext()) {
   JSValueProtect(ctx_, instance_);
 }
 
-JSValue::JSValue(size_t val) : ctx_(GetJSContext()) {
+JSValue::JSValue(unsigned long val) : ctx_(GetJSContext()) {
   instance_ = JSValueMakeNumber(ctx_, static_cast<double>(val));
   JSValueProtect(ctx_, instance_);
 }

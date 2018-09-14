@@ -105,7 +105,7 @@ public:
   JSValue(int64_t val);
 
   // Create unsigned intenger JSValue (aka, Number) [will be cast to double]
-  JSValue(size_t val);
+  JSValue(unsigned long val);
 
   // Create double JSValue (aka, Number)
   JSValue(double val);
@@ -182,7 +182,7 @@ public:
 
   operator int64_t() const { return ToInteger(); }
   
-  operator size_t() const { return static_cast<size_t>(ToNumber()); }
+  operator unsigned long() const { return static_cast<unsigned long>(ToNumber()); }
 
   operator ultralight::String() const { return ToString(); }
 
