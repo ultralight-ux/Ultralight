@@ -3,140 +3,114 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6626FBBF21226C8A007CE2CF /* WebCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FBBC21226C8A007CE2CF /* WebCore.framework */; };
-		6626FBC021226C8A007CE2CF /* libUltralightCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */; };
-		6626FBC121226C8A007CE2CF /* Ultralight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6626FBBE21226C8A007CE2CF /* Ultralight.framework */; };
-		6626FBC321226D08007CE2CF /* libUltralightCore.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		6626FBC421226D08007CE2CF /* Ultralight.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FBBE21226C8A007CE2CF /* Ultralight.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6626FBC521226D08007CE2CF /* WebCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6626FBBC21226C8A007CE2CF /* WebCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6626FBD021229CE4007CE2CF /* FontLoaderRoboto.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FBCF21229CE4007CE2CF /* FontLoaderRoboto.cc */; };
-		6626FBD421229D2F007CE2CF /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6626FBD321229D2F007CE2CF /* main.cc */; };
+		661E813F214CB05800D99168 /* WebCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 661E813C214CB05700D99168 /* WebCore.framework */; };
+		661E8140214CB05800D99168 /* libUltralightCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 661E813D214CB05700D99168 /* libUltralightCore.dylib */; };
+		661E8141214CB05800D99168 /* Ultralight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 661E813E214CB05800D99168 /* Ultralight.framework */; };
+		661E814A214CB43500D99168 /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 661E8149214CB43500D99168 /* main.cc */; };
+		661E814E214CB45800D99168 /* FontLoaderRoboto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 661E814C214CB45800D99168 /* FontLoaderRoboto.cpp */; };
+		661E814F214CB50900D99168 /* libUltralightCore.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 661E813D214CB05700D99168 /* libUltralightCore.dylib */; };
+		661E8150214CB50900D99168 /* Ultralight.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 661E813E214CB05800D99168 /* Ultralight.framework */; };
+		661E8151214CB50900D99168 /* WebCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 661E813C214CB05700D99168 /* WebCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		6626FBAF21226C31007CE2CF /* CopyFiles */ = {
+		661E812D214CAFE900D99168 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		6626FBC221226CF0007CE2CF /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				6626FBC321226D08007CE2CF /* libUltralightCore.dylib in CopyFiles */,
-				6626FBC421226D08007CE2CF /* Ultralight.framework in CopyFiles */,
-				6626FBC521226D08007CE2CF /* WebCore.framework in CopyFiles */,
+				661E814F214CB50900D99168 /* libUltralightCore.dylib in CopyFiles */,
+				661E8150214CB50900D99168 /* Ultralight.framework in CopyFiles */,
+				661E8151214CB50900D99168 /* WebCore.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6626FBB121226C31007CE2CF /* HelloWorld */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HelloWorld; sourceTree = BUILT_PRODUCTS_DIR; };
-		6626FBBC21226C8A007CE2CF /* WebCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebCore.framework; path = ../../../../bin/mac/WebCore.framework; sourceTree = "<group>"; };
-		6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libUltralightCore.dylib; path = ../../../../bin/mac/libUltralightCore.dylib; sourceTree = "<group>"; };
-		6626FBBE21226C8A007CE2CF /* Ultralight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ultralight.framework; path = ../../../../bin/mac/Ultralight.framework; sourceTree = "<group>"; };
-		6626FBCE21229CE3007CE2CF /* FontLoaderRoboto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontLoaderRoboto.h; path = ../../../../framework/platform/common/FontLoaderRoboto.h; sourceTree = "<group>"; };
-		6626FBCF21229CE4007CE2CF /* FontLoaderRoboto.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontLoaderRoboto.cc; path = ../../../../framework/platform/common/FontLoaderRoboto.cc; sourceTree = "<group>"; };
-		6626FBD321229D2F007CE2CF /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cc; path = ../../src/main.cc; sourceTree = "<group>"; };
+		661E812F214CAFE900D99168 /* HelloWorld */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HelloWorld; sourceTree = BUILT_PRODUCTS_DIR; };
+		661E813C214CB05700D99168 /* WebCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebCore.framework; path = ../../../../bin/mac/WebCore.framework; sourceTree = "<group>"; };
+		661E813D214CB05700D99168 /* libUltralightCore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libUltralightCore.dylib; path = ../../../../bin/mac/libUltralightCore.dylib; sourceTree = "<group>"; };
+		661E813E214CB05800D99168 /* Ultralight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ultralight.framework; path = ../../../../bin/mac/Ultralight.framework; sourceTree = "<group>"; };
+		661E8149214CB43500D99168 /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cc; path = ../../src/main.cc; sourceTree = "<group>"; };
+		661E814C214CB45800D99168 /* FontLoaderRoboto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontLoaderRoboto.cpp; path = ../../../../deps/Framework/platform/common/FontLoaderRoboto.cpp; sourceTree = "<group>"; };
+		661E814D214CB45800D99168 /* FontLoaderRoboto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontLoaderRoboto.h; path = ../../../../deps/Framework/platform/common/FontLoaderRoboto.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6626FBAE21226C31007CE2CF /* Frameworks */ = {
+		661E812C214CAFE900D99168 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6626FBC121226C8A007CE2CF /* Ultralight.framework in Frameworks */,
-				6626FBBF21226C8A007CE2CF /* WebCore.framework in Frameworks */,
-				6626FBC021226C8A007CE2CF /* libUltralightCore.dylib in Frameworks */,
+				661E813F214CB05800D99168 /* WebCore.framework in Frameworks */,
+				661E8140214CB05800D99168 /* libUltralightCore.dylib in Frameworks */,
+				661E8141214CB05800D99168 /* Ultralight.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6626FBA821226C31007CE2CF = {
+		661E8126214CAFE900D99168 = {
 			isa = PBXGroup;
 			children = (
-				6626FBCD21229CCB007CE2CF /* Framework */,
-				6626FBCC21229CC5007CE2CF /* Source */,
-				6626FBBB21226C74007CE2CF /* Dependencies */,
-				6626FBB221226C31007CE2CF /* Products */,
+				661E814B214CB43800D99168 /* Framework */,
+				661E8148214CB42500D99168 /* HelloWorld */,
+				661E8130214CAFE900D99168 /* Products */,
+				661E813B214CB05700D99168 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		6626FBB221226C31007CE2CF /* Products */ = {
+		661E8130214CAFE900D99168 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6626FBB121226C31007CE2CF /* HelloWorld */,
+				661E812F214CAFE900D99168 /* HelloWorld */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6626FBBB21226C74007CE2CF /* Dependencies */ = {
+		661E813B214CB05700D99168 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6626FBBD21226C8A007CE2CF /* libUltralightCore.dylib */,
-				6626FBBE21226C8A007CE2CF /* Ultralight.framework */,
-				6626FBBC21226C8A007CE2CF /* WebCore.framework */,
+				661E813D214CB05700D99168 /* libUltralightCore.dylib */,
+				661E813E214CB05800D99168 /* Ultralight.framework */,
+				661E813C214CB05700D99168 /* WebCore.framework */,
 			);
-			name = Dependencies;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6626FBCC21229CC5007CE2CF /* Source */ = {
+		661E8148214CB42500D99168 /* HelloWorld */ = {
 			isa = PBXGroup;
 			children = (
-				6626FBD321229D2F007CE2CF /* main.cc */,
+				661E8149214CB43500D99168 /* main.cc */,
 			);
-			name = Source;
+			name = HelloWorld;
 			sourceTree = "<group>";
 		};
-		6626FBCD21229CCB007CE2CF /* Framework */ = {
+		661E814B214CB43800D99168 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				6626FBD121229CF7007CE2CF /* platform */,
+				661E814C214CB45800D99168 /* FontLoaderRoboto.cpp */,
+				661E814D214CB45800D99168 /* FontLoaderRoboto.h */,
 			);
 			name = Framework;
-			sourceTree = "<group>";
-		};
-		6626FBD121229CF7007CE2CF /* platform */ = {
-			isa = PBXGroup;
-			children = (
-				6626FBD221229D0F007CE2CF /* common */,
-			);
-			name = platform;
-			sourceTree = "<group>";
-		};
-		6626FBD221229D0F007CE2CF /* common */ = {
-			isa = PBXGroup;
-			children = (
-				6626FBCF21229CE4007CE2CF /* FontLoaderRoboto.cc */,
-				6626FBCE21229CE3007CE2CF /* FontLoaderRoboto.h */,
-			);
-			name = common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6626FBB021226C31007CE2CF /* HelloWorld */ = {
+		661E812E214CAFE900D99168 /* HelloWorld */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6626FBB821226C31007CE2CF /* Build configuration list for PBXNativeTarget "HelloWorld" */;
+			buildConfigurationList = 661E8136214CAFE900D99168 /* Build configuration list for PBXNativeTarget "HelloWorld" */;
 			buildPhases = (
-				6626FBAD21226C31007CE2CF /* Sources */,
-				6626FBAE21226C31007CE2CF /* Frameworks */,
-				6626FBAF21226C31007CE2CF /* CopyFiles */,
-				6626FBC221226CF0007CE2CF /* CopyFiles */,
+				661E812B214CAFE900D99168 /* Sources */,
+				661E812C214CAFE900D99168 /* Frameworks */,
+				661E812D214CAFE900D99168 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -144,55 +118,54 @@
 			);
 			name = HelloWorld;
 			productName = HelloWorld;
-			productReference = 6626FBB121226C31007CE2CF /* HelloWorld */;
+			productReference = 661E812F214CAFE900D99168 /* HelloWorld */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		6626FBA921226C31007CE2CF /* Project object */ = {
+		661E8127214CAFE900D99168 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = ultralight;
 				TargetAttributes = {
-					6626FBB021226C31007CE2CF = {
+					661E812E214CAFE900D99168 = {
 						CreatedOnToolsVersion = 9.4.1;
-						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 6626FBAC21226C31007CE2CF /* Build configuration list for PBXProject "HelloWorld" */;
-			compatibilityVersion = "Xcode 8.0";
+			buildConfigurationList = 661E812A214CAFE900D99168 /* Build configuration list for PBXProject "HelloWorld" */;
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 6626FBA821226C31007CE2CF;
-			productRefGroup = 6626FBB221226C31007CE2CF /* Products */;
+			mainGroup = 661E8126214CAFE900D99168;
+			productRefGroup = 661E8130214CAFE900D99168 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6626FBB021226C31007CE2CF /* HelloWorld */,
+				661E812E214CAFE900D99168 /* HelloWorld */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6626FBAD21226C31007CE2CF /* Sources */ = {
+		661E812B214CAFE900D99168 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6626FBD421229D2F007CE2CF /* main.cc in Sources */,
-				6626FBD021229CE4007CE2CF /* FontLoaderRoboto.cc in Sources */,
+				661E814E214CB45800D99168 /* FontLoaderRoboto.cpp in Sources */,
+				661E814A214CB43500D99168 /* main.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		6626FBB621226C31007CE2CF /* Debug */ = {
+		661E8134214CAFE900D99168 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -250,7 +223,7 @@
 			};
 			name = Debug;
 		};
-		6626FBB721226C31007CE2CF /* Release */ = {
+		661E8135214CAFE900D99168 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -301,7 +274,7 @@
 			};
 			name = Release;
 		};
-		6626FBB921226C31007CE2CF /* Debug */ = {
+		661E8137214CAFE900D99168 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -312,11 +285,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = ../../../bin/mac;
+				SYMROOT = ../../../../build;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
-		6626FBBA21226C31007CE2CF /* Release */ = {
+		661E8138214CAFE900D99168 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -327,32 +301,33 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				LIBRARY_SEARCH_PATHS = ../../../../bin/mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = ../../../bin/mac;
+				SYMROOT = ../../../../build;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6626FBAC21226C31007CE2CF /* Build configuration list for PBXProject "HelloWorld" */ = {
+		661E812A214CAFE900D99168 /* Build configuration list for PBXProject "HelloWorld" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6626FBB621226C31007CE2CF /* Debug */,
-				6626FBB721226C31007CE2CF /* Release */,
+				661E8134214CAFE900D99168 /* Debug */,
+				661E8135214CAFE900D99168 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6626FBB821226C31007CE2CF /* Build configuration list for PBXNativeTarget "HelloWorld" */ = {
+		661E8136214CAFE900D99168 /* Build configuration list for PBXNativeTarget "HelloWorld" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6626FBB921226C31007CE2CF /* Debug */,
-				6626FBBA21226C31007CE2CF /* Release */,
+				661E8137214CAFE900D99168 /* Debug */,
+				661E8138214CAFE900D99168 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 6626FBA921226C31007CE2CF /* Project object */;
+	rootObject = 661E8127214CAFE900D99168 /* Project object */;
 }
