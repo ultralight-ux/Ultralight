@@ -109,17 +109,11 @@ void Overlay::UpdateGeometry() {
   float tex_width_ratio = target.width / (float)target.texture_width;
   float tex_height_ratio = target.height / (float)target.texture_height;
 
-#ifdef FRAMEWORK_PLATFORM_GLFW
-  const float flip_y = false;
-#else
-  const float flip_y = false;
-#endif
-
   // TOP LEFT
   v.pos[0] = v.obj[0] = left;
   v.pos[1] = v.obj[1] = top;
   v.tex[0] = 0;
-  v.tex[1] = flip_y ? tex_height_ratio : 0;
+  v.tex[1] = 0;
 
   vertices_[0] = v;
 
@@ -127,7 +121,7 @@ void Overlay::UpdateGeometry() {
   v.pos[0] = v.obj[0] = right;
   v.pos[1] = v.obj[1] = top;
   v.tex[0] = tex_width_ratio;
-  v.tex[1] = flip_y ? tex_height_ratio : 0;
+  v.tex[1] = 0;
 
   vertices_[1] = v;
 
@@ -135,7 +129,7 @@ void Overlay::UpdateGeometry() {
   v.pos[0] = v.obj[0] = right;
   v.pos[1] = v.obj[1] = bottom;
   v.tex[0] = tex_width_ratio;
-  v.tex[1] = flip_y ? 0 : tex_height_ratio;
+  v.tex[1] = tex_height_ratio;
 
   vertices_[2] = v;
 
@@ -143,7 +137,7 @@ void Overlay::UpdateGeometry() {
   v.pos[0] = v.obj[0] = left;
   v.pos[1] = v.obj[1] = bottom;
   v.tex[0] = 0;
-  v.tex[1] = flip_y ? 0 : tex_height_ratio;
+  v.tex[1] = tex_height_ratio;
 
   vertices_[3] = v;
 

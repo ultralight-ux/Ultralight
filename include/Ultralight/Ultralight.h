@@ -6,7 +6,6 @@
 #include <Ultralight/String.h>
 #include <Ultralight/Bitmap.h>
 #include <Ultralight/Buffer.h>
-#include <Ultralight/Vector.h>
 #include <Ultralight/View.h>
 #include <Ultralight/KeyCodes.h>
 #include <Ultralight/KeyEvent.h>
