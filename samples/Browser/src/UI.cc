@@ -77,7 +77,7 @@ void UI::OnRequestNewTab(const JSObject& obj, const JSArgs& args) {
 
 void UI::OnRequestTabClose(const JSObject& obj, const JSArgs& args) {
   if (args.size() == 1) {
-    size_t id = args[0];
+    uint64_t id = args[0];
 
     auto& tab = tabs_[id];
     if (!tab)
@@ -100,7 +100,7 @@ void UI::OnRequestTabClose(const JSObject& obj, const JSArgs& args) {
 
 void UI::OnActiveTabChange(const JSObject& obj, const JSArgs& args) {
   if (args.size() == 1) {
-    size_t id = args[0];
+    uint64_t id = args[0];
 
     if (id == active_tab_id_)
       return;
@@ -183,23 +183,23 @@ void UI::Resize(int width, int height) {
 }
 
 void UI::CreateNewTab() {
-  size_t id = tab_id_counter_++;
+  uint64_t id = tab_id_counter_++;
   tabs_[id].reset(new Tab(this, id));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
   addTab({ id, "New Tab", "" });
 }
 
-void UI::UpdateTabTitle(size_t id, const ultralight::String& title) {
+void UI::UpdateTabTitle(uint64_t id, const ultralight::String& title) {
   updateTab({ id, title, "" });
 }
 
-void UI::UpdateTabURL(size_t id, const ultralight::String& url) {
+void UI::UpdateTabURL(uint64_t id, const ultralight::String& url) {
   if (id == active_tab_id_ && !tabs_.empty())
     SetURL(url);
 }
 
-void UI::UpdateTabNavigation(size_t id, bool is_loading, bool can_go_back, bool can_go_forward) {
+void UI::UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, bool can_go_forward) {
   if (id == active_tab_id_ && !tabs_.empty()) {
     SetLoading(is_loading);
     SetCanGoBack(can_go_back);
