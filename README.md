@@ -422,7 +422,7 @@ void MyApplication::Update()
   // Render all active views to command lists and dispatch calls to GPUDriver
   renderer->Render();
 
-  driver->EndSychronize();
+  driver->EndSynchronize();
 
   // Draw any pending commands to screen
   if (driver->HasCommandsPending())
