@@ -14,8 +14,8 @@ public:
 
   ultralight::Ref<ultralight::View> view() { return view_; }
 
-  int width() const { return width_; }
-  int height() const { return height_; }
+  int width(bool scaled = false) const { return scaled ? (int)(scale_ * (float)width_) : width_; }
+  int height(bool scaled = false) const { return scaled ? (int)(scale_ * (float)height_) : height_; }
   int x() const { return x_; }
   int y() const { return y_; }
 

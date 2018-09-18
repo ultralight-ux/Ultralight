@@ -12,7 +12,7 @@ Overlay::Overlay(ultralight::Ref<ultralight::Renderer> renderer,
   ultralight::GPUDriver* driver,
   int width, int height, int x, int y, float scale) :
   view_(renderer->CreateView(width, height, false)), width_(width), height_(height),
-  x_(x), y_(y), needs_update_(true), driver_(driver) {
+  x_(x), y_(y), scale_(scale), needs_update_(true), driver_(driver) {
 }
 
 Overlay::~Overlay() {
@@ -102,8 +102,8 @@ void Overlay::UpdateGeometry() {
 
   float left = static_cast<float>(x_);
   float top = static_cast<float>(y_);
-  float right = static_cast<float>(x_ + width());
-  float bottom = static_cast<float>(y_ + height());
+  float right = static_cast<float>(x_ + width(true));
+  float bottom = static_cast<float>(y_ + height(true));
 
   ultralight::RenderTarget target = view_->render_target();
   float tex_width_ratio = target.width / (float)target.texture_width;
