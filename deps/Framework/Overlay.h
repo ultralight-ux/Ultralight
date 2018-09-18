@@ -22,7 +22,7 @@ public:
   void MoveTo(int x, int y) { x_ = x; y_ = y; needs_update_ = true; }
   void MoveBy(int dx, int dy) { x_ += dx; y_ += dy; needs_update_ = true; }
 
-  bool Contains(int x, int y) const { return x >= x_ && y >= y_ && x < x_ + width_ && y < y_ + height_; }
+  bool Contains(int x, int y) const { return x >= x_ && y >= y_ && x < x_ + width(true) && y < y_ + height(true); }
 
   virtual void Draw();
 
