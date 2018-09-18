@@ -426,6 +426,59 @@ void GPUDriverGL::DrawCommandList() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void GPUDriverGL::SaveRenderState() {
+  render_state_.shader_program = 0;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &render_state_.shader_program);
+
+  render_state_.blend_state = 0;
+  glGetBooleanv(GL_BLEND, &render_state_.blend_state);
+
+  if (render_state_.blend_state) {
+    render_state_.blend_src = GL_ONE;
+    render_state_.blend_dst = GL_ONE_MINUS_SRC_ALPHA;
+    glGetIntegerv(GL_BLEND_SRC_ALPHA, &render_state_.blend_src);
+    glGetIntegerv(GL_BLEND_DST_ALPHA, &render_state_.blend_dst);
+  }
+
+  render_state_.depth_state = 0;
+  glGetBooleanv(GL_DEPTH_TEST, &render_state_.depth_state);
+
+  if (render_state_.depth_state) {
+    render_state_.depth_func = GL_NEVER;
+    glGetIntegerv(GL_DEPTH_FUNC, &render_state_.depth_func);
+  }
+
+  render_state_.scissor_state = 0;
+  glGetBooleanv(GL_SCISSOR_TEST, &render_state_.scissor_state);
+}
+
+void GPUDriverGL::RestoreRenderState() {
+  glUseProgram(render_state_.shader_program);
+
+  if (render_state_.blend_state) {
+    glEnable(GL_BLEND);
+    glBlendFunc(render_state_.blend_src, render_state_.blend_dst);
+  }
+  else {
+    glDisable(GL_BLEND);
+  }
+
+  if (render_state_.depth_state) {
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(render_state_.depth_func);
+  }
+  else {
+    glDisable(GL_DEPTH_TEST);
+  }
+
+  if (render_state_.scissor_state) {
+    glEnable(GL_SCISSOR_TEST);
+  }
+  else {
+    glDisable(GL_SCISSOR_TEST);
+  }
+}
+
 void GPUDriverGL::BindUltralightTexture(uint32_t ultralight_texture_id) {
   GLuint tex_id = texture_map[ultralight_texture_id];
   glBindTexture(GL_TEXTURE_2D, tex_id);

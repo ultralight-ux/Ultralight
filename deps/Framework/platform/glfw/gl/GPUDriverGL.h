@@ -121,6 +121,18 @@ protected:
   GLuint viewport_width_, viewport_height_;
   GLfloat render_buffer_width_, render_buffer_height_;
   GLfloat scale_;
+  
+  struct RenderStateStore {
+    GLint     shader_program;
+    GLboolean blend_state;
+    GLint     blend_src;
+    GLint     blend_dst;
+    GLboolean depth_state;
+    GLint     depth_func;
+    GLboolean scissor_state;
+  };
+
+  RenderStateStore render_state_;
 };
 
 }  // namespace ultralight
