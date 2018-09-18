@@ -11,7 +11,7 @@ class Tab : public framework::Overlay,
             public ultralight::ViewListener,
             public ultralight::LoadListener {
 public:
-  Tab(UI* ui, size_t id);
+  Tab(UI* ui, uint64_t id);
   ~Tab();
 
   void set_ready_to_close(bool ready) { ready_to_close_ = ready; }
@@ -42,6 +42,6 @@ public:
 
 protected:
   UI* ui_;
-  size_t id_;
+  uint64_t id_;
   bool ready_to_close_ = false;
 };

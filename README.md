@@ -22,8 +22,9 @@ This package contains everything you need to start building cross-platform HTML 
  		- [Linux Build Requirements](#linux-build-requirements)
  - [Building Sample Projects](#building-sample-projects)
  	- [Building Samples with CMake (All Platforms)](#building-samples-with-cmake-all-platforms)
- 	- [Building Samples (Windows)](#building-samples-windows)
- 	- [Building Samples (macOS)](#building-samples-macos)
+        - [Building 64-bit on Windows](#building-64-bit-on-windows)
+ 	- [Building Additional Samples (Windows)](#building-samples-windows)
+ 	- [Building Additional Samples (macOS)](#building-samples-macos)
  - [Using the C++ API](#using-the-c-api)
  	- [Compiler / Linker Flags](#compiler--linker-flags)
  		- [Disabling RTTI](#disabling-rtti)
@@ -91,24 +92,24 @@ All platforms include an __OpenGL-based sample (powered by GLFW)__. To build the
 
 ## Building Samples with CMake (All Platforms)
 
-To generate projects for your platform, run the following from this directory:
+To generate projects for your platform and build, run the following from this directory:
 
 ```
 mkdir build
 cd build
 cmake ..
+cmake --build . --config Release
 ```
 
-On __macOS__ and __Linux__ you can then simply build the generated Makefile:
+### Building 64-bit on Windows
+
+If you run the command `cmake ..` without any generators on Windows, it will usually select the default 32-bit Visual Studio version you have installed. To generate projects for 64-bit on Windows you will need to explicitly tell CMake to use the `x64` platform.
 
 ```
-make -j4
-```
-
-On __Windows__, a Visual Studio solution will be generated in the `build` directory which you can then open and build.
-
-```
-Ultralight.sln
+mkdir build64
+cd build64
+cmake .. -DCMAKE_GENERATOR_PLATFORM=x64
+cmake --build . --config Release
 ```
 
 ### Running the Samples
@@ -125,7 +126,7 @@ On __Windows__ the projects will be built to:
 /build/samples/Browser/$(Configuration)
 ```
 
-## Building Samples (Windows Only)
+## Building Additional Samples (Windows Only)
 
 A D3D11-based Browser sample is included on Windows, open the following solution in Visual Studio to build and run it:
 
@@ -133,7 +134,7 @@ A D3D11-based Browser sample is included on Windows, open the following solution
 /samples/Browser/projects/win/Browser.sln
 ```
 
-## Building Samples (macOS Only)
+## Building Additional Samples (macOS Only)
 
 A Metal-based Browser sample is included on macOS, open the following project in XCode to build and run it:
 

@@ -41,9 +41,9 @@ public:
 
 protected:
   void CreateNewTab();
-  void UpdateTabTitle(size_t id, const ultralight::String& title);
-  void UpdateTabURL(size_t id, const ultralight::String& url);
-  void UpdateTabNavigation(size_t id, bool is_loading, bool can_go_back, bool can_go_forward);
+  void UpdateTabTitle(uint64_t id, const ultralight::String& title);
+  void UpdateTabURL(uint64_t id, const ultralight::String& url);
+  void UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, bool can_go_forward);
 
   void SetLoading(bool is_loading);
   void SetCanGoBack(bool can_go_back);
@@ -61,9 +61,9 @@ protected:
   int tab_height_;
   float scale_;
 
-  std::map<size_t, std::unique_ptr<Tab>> tabs_;
-  size_t active_tab_id_ = 0;
-  size_t tab_id_counter_ = 0;
+  std::map<uint64_t, std::unique_ptr<Tab>> tabs_;
+  uint64_t active_tab_id_ = 0;
+  uint64_t tab_id_counter_ = 0;
   bool tab_has_focus_ = false;
   ultralight::Cursor cur_cursor_;
 

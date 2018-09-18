@@ -1,4 +1,5 @@
 /build
+/build64
 obj/
 .vs/
 *.db

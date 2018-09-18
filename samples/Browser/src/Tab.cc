@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-Tab::Tab(UI* ui, size_t id) : ui_(ui), id_(id), Overlay(ui->renderer_, ui->driver_, ui->screen_width_,
+Tab::Tab(UI* ui, uint64_t id) : ui_(ui), id_(id), Overlay(ui->renderer_, ui->driver_, ui->screen_width_,
   ui->tab_height_, 0, ui->ui_height_, ui->scale_) {
   view()->set_view_listener(this);
   view()->set_load_listener(this);
