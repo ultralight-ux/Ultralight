@@ -220,6 +220,12 @@ WebCore.framework
 UltralightCore.dylib
 ```
 
+Or alternatively, if you are building with a Makefile, add the following to your `LDFLAGS`:
+
+```
+-lUltralightCore -framework Ultralight -framework WebCore 
+```
+
 ## API Headers
 
 Simply include `<Ultralight/Ultralight.h>` at the top of your code to import the API.
