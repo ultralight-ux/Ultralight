@@ -232,6 +232,13 @@ template<typename T> class RefPtr {
   {
   }
 
+  RefPtr(T* other)
+    : instance_(other)
+  {
+    if (instance_)
+      instance_->AddRef();
+  }
+
   RefPtr(const RefPtr& other) 
     : instance_(other.instance_) 
   {

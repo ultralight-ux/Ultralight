@@ -10,7 +10,7 @@ typedef ShaderType ProgramType;
 
 class GPUDriverGL : public GPUDriver {
 public:
-  GPUDriverGL(GLuint viewport_width, GLuint viewport_height, GLfloat scale);
+  GPUDriverGL(GLfloat scale);
 
   virtual ~GPUDriverGL() { }
 
@@ -38,10 +38,6 @@ public:
 
   virtual void BindRenderBuffer(uint32_t render_buffer_id) override;
 
-  virtual void SetRenderBufferViewport(uint32_t render_buffer_id,
-    uint32_t width,
-    uint32_t height) override;
-
   virtual void ClearRenderBuffer(uint32_t render_buffer_id) override;
 
   virtual void DestroyRenderBuffer(uint32_t render_buffer_id) override;
@@ -54,7 +50,7 @@ public:
 
   virtual void UpdateGeometry(uint32_t geometry_id,
     const VertexBuffer& vertices,
-    const IndexBuffer& buffer) override;
+    const IndexBuffer& indices) override;
 
   virtual void DrawGeometry(uint32_t geometry_id,
     uint32_t indices_count,
@@ -71,22 +67,21 @@ public:
 
   int batch_count() { return batch_count_; }
 
-  void ResizeViewport(int width, int height);
-
   void BindUltralightTexture(uint32_t ultralight_texture_id);
 
   void LoadPrograms();
   void DestroyPrograms();
 
-  void LoadProgram(ProgramType type, const char* vert, const char* frag);
+  void LoadProgram(ProgramType type);
   void SelectProgram(ProgramType type);
-  void SetUniformDefaults();
+  void UpdateUniforms(const GPUState& state);
   void SetUniform1ui(const char* name, GLuint val);
   void SetUniform1f(const char* name, float val);
   void SetUniform1fv(const char* name, size_t count, const float* val);
   void SetUniform4f(const char* name, const float val[4]);
   void SetUniform4fv(const char* name, size_t count, const float* val);
   void SetUniformMatrix4fv(const char* name, size_t count, const float* val);
+  void SetViewport(float width, float height);
 
 protected:
   std::map<int, GLuint> texture_map;
@@ -101,12 +96,7 @@ protected:
   };
   std::map<int, GeometryEntry> geometry_map;
 
-  struct FrameBufferInfo {
-    GLuint id;
-    GLuint width;
-    GLuint height;
-  };
-  std::map<int, FrameBufferInfo> frame_buffer_map;
+  std::map<int, GLuint> frame_buffer_map;
 
   struct ProgramEntry {
     GLuint program_id;
@@ -118,8 +108,6 @@ protected:
 
   std::vector<Command> command_list;
   int batch_count_;
-  GLuint viewport_width_, viewport_height_;
-  GLfloat render_buffer_width_, render_buffer_height_;
   GLfloat scale_;
 };
 

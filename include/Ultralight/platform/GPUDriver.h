@@ -17,14 +17,21 @@ struct UExport RenderBuffer {
   uint32_t texture_id;
   uint32_t width;
   uint32_t height;
-  uint32_t viewport_width;
-  uint32_t viewport_height;
   bool has_stencil_buffer;
   bool has_depth_buffer;
 };
 
 /**
- * Vertex description, useful for synthesizing or modifying vertex data.
+* Vertex description for path vertices, useful for synthesizing or modifying vertex data.
+*/
+struct Vertex_2f_4ub_2f {
+  float pos[2];
+  unsigned char color[4];
+  float obj[2];
+};
+
+/**
+ * Vertex description for quad vertices, useful for synthesizing or modifying vertex data.
  */
 struct Vertex_2f_4ub_2f_2f_28f {
   float pos[2];
@@ -44,6 +51,7 @@ struct Vertex_2f_4ub_2f_2f_28f {
  * Vertex format (only one at this time)
  */
 enum UExport VertexBufferFormat {
+  kVertexBufferFormat_2f_4ub_2f,
   kVertexBufferFormat_2f_4ub_2f_2f_28f,
 };
 
@@ -71,16 +79,18 @@ struct UExport IndexBuffer {
 
 /**
  * Shader type enumeration, used by GPUDriver::shader_type
- * Only one at this time but may be more in future.
  */
 enum UExport ShaderType {
   kShaderType_Fill,
+  kShaderType_FillPath,
 };
 
 /**
  * GPU state description.
  */
 struct UExport GPUState {
+  float viewport_width;
+  float viewport_height;
   Matrix4x4 transform;
   bool enable_texturing;
   bool enable_blend;
@@ -177,15 +187,10 @@ public:
 
   // Create a render buffer with certain ID and buffer description.
   virtual void CreateRenderBuffer(uint32_t render_buffer_id,
-                                 const RenderBuffer& buffer) = 0;
+                                  const RenderBuffer& buffer) = 0;
 
   // Bind a render buffer
   virtual void BindRenderBuffer(uint32_t render_buffer_id) = 0;
-
-  // Set the viewport for a render buffer, may change during lifetime
-  virtual void SetRenderBufferViewport(uint32_t render_buffer_id,
-                                       uint32_t width,
-                                       uint32_t height) = 0;
 
   // Clear a render buffer (flush pixels)
   virtual void ClearRenderBuffer(uint32_t render_buffer_id) = 0;

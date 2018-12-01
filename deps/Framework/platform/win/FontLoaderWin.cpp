@@ -206,7 +206,9 @@ String16 FontLoaderWin::fallback_font() const {
 Ref<Buffer> FontLoaderWin::Load(const String16& family, int weight, bool italic, float size) {
   HFONT font = createGDIFont(family.data(), weight, italic, (int)size, false);
   ultralight::Ref<ultralight::Buffer> data = GetFontData(font);
+
   uint64_t hash = (uint64_t)murmur3_32((const uint8_t*)data->data(), data->size(), 0xBEEF);
+
   auto i = fonts_.find(hash);
   if (i == fonts_.end()) {
     fonts_.insert({ hash, data });

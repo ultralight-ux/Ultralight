@@ -18,7 +18,10 @@
 #endif
 
 #if _WIN32
-#define FATAL(x) { std::cerr << "[ERROR] " << __FUNCSIG__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
+#define FATAL(x) { std::stringstream str; \
+  str << "[ERROR] " << __FUNCSIG__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
+  OutputDebugString(str.str().c_str()); \
+  std::cerr << str.str() << std::endl; \
   __debugbreak(); std::cin.get(); exit(-1); }
 #else
 #define FATAL(x) { std::cerr << "[ERROR] " << __PRETTY_FUNCTION__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
@@ -101,12 +104,10 @@ static GLuint LoadShaderFromFile(GLenum shader_type, const char* filename) {
 
 namespace ultralight {
 
-GPUDriverGL::GPUDriverGL(GLuint viewport_width, GLuint viewport_height, GLfloat scale) :
-  viewport_width_(viewport_width),
-  viewport_height_(viewport_height),
+GPUDriverGL::GPUDriverGL(GLfloat scale) :
   scale_(scale) {
-  // Render Buffer ID 0 is reserved for the screen, set its viewport dimensions now.
-  frame_buffer_map[0] = { 0, viewport_width, viewport_height };
+  // Render Buffer ID 0 is reserved for the screen
+  frame_buffer_map[0] = 0;
 }
 
 void GPUDriverGL::CreateTexture(uint32_t texture_id,
@@ -130,11 +131,15 @@ void GPUDriverGL::CreateTexture(uint32_t texture_id,
   CHECK_GL();
 
   if (bitmap->format() == kBitmapFormat_A8) {
+    const void* pixels = bitmap->LockPixels();
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, bitmap->width(), bitmap->height(), 0,
-      GL_RED, GL_UNSIGNED_BYTE, bitmap->pixels());
+      GL_RED, GL_UNSIGNED_BYTE, pixels);
+    bitmap->UnlockPixels();
   } else if (bitmap->format() == kBitmapFormat_RGBA8) {
+    const void* pixels = bitmap->LockPixels();
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->width(), bitmap->height(), 0,
-      GL_BGRA, GL_UNSIGNED_BYTE, bitmap->pixels());
+      GL_BGRA, GL_UNSIGNED_BYTE, pixels);
+    bitmap->UnlockPixels();
   } else {
     FATAL("Unhandled texture format: " << bitmap->format())
   }
@@ -153,14 +158,19 @@ void GPUDriverGL::UpdateTexture(uint32_t texture_id,
   glPixelStorei(GL_UNPACK_ROW_LENGTH, bitmap->row_bytes() / bitmap->bpp());
 
   if (!bitmap->IsEmpty()) {
-    if (bitmap->format() == kBitmapFormat_A8)
+    if (bitmap->format() == kBitmapFormat_A8) {
+      const void* pixels = bitmap->LockPixels();
       glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, bitmap->width(), bitmap->height(), 0,
-        GL_RED, GL_UNSIGNED_BYTE, bitmap->pixels());
-    else if (bitmap->format() == kBitmapFormat_RGBA8)
+        GL_RED, GL_UNSIGNED_BYTE, pixels);
+      bitmap->UnlockPixels();
+    } else if (bitmap->format() == kBitmapFormat_RGBA8) {
+      const void* pixels = bitmap->LockPixels();
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->width(), bitmap->height(), 0,
-        GL_BGRA, GL_UNSIGNED_BYTE, bitmap->pixels());
-    else
+        GL_BGRA, GL_UNSIGNED_BYTE, pixels);
+      bitmap->UnlockPixels();
+    } else {
       FATAL("Unhandled texture format: " << bitmap->format());
+    }
 
     CHECK_GL();
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -190,12 +200,9 @@ void GPUDriverGL::CreateRenderBuffer(uint32_t render_buffer_id,
   GLuint frame_buffer_id = 0;
   glGenFramebuffers(1, &frame_buffer_id);
   CHECK_GL();
-  frame_buffer_map[render_buffer_id] = { frame_buffer_id, 
-    (GLuint)buffer.viewport_width, (GLuint)buffer.viewport_height };
+  frame_buffer_map[render_buffer_id] = frame_buffer_id;
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
   CHECK_GL();
-
-  glViewport(0, 0, buffer.viewport_width, buffer.viewport_height);
 
   GLuint rbuf_texture_id = texture_map[buffer.texture_id];
   glBindTexture(GL_TEXTURE_2D, rbuf_texture_id);
@@ -214,21 +221,8 @@ void GPUDriverGL::CreateRenderBuffer(uint32_t render_buffer_id,
 }
 
 void GPUDriverGL::BindRenderBuffer(uint32_t render_buffer_id) {
-  FrameBufferInfo framebuffer = frame_buffer_map[render_buffer_id];
-  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.id);
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_map[render_buffer_id]);
   CHECK_GL();
-  render_buffer_width_ = (GLfloat)framebuffer.width;
-  render_buffer_height_ = (GLfloat)framebuffer.height;
-  glViewport(0, 0, static_cast<GLsizei>(framebuffer.width * scale_),
-                   static_cast<GLsizei>(framebuffer.height * scale_));
-}
-
-void GPUDriverGL::SetRenderBufferViewport(uint32_t render_buffer_id, uint32_t width, uint32_t height) {
-  auto i = frame_buffer_map.find(render_buffer_id);
-  if (i != frame_buffer_map.end()) {
-    i->second.width = width;
-    i->second.height = height;
-  }
 }
 
 void GPUDriverGL::ClearRenderBuffer(uint32_t render_buffer_id) {
@@ -244,8 +238,8 @@ void GPUDriverGL::ClearRenderBuffer(uint32_t render_buffer_id) {
 void GPUDriverGL::DestroyRenderBuffer(uint32_t render_buffer_id) {
   if (render_buffer_id == 0)
     return;
-  FrameBufferInfo framebuffer = frame_buffer_map[render_buffer_id];
-  glDeleteFramebuffers(1, &framebuffer.id);
+  GLuint framebuffer_id = frame_buffer_map[render_buffer_id];
+  glDeleteFramebuffers(1, &framebuffer_id);
 }
 
 
@@ -288,6 +282,18 @@ void GPUDriverGL::CreateGeometry(uint32_t geometry_id,
     glEnableVertexAttribArray(10);
 
     CHECK_GL();
+  } else if (vertices.format == kVertexBufferFormat_2f_4ub_2f) {
+    GLsizei stride = 20;
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+    glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (GLvoid*)8);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)12);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+
+    CHECK_GL();
   } else {
     FATAL("Unhandled vertex format: " << vertices.format);
   }
@@ -305,7 +311,8 @@ void GPUDriverGL::CreateGeometry(uint32_t geometry_id,
 }
 
 void GPUDriverGL::UpdateGeometry(uint32_t geometry_id,
-  const VertexBuffer& vertices, const IndexBuffer& indices) {
+  const VertexBuffer& vertices,
+  const IndexBuffer& indices) {
   GeometryEntry& geometry = geometry_map[geometry_id];
   glBindVertexArray(geometry.vao);
   CHECK_GL();
@@ -328,31 +335,12 @@ void GPUDriverGL::DrawGeometry(uint32_t geometry_id,
 
   BindRenderBuffer(state.render_buffer_id);
 
+  SetViewport(state.viewport_width, state.viewport_height);
+
   GeometryEntry& geometry = geometry_map[geometry_id];
   SelectProgram((ProgramType)state.shader_type);
-  SetUniformDefaults();
-  CHECK_GL();
-  if (state.render_buffer_id == 0) {
-    // Anything drawn to screen needs to be flipped vertically to compensate for
-    // flipping in vertex shader.
-    ultralight::Matrix4x4 mat = state.transform;
-    mat.data[4] *= -1.0;
-    mat.data[5] *= -1.0;
-    mat.data[12] += -render_buffer_height_ * mat.data[4];
-    mat.data[13] += -render_buffer_height_ * mat.data[5];
-    SetUniformMatrix4fv("Transform", 1, &mat.data[0]);
-  } else {
-    SetUniformMatrix4fv("Transform", 1, &state.transform.data[0]);
-  }
-  CHECK_GL();
-  SetUniform4fv("Scalar4", 2, &state.uniform_scalar[0]);
-  CHECK_GL();
-  SetUniform4fv("Vector", 8, &state.uniform_vector[0].value[0]);
-  CHECK_GL();
-  SetUniform1ui("ClipSize", state.clip_size);
-  CHECK_GL();
-  SetUniformMatrix4fv("Clip", 8, &state.clip[0].data[0]);
-
+  UpdateUniforms(state);
+  
   CHECK_GL();
 
   glBindVertexArray(geometry.vao);
@@ -431,13 +419,9 @@ void GPUDriverGL::BindUltralightTexture(uint32_t ultralight_texture_id) {
   glBindTexture(GL_TEXTURE_2D, tex_id);
 }
 
-void GPUDriverGL::ResizeViewport(int width, int height) {
-  SetRenderBufferViewport(0, width, height);
-}
-
 void GPUDriverGL::LoadPrograms(void) {
-  const char* vert_program = "vs/v2f_c4f_t2f_t2f_d28f.vert";
-  LoadProgram(ultralight::kShaderType_Fill, vert_program, "ps/fill.frag");
+  LoadProgram(ultralight::kShaderType_Fill);
+  LoadProgram(ultralight::kShaderType_FillPath);
 }
 
 void GPUDriverGL::DestroyPrograms(void) {
@@ -454,12 +438,18 @@ void GPUDriverGL::DestroyPrograms(void) {
   programs_.clear();
 }
 
-void GPUDriverGL::LoadProgram(ProgramType type,
-  const char* vert, const char* frag) {
+void GPUDriverGL::LoadProgram(ProgramType type) {
   GLenum ErrorCheckValue = glGetError();
   ProgramEntry prog;
-  prog.vert_shader_id = LoadShaderFromFile(GL_VERTEX_SHADER, vert);
-  prog.frag_shader_id = LoadShaderFromFile(GL_FRAGMENT_SHADER, frag);
+  if (type == kShaderType_Fill)
+  {
+    prog.vert_shader_id = LoadShaderFromFile(GL_VERTEX_SHADER, "vs/v2f_c4f_t2f_t2f_d28f.vert");
+    prog.frag_shader_id = LoadShaderFromFile(GL_FRAGMENT_SHADER, "ps/fill.frag");
+  } else if (type == kShaderType_FillPath) {
+    prog.vert_shader_id = LoadShaderFromFile(GL_VERTEX_SHADER, "vs/v2f_c4f_t2f.vert");
+    prog.frag_shader_id = LoadShaderFromFile(GL_FRAGMENT_SHADER, "ps/fill_path.frag");
+  }
+
   prog.program_id = glCreateProgram();
   glAttachShader(prog.program_id, prog.vert_shader_id);
   glAttachShader(prog.program_id, prog.frag_shader_id);
@@ -467,20 +457,26 @@ void GPUDriverGL::LoadProgram(ProgramType type,
   glBindAttribLocation(prog.program_id, 0, "in_Position");
   glBindAttribLocation(prog.program_id, 1, "in_Color");
   glBindAttribLocation(prog.program_id, 2, "in_TexCoord");
-  glBindAttribLocation(prog.program_id, 3, "in_ObjCoord");
-  glBindAttribLocation(prog.program_id, 4, "in_Data0");
-  glBindAttribLocation(prog.program_id, 5, "in_Data1");
-  glBindAttribLocation(prog.program_id, 6, "in_Data2");
-  glBindAttribLocation(prog.program_id, 7, "in_Data3");
-  glBindAttribLocation(prog.program_id, 8, "in_Data4");
-  glBindAttribLocation(prog.program_id, 9, "in_Data5");
-  glBindAttribLocation(prog.program_id, 10, "in_Data6");
+
+  if (type == kShaderType_Fill) {
+    glBindAttribLocation(prog.program_id, 3, "in_ObjCoord");
+    glBindAttribLocation(prog.program_id, 4, "in_Data0");
+    glBindAttribLocation(prog.program_id, 5, "in_Data1");
+    glBindAttribLocation(prog.program_id, 6, "in_Data2");
+    glBindAttribLocation(prog.program_id, 7, "in_Data3");
+    glBindAttribLocation(prog.program_id, 8, "in_Data4");
+    glBindAttribLocation(prog.program_id, 9, "in_Data5");
+    glBindAttribLocation(prog.program_id, 10, "in_Data6");
+  }
 
   glLinkProgram(prog.program_id);
   glUseProgram(prog.program_id);
-  glUniform1i(glGetUniformLocation(prog.program_id, "Texture1"), 0);
-  glUniform1i(glGetUniformLocation(prog.program_id, "Texture2"), 1);
-  glUniform1i(glGetUniformLocation(prog.program_id, "Texture3"), 2);
+
+  if (type == kShaderType_Fill) {
+    glUniform1i(glGetUniformLocation(prog.program_id, "Texture1"), 0);
+    glUniform1i(glGetUniformLocation(prog.program_id, "Texture2"), 1);
+    glUniform1i(glGetUniformLocation(prog.program_id, "Texture3"), 2);
+  }
 
   if (glGetError())
     FATAL("Unable to link shader.\n\tError:" << glErrorString(glGetError()) << "\n\tLog: " << GetProgramLog(prog.program_id))
@@ -498,9 +494,31 @@ void GPUDriverGL::SelectProgram(ProgramType type) {
   }
 }
 
-void GPUDriverGL::SetUniformDefaults() {
-  float params[4] = { (float)(glfwGetTime() / 1000.0), (float)render_buffer_width_, (float)render_buffer_height_, scale_ };
+void GPUDriverGL::UpdateUniforms(const GPUState& state) {
+  float params[4] = { (float)(glfwGetTime() / 1000.0), state.viewport_width, state.viewport_height, scale_ };
   SetUniform4f("State", params);
+  CHECK_GL();
+  if (state.render_buffer_id == 0) {
+    // Anything drawn to screen needs to be flipped vertically to compensate for
+    // flipping in vertex shader.
+    ultralight::Matrix4x4 mat = state.transform;
+    mat.data[4] *= -1.0;
+    mat.data[5] *= -1.0;
+    mat.data[12] += -state.viewport_height * mat.data[4];
+    mat.data[13] += -state.viewport_height * mat.data[5];
+    SetUniformMatrix4fv("Transform", 1, &mat.data[0]);
+  }
+  else {
+    SetUniformMatrix4fv("Transform", 1, &state.transform.data[0]);
+  }
+  CHECK_GL();
+  SetUniform4fv("Scalar4", 2, &state.uniform_scalar[0]);
+  CHECK_GL();
+  SetUniform4fv("Vector", 8, &state.uniform_vector[0].value[0]);
+  CHECK_GL();
+  SetUniform1ui("ClipSize", state.clip_size);
+  CHECK_GL();
+  SetUniformMatrix4fv("Clip", 8, &state.clip[0].data[0]);
 }
 
 void GPUDriverGL::SetUniform1ui(const char* name, GLuint val) {
@@ -526,6 +544,11 @@ void GPUDriverGL::SetUniform4fv(const char* name, size_t count, const float* val
 
 void GPUDriverGL::SetUniformMatrix4fv(const char* name, size_t count, const float* val) {
   glUniformMatrix4fv(glGetUniformLocation(cur_program_id_, name), (GLsizei)count, false, val);
+}
+
+void GPUDriverGL::SetViewport(float width, float height) {
+  glViewport(0, 0, static_cast<GLsizei>(width * scale_),
+                   static_cast<GLsizei>(height * scale_));
 }
 
 }  // namespace ultralight

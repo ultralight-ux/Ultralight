@@ -1,18 +1,22 @@
 #include "Overlay.h"
+#include "Window.h"
 #include <Ultralight/Renderer.h>
+#include <Ultralight/Buffer.h>
 #include <Ultralight/platform/Platform.h>
 #include <Ultralight/platform/Config.h>
 
+using namespace ultralight;
+
 namespace framework {
 
-static ultralight::IndexType patternCW[] = { 0, 1, 3, 1, 2, 3 };
-static ultralight::IndexType patternCCW[] = { 0, 3, 1, 1, 3, 2 };
+static IndexType patternCW[] = { 0, 1, 3, 1, 2, 3 };
+static IndexType patternCCW[] = { 0, 3, 1, 1, 3, 2 };
 
-Overlay::Overlay(ultralight::Ref<ultralight::Renderer> renderer,
-  ultralight::GPUDriver* driver,
-  int width, int height, int x, int y, float scale) :
+Overlay::Overlay(Ref<Renderer> renderer,
+  GPUDriver* driver, const Window& window,
+  int width, int height, int x, int y) :
   view_(renderer->CreateView(width, height, false)), width_(width), height_(height),
-  x_(x), y_(y), needs_update_(true), driver_(driver) {
+  x_(x), y_(y), needs_update_(true), driver_(driver), window_(window) {
 }
 
 Overlay::~Overlay() {
@@ -23,30 +27,28 @@ Overlay::~Overlay() {
 void Overlay::Draw() {
   UpdateGeometry();
 
-  gpu_state_.texture_1_id = view()->render_target().texture_id;
-
   driver_->DrawGeometry(geometry_id_, 6, 0, gpu_state_);
 }
 
-void Overlay::FireKeyEvent(const ultralight::KeyEvent& evt) {
+void Overlay::FireKeyEvent(const KeyEvent& evt) {
   view()->FireKeyEvent(evt);
 }
 
-void Overlay::FireMouseEvent(const ultralight::MouseEvent& evt) {
-  if (evt.type == ultralight::MouseEvent::kType_MouseDown &&
-      evt.button == ultralight::MouseEvent::kButton_Left)
+void Overlay::FireMouseEvent(const MouseEvent& evt) {
+  if (evt.type == MouseEvent::kType_MouseDown &&
+      evt.button == MouseEvent::kButton_Left)
     has_focus_ = Contains(evt.x, evt.y);
-  else if (evt.type == ultralight::MouseEvent::kType_MouseMoved)
+  else if (evt.type == MouseEvent::kType_MouseMoved)
     has_hover_ = Contains(evt.x, evt.y);
 
-  ultralight::MouseEvent rel_evt = evt;
+  MouseEvent rel_evt = evt;
   rel_evt.x -= x_;
   rel_evt.y -= y_;
 
   view()->FireMouseEvent(rel_evt);
 }
 
-void Overlay::FireScrollEvent(const ultralight::ScrollEvent& evt) {
+void Overlay::FireScrollEvent(const ScrollEvent& evt) {
   //if (has_hover_)
     view()->FireScrollEvent(evt);
 }
@@ -56,33 +58,45 @@ void Overlay::Resize(int width, int height) {
     return;
 
   view_->Resize(width, height);
-
+  
   width_ = width;
   height_ = height;
   needs_update_ = true;
+  UpdateGeometry();
+
+  // Update these now since they were invalidated
+  RenderTarget target = view_->render_target();
+  gpu_state_.texture_1_id = target.texture_id;
+  gpu_state_.viewport_width = (float)window_.width();
+  gpu_state_.viewport_height = (float)window_.height();
 }
 
 void Overlay::UpdateGeometry() {
   bool initial_creation = false;
+  RenderTarget target = view_->render_target();
+
   if (vertices_.empty()) {
     vertices_.resize(4);
     indices_.resize(6);
 
-    auto& config = ultralight::Platform::instance().config();
-    if (config.face_winding == ultralight::kFaceWinding_Clockwise)
-      memcpy(indices_.data(), patternCW, sizeof(ultralight::IndexType) * indices_.size());
+    auto& config = Platform::instance().config();
+    if (config.face_winding == kFaceWinding_Clockwise)
+      memcpy(indices_.data(), patternCW, sizeof(IndexType) * indices_.size());
     else
-      memcpy(indices_.data(), patternCCW, sizeof(ultralight::IndexType) * indices_.size());
+      memcpy(indices_.data(), patternCCW, sizeof(IndexType) * indices_.size());
 
     memset(&gpu_state_, 0, sizeof(gpu_state_));
-    ultralight::Matrix identity;
+    Matrix identity;
     identity.SetIdentity();
 
-    gpu_state_.transform = ultralight::ConvertAffineTo4x4(identity);
+    gpu_state_.viewport_width = (float)window_.width();
+    gpu_state_.viewport_height = (float)window_.height();
+    gpu_state_.transform = ConvertAffineTo4x4(identity);
     gpu_state_.enable_blend = true;
     gpu_state_.enable_texturing = true;
-    gpu_state_.shader_type = ultralight::kShaderType_Fill;
+    gpu_state_.shader_type = kShaderType_Fill;
     gpu_state_.render_buffer_id = 0; // default render target view (screen)
+    gpu_state_.texture_1_id = target.texture_id;
 
     initial_creation = true;
   }
@@ -90,7 +104,7 @@ void Overlay::UpdateGeometry() {
   if (!needs_update_)
     return;
 
-  ultralight::Vertex_2f_4ub_2f_2f_28f v;
+  Vertex_2f_4ub_2f_2f_28f v;
   memset(&v, 0, sizeof(v));
 
   v.data0[0] = 1; // Fill Type: Image
@@ -105,39 +119,35 @@ void Overlay::UpdateGeometry() {
   float right = static_cast<float>(x_ + width());
   float bottom = static_cast<float>(y_ + height());
 
-  ultralight::RenderTarget target = view_->render_target();
-  float tex_width_ratio = target.width / (float)target.texture_width;
-  float tex_height_ratio = target.height / (float)target.texture_height;
-
   // TOP LEFT
   v.pos[0] = v.obj[0] = left;
   v.pos[1] = v.obj[1] = top;
-  v.tex[0] = 0;
-  v.tex[1] = 0;
+  v.tex[0] = target.uv_coords.left;
+  v.tex[1] = target.uv_coords.top;
 
   vertices_[0] = v;
 
   // TOP RIGHT
   v.pos[0] = v.obj[0] = right;
   v.pos[1] = v.obj[1] = top;
-  v.tex[0] = tex_width_ratio;
-  v.tex[1] = 0;
+  v.tex[0] = target.uv_coords.right;
+  v.tex[1] = target.uv_coords.top;
 
   vertices_[1] = v;
 
   // BOTTOM RIGHT
   v.pos[0] = v.obj[0] = right;
   v.pos[1] = v.obj[1] = bottom;
-  v.tex[0] = tex_width_ratio;
-  v.tex[1] = tex_height_ratio;
+  v.tex[0] = target.uv_coords.right;
+  v.tex[1] = target.uv_coords.bottom;
 
   vertices_[2] = v;
 
   // BOTTOM LEFT
   v.pos[0] = v.obj[0] = left;
   v.pos[1] = v.obj[1] = bottom;
-  v.tex[0] = 0;
-  v.tex[1] = tex_height_ratio;
+  v.tex[0] = target.uv_coords.left;
+  v.tex[1] = target.uv_coords.bottom;
 
   vertices_[3] = v;
 

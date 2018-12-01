@@ -14,7 +14,7 @@ public:
     glfwMakeContextCurrent(window_);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glfwSwapInterval(enable_vsync? 1 : 0);
-    driver_.reset(new ultralight::GPUDriverGL(window.width(), window.height(), (GLfloat)window.scale()));
+    driver_.reset(new ultralight::GPUDriverGL((GLfloat)window.scale()));
   }
 
   virtual ~GPUContextGL() {}
@@ -33,8 +33,8 @@ public:
   }
 
   virtual void Resize(int width, int height) override {
-    ultralight::GPUDriverGL* driver_gl = static_cast<ultralight::GPUDriverGL*>(driver_.get());
-    driver_gl->ResizeViewport(width, height);
+    //ultralight::GPUDriverGL* driver_gl = static_cast<ultralight::GPUDriverGL*>(driver_.get());
+    //driver_gl->ResizeViewport(width, height);
   }
 };
 

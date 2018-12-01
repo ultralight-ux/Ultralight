@@ -2,6 +2,7 @@
 #pragma once
 #include <Ultralight/Defines.h>
 #include <Ultralight/Bitmap.h>
+#include <Ultralight/Geometry.h>
 
 namespace ultralight {
 
@@ -18,6 +19,7 @@ struct UExport RenderTarget {
   uint32_t texture_width;
   uint32_t texture_height;
   BitmapFormat texture_format;
+  Rect uv_coords;
   uint32_t render_buffer_id;
 
   RenderTarget();

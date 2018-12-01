@@ -6,10 +6,12 @@
 
 namespace framework {
 
+class Window;
+
 class Overlay {
 public:
   Overlay(ultralight::Ref<ultralight::Renderer> renderer, ultralight::GPUDriver* driver,
-    int width, int height, int x, int y, float scale);
+    const Window& window, int width, int height, int x, int y);
   virtual ~Overlay();
 
   ultralight::Ref<ultralight::View> view() { return view_; }
@@ -41,7 +43,7 @@ protected:
   int height_;
   int x_;
   int y_;
-  float scale_;
+  const Window& window_;
   bool has_focus_ = false;
   bool has_hover_ = false;
   ultralight::Ref<ultralight::View> view_;

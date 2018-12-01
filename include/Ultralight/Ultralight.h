@@ -3,6 +3,7 @@
 #include <Ultralight/Defines.h>
 #include <Ultralight/RefPtr.h>
 #include <Ultralight/String16.h>
+#include <Ultralight/String8.h>
 #include <Ultralight/String.h>
 #include <Ultralight/Bitmap.h>
 #include <Ultralight/Buffer.h>
@@ -13,6 +14,7 @@
 #include <Ultralight/Matrix.h>
 #include <Ultralight/MouseEvent.h>
 #include <Ultralight/Renderer.h>
+#include <Ultralight/Geometry.h>
 #include <Ultralight/RenderTarget.h>
 #include <Ultralight/ScrollEvent.h>
 #include <Ultralight/platform/Platform.h>

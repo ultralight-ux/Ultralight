@@ -169,9 +169,6 @@ double JSValue::ToNumber() const { return JSValueToNumber(ctx_, instance(), null
 JSString JSValue::ToString() const { 
   JSString result(JSValueToStringCopy(ctx_, instance(), nullptr));
 
-  // Call Release to match the Retain call in JSString constructor
-  JSStringRelease(result);
-
   return result;
 }
 

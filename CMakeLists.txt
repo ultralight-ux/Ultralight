@@ -34,6 +34,8 @@ set(FRAMEWORK_SRC "${FRAMEWORK_SOURCE_DIR}/Application.h"
                   "${FRAMEWORK_SOURCE_DIR}/platform/glfw/gl/GPUDriverGL.cpp")
                   
 set(FRAMEWORK_SHADER_SRC "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/ps/fill.frag"
+                         "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/ps/fill_path.frag"
+                         "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/vs/v2f_c4f_t2f.vert"
                          "${FRAMEWORK_SOURCE_DIR}/shaders/glsl/vs/v2f_c4f_t2f_t2f_d28f.vert")
 				  
 if (WIN32)

@@ -40,4 +40,8 @@ class UExport Platform {
   virtual FileSystem* file_system() const = 0;
 };
 
+UExport GPUDriver* DefaultGPUDriver();
+
+UExport FontLoader* DefaultFontLoader();
+
 }  // namespace ultralight

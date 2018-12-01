@@ -43,10 +43,6 @@ public:
 
   virtual void BindRenderBuffer(uint32_t render_buffer_id) override;
 
-  virtual void SetRenderBufferViewport(uint32_t render_buffer_id,
-    uint32_t width,
-    uint32_t height) override;
-
   virtual void ClearRenderBuffer(uint32_t render_buffer_id) override;
 
   virtual void DestroyRenderBuffer(uint32_t render_buffer_id) override;
@@ -79,15 +75,21 @@ public:
   int batch_count() const { return batch_count_; }
 
 protected:
-  ComPtr<ID3D11PixelShader> GetShader(uint8_t shader);
-  ComPtr<ID3D11InputLayout> GetVertexLayout();
+  void LoadVertexShader(const WCHAR* path, ID3D11VertexShader** ppVertexShader,
+    const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, ID3D11InputLayout** ppInputLayout);
+  void LoadPixelShader(const WCHAR* path, ID3D11PixelShader** ppPixelShader);
+  void LoadShaders();
+  void BindShader(uint8_t shader);
+  void BindVertexLayout(VertexBufferFormat format);
+  void BindGeometry(uint32_t id);
   ComPtr<ID3D11SamplerState> GetSamplerState();
   ComPtr<ID3D11Buffer> GetConstantBuffer();
+  void SetViewport(float width, float height);
   void UpdateConstantBuffer(const GPUState& state);
 
   framework::PlatformGPUContextD3D11* context_;
-  ComPtr<ID3D11VertexShader> vertex_shader_;
-  ComPtr<ID3D11InputLayout> vertex_layout_;
+  ComPtr<ID3D11InputLayout> vertex_layout_2f_4ub_2f_;
+  ComPtr<ID3D11InputLayout> vertex_layout_2f_4ub_2f_2f_28f_;
   ComPtr<ID3D11SamplerState> sampler_state_;
   ComPtr<ID3D11Buffer> constant_buffer_;
 
@@ -95,10 +97,7 @@ protected:
   uint32_t next_render_buffer_id_ = 1; // render buffer id 0 is reserved for default render target view.
   uint32_t next_geometry_id_ = 1;
 
-  uint32_t render_buffer_width_ = 0;
-  uint32_t render_buffer_height_ = 0;
-
-  typedef std::pair<ComPtr<ID3D11Buffer>, ComPtr<ID3D11Buffer>> GeometryEntry;
+  struct GeometryEntry { VertexBufferFormat format; ComPtr<ID3D11Buffer> vertexBuffer; ComPtr<ID3D11Buffer> indexBuffer; };
   typedef std::map<uint32_t, GeometryEntry> GeometryMap;
   GeometryMap geometry_;
 
@@ -106,11 +105,10 @@ protected:
   typedef std::map<uint32_t, TextureEntry> TextureMap;
   TextureMap textures_;
 
-  struct RenderTarget { ComPtr<ID3D11RenderTargetView> rt_view; uint32_t width; uint32_t height; };
-  typedef std::map<uint32_t, RenderTarget> RenderTargetMap;
+  typedef std::map<uint32_t, ComPtr<ID3D11RenderTargetView>> RenderTargetMap;
   RenderTargetMap render_targets_;
 
-  typedef std::map<ShaderType, ComPtr<ID3D11PixelShader>> ShaderMap;
+  typedef std::map<ShaderType, std::pair<ComPtr<ID3D11VertexShader>, ComPtr<ID3D11PixelShader>>> ShaderMap;
   ShaderMap shaders_;
 
   std::vector<Command> command_list_;

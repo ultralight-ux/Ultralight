@@ -38,6 +38,10 @@ struct UExport Config {
   // Whether to use signed distance field (SDF) paths or raster paths.
   bool use_distance_field_paths = false;
 
+  // When using the default, offscreen GPU driver, whether or not we
+  // should use BGRA byte order (instead of RGBA). See View::bitmap().
+  bool use_bgra_for_offscreen_rendering = false;
+
   // The amount that the application DPI has been scaled (200% = 2.0).
   // Used for oversampling raster shapes.
   double device_scale_hint = 1.0;
@@ -53,6 +57,12 @@ struct UExport Config {
 
   // Default font-family to use for sans-serif fonts.
   String16 font_family_sans_serif = "Arial";
+
+  // Default user-agent string
+  String16 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/602.1 (KHTML, like Gecko) Ultralight/0.9.2 Safari/602.1";
+
+  // Default user stylesheet (CSS)
+  String16 user_stylesheet;
 };
 
 }  // namespace ultralight

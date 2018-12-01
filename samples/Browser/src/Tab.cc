@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 
-Tab::Tab(UI* ui, uint64_t id) : ui_(ui), id_(id), Overlay(ui->renderer_, ui->driver_, ui->screen_width_,
-  ui->tab_height_, 0, ui->ui_height_, ui->scale_) {
+Tab::Tab(UI* ui, uint64_t id) : ui_(ui), id_(id), Overlay(ui->renderer_, ui->driver_, ui->window_,
+  ui->screen_width_, ui->tab_height_, 0, ui->ui_height_) {
   view()->set_view_listener(this);
   view()->set_load_listener(this);
 }
@@ -40,6 +40,7 @@ void Tab::OnAddConsoleMessage(ultralight::View* caller,
   uint32_t line_number,
   uint32_t column_number,
   const ultralight::String& source_id) {
+  OutputDebugStringW(message.utf16().data());
 }
 
 void Tab::OnBeginLoading(ultralight::View* caller) {

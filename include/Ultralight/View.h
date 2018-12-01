@@ -7,6 +7,7 @@
 #include <Ultralight/MouseEvent.h>
 #include <Ultralight/ScrollEvent.h>
 #include <Ultralight/RenderTarget.h>
+#include <Ultralight/Bitmap.h>
 #include <Ultralight/Listener.h>
 
 namespace ultralight {
@@ -33,6 +34,26 @@ public:
   virtual RenderTarget render_target() = 0;
 
   /*************************
+   * Rendering             *
+   *************************/
+
+  /*****************************************************************
+   * NOTE: The following two functions are only valid when using   *  
+   *       the default, offscreen GPUDriver. They will always      *
+   *       return false/NULL respectively otherwise.               *
+   *                                                               *
+   *       If you're using a custom GPUDriver, you should get the  *
+   *       texture ID of this View via render_target() and display *
+   *       that in an on-screen overlay instead.                   *
+   ****************************************************************/
+
+  // Check if bitmap is dirty (has changed since last call to bitmap())
+  virtual bool is_bitmap_dirty() = 0;
+
+  // Get the bitmap and reset the dirty flag.
+  virtual RefPtr<Bitmap> bitmap() = 0;
+
+  /*************************
    * Loading               *
    *************************/
 
@@ -43,8 +64,8 @@ public:
   virtual void LoadURL(const String& url) = 0;
 
   /*************************
-  * Resizing               *
-  *************************/
+   * Resizing              *
+   *************************/
 
   // Resize view to a certain width and height
   virtual void Resize(uint32_t width, uint32_t height) = 0;

@@ -41,9 +41,16 @@ class UExport Bitmap : public RefCounted {
   virtual uint32_t bpp() const = 0;
   virtual uint32_t row_bytes() const = 0;
   virtual size_t size() const = 0;
-  virtual void* pixels() = 0;
-  virtual const void* pixels() const = 0;
+
   virtual bool owns_pixels() const = 0;
+
+  virtual void* LockPixels() = 0;
+  virtual void UnlockPixels() = 0;
+
+  virtual const void* LockPixels() const = 0;
+  virtual void UnlockPixels() const = 0;
+
+  virtual void* raw_pixels() = 0;
 
   // Member Functions
   virtual bool IsEmpty() const = 0;

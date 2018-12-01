@@ -12,6 +12,17 @@ public:
   virtual ~GPUContextD3D11() {
     if (device_)
       immediate_context_->ClearState();
+
+#if defined(_DEBUG)
+    ID3D11Debug* debug;
+    HRESULT result = device_.Get()->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void **>(&debug));
+
+    if (SUCCEEDED(result))
+    {
+      debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+      debug->Release();
+    }
+#endif
   }
 
   // Inherited from GPUContext
@@ -107,7 +118,9 @@ public:
     UINT height = rc.bottom - rc.top;
 
     UINT createDeviceFlags = 0;
-    // createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#ifdef _DEBUG
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 
     D3D_DRIVER_TYPE driverTypes[] =
     {
