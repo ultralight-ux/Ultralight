@@ -30,14 +30,6 @@ struct UExport Config {
   // Whether JavaScript should be enabled
   bool enable_javascript = true;
 
-  // Whether to use signed distance field (SDF) fonts or raster fonts.
-  // Raster fonts are recommended for when the device scale is 1.0
-  // because the glyph shapes are hinted to the pixel grid.
-  bool use_distance_field_fonts = false;
-
-  // Whether to use signed distance field (SDF) paths or raster paths.
-  bool use_distance_field_paths = false;
-
   // When using the default, offscreen GPU driver, whether or not we
   // should use BGRA byte order (instead of RGBA). See View::bitmap().
   bool use_bgra_for_offscreen_rendering = false;

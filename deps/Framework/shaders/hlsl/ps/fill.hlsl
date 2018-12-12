@@ -219,6 +219,19 @@ float4 fillPatternImage(VS_OUTPUT input) {
   return texture0.Sample(sampler0, uv) * input.Color;
 }
 
+// Gradient noise from Jorge Jimenez's presentation:
+// http://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
+float gradientNoise(in float2 uv)
+{
+    const float3 magic = float3(0.06711056, 0.00583715, 52.9829189);
+    return frac(magic.z * frac(dot(uv, magic.xy)));
+}
+
+float ramp(in float inMin, in float inMax, in float val)
+{
+    return clamp((val - inMin) / (inMax - inMin), 0.0, 1.0);
+}
+
 float4 fillPatternGradient(VS_OUTPUT input) {
   float num_stops = Gradient_NumStops(input);
   bool is_radial = Gradient_IsRadial(input);
@@ -226,6 +239,7 @@ float4 fillPatternGradient(VS_OUTPUT input) {
   float r1 = Gradient_R1(input);
   float2 p0 = Gradient_P0(input);
   float2 p1 = Gradient_P1(input);
+  float4 out_Color = float4(0.0, 0.0, 0.0, 0.0);
 
   if (!is_radial) {
     GradientStop stop0 = GetGradientStop(input, 0u);
@@ -233,12 +247,34 @@ float4 fillPatternGradient(VS_OUTPUT input) {
 
     float2 V = p1 - p0;
     float t = dot(input.TexCoord - p0, V) / dot(V, V);
-    t = saturate(t);
-    return lerp(stop0.color, stop1.color, t);
+    out_Color = lerp(stop0.color, stop1.color, ramp(stop0.percent, stop1.percent, t));
+    if (num_stops > 2) {
+      GradientStop stop2 = GetGradientStop(input, 2u);
+      out_Color = lerp(out_Color, stop2.color, ramp(stop1.percent, stop2.percent, t));
+      if (num_stops > 3) {
+        GradientStop stop3 = GetGradientStop(input, 3u);
+        out_Color = lerp(out_Color, stop3.color, ramp(stop2.percent, stop3.percent, t));
+        if (num_stops > 4) {
+          GradientStop stop4 = GetGradientStop(input, 4u);
+          out_Color = lerp(out_Color, stop4.color, ramp(stop3.percent, stop4.percent, t));
+          if (num_stops > 5) {
+            GradientStop stop5 = GetGradientStop(input, 5u);
+            out_Color = lerp(out_Color, stop5.color, ramp(stop4.percent, stop5.percent, t));
+            if (num_stops > 6) {
+              GradientStop stop6 = GetGradientStop(input, 6u);
+              out_Color = lerp(out_Color, stop6.color, ramp(stop5.percent, stop6.percent, t));
+            }
+          }
+        }
+      }
+    }
   } else {
-    // TODO: Handle radial gradients
-    return input.Color;
+    // TODO Radial Gradients
   }
+
+  // Add gradient noise to reduce banding (+4/-4 gradations)
+  out_Color += (8.0/255.0) * gradientNoise(input.Position.xy) - (4.0/255.0);
+  return out_Color;
 }
 
 float stroke(float d, float s, float a) {
@@ -251,7 +287,7 @@ float samp(in float2 uv, float width, float median) {
   return antialias(texture0.Sample(sampler0, uv).a, width, median);
 }
 
-#define SHARPENING 0.7 // 0 = No sharpening, 0.9 = Max sharpening.
+#define SHARPENING 0.9 // 0 = No sharpening, 0.9 = Max sharpening.
 #define SHARPEN_MORE 1
 
 float supersample(in float2 uv) {

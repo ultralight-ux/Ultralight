@@ -14,8 +14,6 @@ Browser::Browser(framework::Window& window) : window_(window) {
   ultralight::Config config;
   config.face_winding = gpu_context_->face_winding();
   config.device_scale_hint = window_.scale();
-  config.use_distance_field_fonts = window_.scale() != 1.0f; // Only use SDF fonts for high-DPI
-  config.use_distance_field_paths = true;
 
 #if defined(FRAMEWORK_PLATFORM_MAC)
   // Use @resource_path on macOS to use the App Bundle's resource directory

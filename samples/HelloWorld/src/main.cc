@@ -1,14 +1,11 @@
 #include <Ultralight/Ultralight.h>
 #include <iostream>
 #include <string>
-#ifdef _WINDOWS
-#include <windows.h>
-#else
-#include <unistd.h>
-#define Sleep(x) usleep((x)*1000)
-#endif
+#include <thread>
+#include <chrono>
 
 using namespace ultralight;
+using namespace std::chrono_literals;
 
 static bool finished = false;
 
@@ -24,10 +21,6 @@ public:
 int main() {
   std::cout << "\n\n";
   std::cout << "Creating Renderer..." << std::endl;
-
-  Config config;
-  config.use_distance_field_fonts = true;
-  Platform::instance().set_config(config);
 
   auto renderer = ultralight::Renderer::Create();
 
@@ -57,7 +50,7 @@ int main() {
   
   while (!finished) {
     renderer->Update();
-    Sleep(1);
+    std::this_thread::sleep_for(10ms);
   }
 
   std::cout << "Loaded page with title: \n\t " << view->title().utf8().data() << std::endl;
@@ -66,9 +59,8 @@ int main() {
 
   renderer->Render();
 
-  while (!view->is_bitmap_dirty()) {
-    Sleep(1);
-  }
+  while (!view->is_bitmap_dirty())
+    std::this_thread::sleep_for(10ms);
 
   view->bitmap()->WritePNG("output.png");
 

@@ -218,8 +218,21 @@ void fillPatternImage() {
   fillImage(uv);
 }
 
+// Gradient noise from Jorge Jimenez's presentation:
+// http://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
+float gradientNoise(in vec2 uv)
+{
+    const vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+    return fract(magic.z * fract(dot(uv, magic.xy)));
+}
+
+float ramp(in float inMin, in float inMax, in float val)
+{
+    return clamp((val - inMin) / (inMax - inMin), 0.0, 1.0);
+}
+
 void fillPatternGradient() {
-  float num_stops = Gradient_NumStops();
+  int num_stops = int(Gradient_NumStops());
   bool is_radial = Gradient_IsRadial();
   float r0 = Gradient_R0();
   float r1 = Gradient_R1();
@@ -227,14 +240,37 @@ void fillPatternGradient() {
   vec2 p1 = Gradient_P1();
 
   if (!is_radial) {
-    GradientStop stop0 = GetGradientStop(0u);
-    GradientStop stop1 = GetGradientStop(1u);
-
     vec2 V = p1 - p0;
     float t = dot(ex_TexCoord - p0, V) / dot(V, V);
-    t = clamp(t, 0.0, 1.0);
-    out_Color = mix(stop0.color, stop1.color, t);
+    GradientStop stop0 = GetGradientStop(0u);
+    GradientStop stop1 = GetGradientStop(1u);
+    out_Color = mix(stop0.color, stop1.color, ramp(stop0.percent, stop1.percent, t));
+    if (num_stops > 2) {
+      GradientStop stop2 = GetGradientStop(2u);
+      out_Color = mix(out_Color, stop2.color, ramp(stop1.percent, stop2.percent, t));
+      if (num_stops > 3) {
+        GradientStop stop3 = GetGradientStop(3u);
+        out_Color = mix(out_Color, stop3.color, ramp(stop2.percent, stop3.percent, t));
+        if (num_stops > 4) {
+          GradientStop stop4 = GetGradientStop(4u);
+          out_Color = mix(out_Color, stop4.color, ramp(stop3.percent, stop4.percent, t));
+          if (num_stops > 5) {
+            GradientStop stop5 = GetGradientStop(5u);
+            out_Color = mix(out_Color, stop5.color, ramp(stop4.percent, stop5.percent, t));
+            if (num_stops > 6) {
+              GradientStop stop6 = GetGradientStop(6u);
+              out_Color = mix(out_Color, stop6.color, ramp(stop5.percent, stop6.percent, t));
+            }
+          }
+        }
+      }
+    }
+  } else {
+    // TODO Radial Gradients
   }
+
+  // Add gradient noise to reduce banding (+4/-4 gradations)
+  out_Color += (8.0/255.0) * gradientNoise(gl_FragCoord.xy) - (4.0/255.0);
 }
 
 float stroke(float d, float s, float a) {
@@ -247,7 +283,7 @@ float samp(in vec2 uv, float width, float median) {
   return antialias(texture(Texture1, uv).r, width, median);
 }
 
-#define SHARPENING 0.7 // 0 = No sharpening, 0.9 = Max sharpening.
+#define SHARPENING 0.9 // 0 = No sharpening, 0.9 = Max sharpening.
 #define SHARPEN_MORE 1
 #define SUPERSAMPLE_SDF 1
 
