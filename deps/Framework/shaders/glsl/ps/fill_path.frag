@@ -132,10 +132,10 @@ void Unpack(vec4 x, out vec4 a, out vec4 b) {
   b = floor(x - a * s);
 }
 
-const float epsilon = 0.75;
+#define AA_WIDTH 0.354
 
-float antialias2 (float d) {
-  return smoothstep (-epsilon, +epsilon, d);
+float antialias(in float d, in float width, in float median) {
+  return smoothstep(median - width, median + width, d);
 }
 
 void applyClip() {
@@ -152,7 +152,7 @@ void applyClip() {
     p -= origin;
         
     float d_clip = sdRoundRect(p, size, radii_x, radii_y) * (inverse? -1.0 : 1.0);
-    float alpha = antialias2(-d_clip);
+    float alpha = antialias(-d_clip, AA_WIDTH, -AA_WIDTH);
     out_Color = vec4(out_Color.rgb * alpha, out_Color.a * alpha);
     
     //if (abs(d_clip) < 2.0)

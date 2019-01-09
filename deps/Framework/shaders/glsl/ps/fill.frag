@@ -71,6 +71,8 @@ GradientStop GetGradientStop(uint offset) {
   return result;
 }
 
+#define AA_WIDTH 0.354
+
 float antialias(in float d, in float width, in float median) {
   return smoothstep(median - width, median + width, d);
 }
@@ -177,13 +179,10 @@ float sdRoundRect(vec2 p, vec2 size, vec4 rx, vec4 ry) {
 void fillSolid() {
   vec2 size = ex_Data1.xy;
   vec2 p = ex_TexCoord * size;
-  float aa_width = 0.5;
-  float alpha_x = min(antialias(p.x, aa_width, 1.0), 1.0 - antialias(p.x, aa_width, size.x - 1));
-  float alpha_y = min(antialias(p.y, aa_width, 1.0), 1.0 - antialias(p.y, aa_width, size.y - 1));
+  float alpha_x = min(antialias(p.x, AA_WIDTH, 1.0), 1.0 - antialias(p.x, AA_WIDTH, size.x - 1));
+  float alpha_y = min(antialias(p.y, AA_WIDTH, 1.0), 1.0 - antialias(p.y, AA_WIDTH, size.y - 1));
   float alpha = min(alpha_x, alpha_y) * ex_Color.a;
   out_Color = vec4(ex_Color.rgb * alpha, alpha);
-  //out_Color = ex_Color;
-  //out_Color = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 void fillImage(vec2 uv) {
@@ -349,7 +348,7 @@ void Unpack(vec4 x, out vec4 a, out vec4 b) {
   b = floor(x - a * s);
 }
 
-const float epsilon = 0.75;
+const float epsilon = AA_WIDTH;
 
 float antialias2 (float d) {
   return smoothstep (-epsilon, +epsilon, d);
@@ -473,7 +472,7 @@ void fillBoxDecorations() {
   color_bottom /= 255.0f;
   color_left /= 255.0f;
 
-  float width = 0.3;
+  float width = AA_WIDTH;
 
   vec2 p = ex_TexCoord * outer_size - (outer_size * 0.5);
 
@@ -493,7 +492,7 @@ void fillBoxDecorations() {
 }
 
 float innerStroke(float stroke_width, float d) {
-  return min(antialias(-d, 0.5, 0.0), 1.0 - antialias(-d, 0.5, stroke_width));
+  return min(antialias(-d, AA_WIDTH, 0.0), 1.0 - antialias(-d, AA_WIDTH, stroke_width));
 }
 
 void fillRoundedRect() {
@@ -503,7 +502,7 @@ void fillRoundedRect() {
   float d = sdRoundRect(p, size, ex_Data1, ex_Data2);
 
   // Fill background
-  float alpha = antialias(-d, 0.5, 0.0) * ex_Color.a;
+  float alpha = antialias(-d, AA_WIDTH, 0.0) * ex_Color.a;
   out_Color = vec4(ex_Color.rgb * alpha, alpha);
 
   // Draw stroke
@@ -537,7 +536,7 @@ void fillBoxShadow() {
   
   float d = inset * sdRoundRect(p - origin, size, ex_Data2, ex_Data3);
   float alpha = radius >= 1.0? pow(antialias(-d, radius * 1.2, 0.0), 2.2) * 2.5 / pow(radius, 0.04) :
-                               antialias(-d, 1.0, 1.0);
+                               antialias(-d, AA_WIDTH, 1.0);
   alpha = clamp(alpha, 0.0, 1.0) * ex_Color.a;
   out_Color = vec4(ex_Color.rgb * alpha, alpha);
   return;

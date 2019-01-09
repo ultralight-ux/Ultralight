@@ -71,6 +71,8 @@ GradientStop GetGradientStop(VS_OUTPUT input, uint offset) {
   return result;
 }
 
+#define AA_WIDTH 0.354
+
 float antialias(in float d, in float width, in float median) {
   return smoothstep(median - width, median + width, d);
 }
@@ -179,9 +181,8 @@ float sdRoundRect(float2 p, float2 size, float4 rx, float4 ry) {
 float4 fillSolid(VS_OUTPUT input) {
   float2 size = input.Data1.xy;
   float2 p = input.TexCoord * size;
-  float aa_width = 0.5;
-  float alpha_x = min(antialias(p.x, aa_width, 1.0), 1.0 - antialias(p.x, aa_width, size.x - 1));
-  float alpha_y = min(antialias(p.y, aa_width, 1.0), 1.0 - antialias(p.y, aa_width, size.y - 1));
+  float alpha_x = min(antialias(p.x, AA_WIDTH, 1.0), 1.0 - antialias(p.x, AA_WIDTH, size.x - 1));
+  float alpha_y = min(antialias(p.y, AA_WIDTH, 1.0), 1.0 - antialias(p.y, AA_WIDTH, size.y - 1));
   float alpha = min(alpha_x, alpha_y) * input.Color.a;
   return float4(input.Color.rgb * alpha, alpha);
 }
@@ -288,7 +289,7 @@ float samp(in float2 uv, float width, float median) {
 }
 
 #define SHARPENING 0.9 // 0 = No sharpening, 0.9 = Max sharpening.
-#define SHARPEN_MORE 1
+#define SHARPEN_MORE 0
 
 float supersample(in float2 uv) {
   float dist = texture0.Sample(sampler0, uv).a;
@@ -352,7 +353,7 @@ void Unpack(float4 x, out float4 a, out float4 b) {
   b = floor(x - a * s);
 }
 
-float epsilon = 0.75;
+float epsilon = AA_WIDTH;
 
 float antialias2(float d) {
   return smoothstep(-epsilon, +epsilon, d);
@@ -479,7 +480,7 @@ float4 fillBoxDecorations(VS_OUTPUT input) {
   color_bottom /= 255.0f;
   color_left /= 255.0f;
 
-  float width = 0.3;
+  float width = AA_WIDTH;
 
   float2 p = input.TexCoord * outer_size - (outer_size * 0.5);
 
@@ -501,7 +502,7 @@ float4 fillBoxDecorations(VS_OUTPUT input) {
 }
 
 float innerStroke(float stroke_width, float d) {
-  return min(antialias(-d, 0.5, 0.0), 1.0 - antialias(-d, 0.5, stroke_width));
+  return min(antialias(-d, AA_WIDTH, 0.0), 1.0 - antialias(-d, AA_WIDTH, stroke_width));
 }
 
 float4 fillRoundedRect(VS_OUTPUT input) {
@@ -511,7 +512,7 @@ float4 fillRoundedRect(VS_OUTPUT input) {
   float d = sdRoundRect(p, size, input.Data1, input.Data2);
 
   // Fill background
-  float alpha = antialias(-d, 0.5, 0.0) * input.Color.a;
+  float alpha = antialias(-d, AA_WIDTH, 0.0) * input.Color.a;
   float4 outColor = float4(input.Color.rgb * alpha, alpha);
 
   // Draw stroke
@@ -546,7 +547,7 @@ float4 fillBoxShadow(VS_OUTPUT input) {
   
   float d = inset * sdRoundRect(p - origin, size, input.Data2, input.Data3);
   float alpha = radius >= 1.0? pow(antialias(-d, radius * 1.2, 0.0), 2.2) * 2.5 / pow(radius, 0.04) :
-                               antialias(-d, 1.0, 1.0);
+                               antialias(-d, AA_WIDTH, 1.0);
   alpha = clamp(alpha, 0.0, 1.0) * input.Color.a;
   return float4(input.Color.rgb * alpha, alpha);
 }
