@@ -303,19 +303,27 @@ JSClassRef NativeFunctionWithRetvalClass() {
 
 JSPropertyValue& JSPropertyValue::operator=(const JSCallback& callback) {
   JSObjectRef nativeFunction = JSObjectMake(ctx_, NativeFunctionClass(), new JSCallback(callback));
-  if (using_numeric_idx_)
+  if (using_numeric_idx_) {
     JSObjectSetPropertyAtIndex(ctx_, *proxyObj_, numeric_idx_, nativeFunction, nullptr);
-  else
+    JSObjectSetProperty(ctx_, nativeFunction, JSString("name"), JSValue(numeric_idx_), kJSPropertyAttributeReadOnly, nullptr);
+  } else {
     JSObjectSetProperty(ctx_, *proxyObj_, string_idx_, nativeFunction, kJSPropertyAttributeNone, nullptr);
+    JSObjectSetProperty(ctx_, nativeFunction, JSString("name"), JSValue(string_idx_), kJSPropertyAttributeReadOnly, nullptr);
+  }
+
   return *this;
 }
 
 JSPropertyValue& JSPropertyValue::operator=(const JSCallbackWithRetval& callback) {
   JSObjectRef nativeFunction = JSObjectMake(ctx_, NativeFunctionWithRetvalClass(), new JSCallbackWithRetval(callback));
-  if (using_numeric_idx_)
+  if (using_numeric_idx_) {
     JSObjectSetPropertyAtIndex(ctx_, *proxyObj_, numeric_idx_, nativeFunction, nullptr);
-  else
+    JSObjectSetProperty(ctx_, nativeFunction, JSString("name"), JSValue(numeric_idx_), kJSPropertyAttributeReadOnly, nullptr);
+  } else {
     JSObjectSetProperty(ctx_, *proxyObj_, string_idx_, nativeFunction, kJSPropertyAttributeNone, nullptr);
+    JSObjectSetProperty(ctx_, nativeFunction, JSString("name"), JSValue(string_idx_), kJSPropertyAttributeReadOnly, nullptr);
+  }
+
   return *this;
 }
 
