@@ -115,6 +115,7 @@ void GPUDriverD3D11::CreateTexture(uint32_t texture_id,
   if (bitmap->IsEmpty()) {
     desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.CPUAccessFlags = 0;
 
     hr = context_->device()->CreateTexture2D(
       &desc, NULL, texture_entry.first.GetAddressOf());
@@ -123,7 +124,7 @@ void GPUDriverD3D11::CreateTexture(uint32_t texture_id,
     ZeroMemory(&tex_data, sizeof(tex_data));
     tex_data.pSysMem = bitmap->LockPixels();
     tex_data.SysMemPitch = bitmap->row_bytes();
-    tex_data.SysMemSlicePitch = bitmap->size();
+    tex_data.SysMemSlicePitch = (UINT)bitmap->size();
 
     hr = context_->device()->CreateTexture2D(
       &desc, &tex_data, texture_entry.first.GetAddressOf());
@@ -167,7 +168,7 @@ void GPUDriverD3D11::UpdateTexture(uint32_t texture_id,
   else {
     Ref<Bitmap> mapped_bitmap = Bitmap::Create(bitmap->width(), bitmap->height(), kBitmapFormat_RGBA8,
       res.RowPitch, res.pData, res.RowPitch * bitmap->height(), false);
-    IntRect dest_rect = { 0, 0, bitmap->width(), bitmap->height() };
+    IntRect dest_rect = { 0, 0, (int)bitmap->width(), (int)bitmap->height() };
     mapped_bitmap->DrawBitmap(dest_rect, dest_rect, bitmap, false);
   }
 
@@ -598,8 +599,8 @@ ComPtr<ID3D11Buffer> GPUDriverD3D11::GetConstantBuffer() {
 void GPUDriverD3D11::SetViewport(float width, float height) {
   D3D11_VIEWPORT vp;
   ZeroMemory(&vp, sizeof(vp));
-  vp.Width = width * context_->scale();
-  vp.Height = height * context_->scale();
+  vp.Width = width * (float)context_->scale();
+  vp.Height = height * (float)context_->scale();
   vp.MinDepth = 0.0f;
   vp.MaxDepth = 1.0f;
   vp.TopLeftX = 0;

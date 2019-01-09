@@ -82,8 +82,8 @@ public:
     // Setup the viewport
     D3D11_VIEWPORT vp;
     ZeroMemory(&vp, sizeof(vp));
-    vp.Width = (float)client_width * scale();
-    vp.Height = (float)client_height * scale();
+    vp.Width = (float)client_width * (float)scale();
+    vp.Height = (float)client_height * (float)scale();
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0;
@@ -228,8 +228,8 @@ public:
     // Setup the viewport
     D3D11_VIEWPORT vp;
     ZeroMemory(&vp, sizeof(vp));
-    vp.Width = (float)width * scale();
-    vp.Height = (float)height * scale();
+    vp.Width = (float)width * (float)scale();
+    vp.Height = (float)height * (float)scale();
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0;
