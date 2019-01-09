@@ -40,7 +40,9 @@ void Tab::OnAddConsoleMessage(ultralight::View* caller,
   uint32_t line_number,
   uint32_t column_number,
   const ultralight::String& source_id) {
+#if _WIN32
   OutputDebugStringW(message.utf16().data());
+#endif
 }
 
 void Tab::OnBeginLoading(ultralight::View* caller) {
