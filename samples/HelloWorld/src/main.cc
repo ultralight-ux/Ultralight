@@ -1,11 +1,8 @@
 #include <Ultralight/Ultralight.h>
 #include <iostream>
 #include <string>
-#include <thread>
-#include <chrono>
 
 using namespace ultralight;
-using namespace std::chrono_literals;
 
 static bool finished = false;
 
@@ -28,7 +25,8 @@ int main() {
 
   auto view = renderer->CreateView(200, 200, false);
 
-  view->set_load_listener(new LoadListenerImpl());
+  LoadListenerImpl* load_listener = new LoadListenerImpl();
+  view->set_load_listener(load_listener);
 
   view->LoadHTML(R"(
   <html>
@@ -48,25 +46,21 @@ int main() {
 
   std::cout << "Starting update loop..." << std::endl;
   
-  while (!finished) {
+  while (!finished)
     renderer->Update();
-    std::this_thread::sleep_for(10ms);
-  }
 
-  std::cout << "Loaded page with title: \n\t " << view->title().utf8().data() << std::endl;
-  
   std::cout << "Writing bitmap to output.png" << std::endl;
 
   renderer->Render();
-
-  while (!view->is_bitmap_dirty())
-    std::this_thread::sleep_for(10ms);
 
   view->bitmap()->WritePNG("output.png");
 
   std::cout << "Done." << std::endl;
 
   std::cout << "\n\n";
+
+  view->set_load_listener(nullptr);
+  delete load_listener;
 
   return 0;
 }
