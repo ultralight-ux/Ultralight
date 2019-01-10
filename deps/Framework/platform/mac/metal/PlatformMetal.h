@@ -10,6 +10,7 @@ public:
     // Platform-specific stuff
     virtual id<MTLDevice> device() = 0;
     virtual id<MTLRenderPipelineState> render_pipeline_state() = 0;
+    virtual id<MTLRenderPipelineState> path_render_pipeline_state() = 0;
     virtual id<MTLCommandBuffer> command_buffer() = 0;
     virtual MTKView* view() = 0;
     

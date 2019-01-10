@@ -23,6 +23,14 @@ typedef struct
     float2 ScreenCoord;
 } FragmentInput;
 
+typedef struct
+{
+    float4 Position [[position]];
+    float4 Color;
+    float2 ObjectCoord;
+    float2 ScreenCoord;
+} PathFragmentInput;
+
 // Uniform Accessor Functions
 float Time(constant Uniforms& u) { return u.State[0]; }
 float ScreenWidth(constant Uniforms& u) { return u.State[1]; }
@@ -47,7 +55,6 @@ vertexShader(uint vertexID [[vertex_id]],
     
     out.ObjectCoord = vertices[vertexID].ObjCoord;
     out.ScreenCoord = (uniforms.Transform * float4(vertices[vertexID].Position.xy, 1.0, 1.0)).xy;
-    //out.ScreenCoord = vertices[vertexID].Position.xy;
     out.Position = float4(ScreenToDeviceCoords(uniforms, out.ScreenCoord), 1.0, 1.0);
     out.Color = float4(vertices[vertexID].Color) / 255.0f;
     out.TexCoord = vertices[vertexID].TexCoord;
@@ -58,6 +65,21 @@ vertexShader(uint vertexID [[vertex_id]],
     out.Data4 = vertices[vertexID].Data4;
     out.Data5 = vertices[vertexID].Data5;
     out.Data6 = vertices[vertexID].Data6;
+    
+    return out;
+}
+
+vertex PathFragmentInput
+pathVertexShader(uint vertexID [[vertex_id]],
+             constant PathVertex *vertices [[buffer(VertexIndex_Vertices)]],
+             constant Uniforms &uniforms [[buffer(VertexIndex_Uniforms)]])
+{
+    PathFragmentInput out;
+    
+    out.ObjectCoord = vertices[vertexID].ObjCoord;
+    out.ScreenCoord = (uniforms.Transform * float4(vertices[vertexID].Position.xy, 1.0, 1.0)).xy;
+    out.Position = float4(ScreenToDeviceCoords(uniforms, out.ScreenCoord), 1.0, 1.0);
+    out.Color = float4(vertices[vertexID].Color) / 255.0f;
     
     return out;
 }
@@ -99,6 +121,8 @@ GradientStop GetGradientStop(thread FragmentInput& input, constant Uniforms& u, 
     }
     return result;
 }
+
+#define AA_WIDTH 0.5
 
 float antialias(float d, float width, float median) {
     return smoothstep(median - width, median + width, d);
@@ -209,9 +233,8 @@ float sdRoundRect(float2 p, float2 size, float4 rx, float4 ry) {
 float4 fillSolid(thread FragmentInput& input) {
     float2 size = input.Data1.xy;
     float2 p = input.TexCoord * size;
-    float aa_width = 0.5;
-    float alpha_x = min(antialias(p.x, aa_width, 1.0), 1.0 - antialias(p.x, aa_width, size.x - 1));
-    float alpha_y = min(antialias(p.y, aa_width, 1.0), 1.0 - antialias(p.y, aa_width, size.y - 1));
+    float alpha_x = min(antialias(p.x, AA_WIDTH, 1.0), 1.0 - antialias(p.x, AA_WIDTH, size.x - 1));
+    float alpha_y = min(antialias(p.y, AA_WIDTH, 1.0), 1.0 - antialias(p.y, AA_WIDTH, size.y - 1));
     float alpha = min(alpha_x, alpha_y) * input.Color.a;
     return float4(input.Color.rgb * alpha, alpha);
 }
@@ -279,7 +302,7 @@ float samp(thread texture2d<half>& tex, float2 uv, float width, float median) {
     return antialias(tex.sample(texSampler, uv).a, width, median);
 }
 
-#define SHARPENING 0.7 // 0 = No sharpening, 0.9 = Max sharpening.
+#define SHARPENING 0.9 // 0 = No sharpening, 0.9 = Max sharpening.
 #define SHARPEN_MORE 1
 
 float supersample(thread texture2d<half>& tex, float2 uv) {
@@ -342,12 +365,6 @@ void Unpack(float4 x, thread float4& a, thread float4& b) {
     const float s = 65536.0;
     a = floor(x / s);
     b = floor(x - a * s);
-}
-
-constant float epsilon = 0.75;
-
-float antialias2(float d) {
-    return smoothstep(-epsilon, +epsilon, d);
 }
 
 // Returns two values:
@@ -467,7 +484,7 @@ float4 fillBoxDecorations(thread FragmentInput& input) {
     color_bottom /= 255.0f;
     color_left /= 255.0f;
     
-    float width = 0.3;
+    float width = AA_WIDTH;
     
     float2 p = input.TexCoord * outer_size - (outer_size * 0.5);
     
@@ -488,18 +505,18 @@ float4 fillBoxDecorations(thread FragmentInput& input) {
     return outColor;
 }
 
-float innerStroke(float stroke_width, float d) {
-    return min(antialias(-d, 0.5, 0.0), 1.0 - antialias(-d, 0.5, stroke_width));
+float innerStroke(float stroke_width, float d, float aa_width) {
+    return min(antialias(-d, aa_width, 0.0), 1.0 - antialias(-d, aa_width, stroke_width));
 }
 
-float4 fillRoundedRect(thread FragmentInput& input) {
+float4 fillRoundedRect(thread FragmentInput& input, constant Uniforms& u) {
     float2 p = input.TexCoord;
     float2 size = input.Data0.zw;
     p = (p - 0.5) * size;
     float d = sdRoundRect(p, size, input.Data1, input.Data2);
     
     // Fill background
-    float alpha = antialias(-d, 0.5, 0.0) * input.Color.a;
+    float alpha = antialias(-d, AA_WIDTH, 0.0) * input.Color.a;
     float4 outColor = float4(input.Color.rgb * alpha, alpha);
     
     // Draw stroke
@@ -507,7 +524,7 @@ float4 fillRoundedRect(thread FragmentInput& input) {
     float4 stroke_color = input.Data4;
     
     if (stroke_width > 0.0) {
-        alpha = innerStroke(stroke_width, d);
+        alpha = innerStroke(stroke_width, d, AA_WIDTH);
         alpha *= stroke_color.a;
         float4 stroke = float4(stroke_color.rgb * alpha, alpha);
         outColor = blend(stroke, outColor);
@@ -516,11 +533,160 @@ float4 fillRoundedRect(thread FragmentInput& input) {
     return outColor;
 }
 
+float4 fillBoxShadow(thread FragmentInput& input) {
+    float2 p = input.ObjectCoord;
+    float inset = bool(input.Data0.y)? -1.0 : 1.0;
+    float radius = input.Data0.z;
+    float2 origin = input.Data1.xy;
+    float2 size = input.Data1.zw;
+    float2 clip_origin = input.Data4.xy;
+    float2 clip_size = input.Data4.zw;
+    
+    float clip = inset * sdRoundRect(p - clip_origin, clip_size, input.Data5, input.Data6);
+    
+    if (clip < 0.0) {
+        return float4(0.0, 0.0, 0.0, 0.0);
+    }
+    
+    float d = inset * sdRoundRect(p - origin, size, input.Data2, input.Data3);
+    float alpha = radius >= 1.0? pow(antialias(-d, radius * 1.2, 0.0), 2.2) * 2.5 / pow(radius, 0.04) :
+    antialias(-d, AA_WIDTH, 1.0);
+    alpha = clamp(alpha, 0.0, 1.0) * input.Color.a;
+    return float4(input.Color.rgb * alpha, alpha);
+}
+
+float3 blendOverlay(float3 src, float3 dest) {
+    float3 col;
+    for (uint i = 0; i < 3; ++i)
+        col[i] = dest[i] < 0.5 ? (2.0 * dest[i] * src[i]) : (1.0 - 2.0 * (1.0 - dest[i]) * (1.0 - src[i]));
+    return col;
+}
+
+float3 blendColorDodge(float3 src, float3 dest) {
+    float3 col;
+    for (uint i = 0; i < 3; ++i)
+        col[i] = (src[i] == 1.0) ? src[i] : min(dest[i] / (1.0 - src[i]), 1.0);
+    return col;
+}
+
+float3 blendColorBurn(float3 src, float3 dest) {
+    float3 col;
+    for (uint i = 0; i < 3; ++i)
+        col[i] = (src[i] == 0.0) ? src[i] : max((1.0 - ((1.0 - dest[i]) / src[i])), 0.0);
+    return col;
+}
+
+float3 blendHardLight(float3 src, float3 dest) {
+    float3 col;
+    for (uint i = 0; i < 3; ++i)
+        col[i] = dest[i] < 0.5 ? (2.0 * dest[i] * src[i]) : (1.0 - 2.0 * (1.0 - dest[i]) * (1.0 - src[i]));
+    return col;
+}
+
+float3 blendSoftLight(float3 src, float3 dest) {
+    float3 col;
+    for (uint i = 0; i < 3; ++i)
+        col[i] = (src[i] < 0.5) ? (2.0 * dest[i] * src[i] + dest[i] * dest[i] * (1.0 - 2.0 * src[i])) : (sqrt(dest[i]) * (2.0 * src[i] - 1.0) + 2.0 * dest[i] * (1.0 - src[i]));
+    return col;
+}
+
+float3 rgb2hsl( float3 col )
+{
+    const float eps = 0.0000001;
+    float minc = min( col.r, min(col.g, col.b) );
+    float maxc = max( col.r, max(col.g, col.b) );
+    float3 mask = step(col.grr,col.rgb) * step(col.bbg,col.rgb);
+    float3 h = mask * (float3(0.0,2.0,4.0) + (col.gbr-col.brg)/(maxc-minc + eps)) / 6.0;
+    return float3(fract( 1.0 + h.x + h.y + h.z ),                // H
+                  (maxc-minc)/(1.0-abs(minc+maxc-1.0) + eps),   // S
+                  (minc+maxc)*0.5 );                            // L
+}
+
+float3 hsl2rgb( float3 c )
+{
+    float3 rgb = clamp( abs(fmod(c.x*6.0+float3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+    return c.z + c.y * (rgb-0.5)*(1.0-abs(2.0*c.z-1.0));
+}
+
+float3 blendHue(float3 src, float3 dest) {
+    float3 baseHSL = rgb2hsl(dest);
+    return hsl2rgb(float3(rgb2hsl(src).r, baseHSL.g, baseHSL.b));
+}
+
+float3 blendSaturation(float3 src, float3 dest) {
+    float3 baseHSL = rgb2hsl(dest);
+    return hsl2rgb(float3(baseHSL.r, rgb2hsl(src).g, baseHSL.b));
+}
+
+float3 blendColor(float3 src, float3 dest) {
+    float3 blendHSL = rgb2hsl(src);
+    return hsl2rgb(float3(blendHSL.r, blendHSL.g, rgb2hsl(dest).b));
+}
+
+float3 blendLuminosity(float3 src, float3 dest) {
+    float3 baseHSL = rgb2hsl(dest);
+    return hsl2rgb(float3(baseHSL.r, baseHSL.g, rgb2hsl(src).b));
+}
+
+float4 fillBlend(thread FragmentInput& input, thread texture2d<half>& tex0, thread texture2d<half>& tex1) {
+    const uint BlendMode_Normal = 1u;
+    const uint BlendMode_Multiply = 2u;
+    const uint BlendMode_Screen = 3u;
+    const uint BlendMode_Darken = 4u;
+    const uint BlendMode_Lighten = 5u;
+    const uint BlendMode_Overlay = 6u;
+    const uint BlendMode_ColorDodge = 7u;
+    const uint BlendMode_ColorBurn = 8u;
+    const uint BlendMode_HardLight = 9u;
+    const uint BlendMode_SoftLight = 10u;
+    const uint BlendMode_Difference = 11u;
+    const uint BlendMode_Exclusion = 12u;
+    const uint BlendMode_Hue = 13u;
+    const uint BlendMode_Saturation = 14u;
+    const uint BlendMode_Color = 15u;
+    const uint BlendMode_Luminosity = 16u;
+    const uint BlendMode_PlusDarker = 17u;
+    const uint BlendMode_PlusLighter = 18u;
+    
+    float4 src = fillImage(input, tex0);
+    float4 dest = float4(tex1.sample(texSampler, input.ObjectCoord));
+    
+    switch(uint(input.Data0.y))
+    {
+        case BlendMode_Normal: return src;
+        case BlendMode_Multiply: return float4(src.rgb * dest.rgb * src.a, dest.a * src.a);
+        case BlendMode_Screen: return float4((1.0 - ((1.0 - dest.rgb) * (1.0 - src.rgb))) * src.a, dest.a * src.a);
+        case BlendMode_Darken: return float4(min(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Lighten: return float4(max(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Overlay: return float4(blendOverlay(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_ColorDodge: return float4(blendColorDodge(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_ColorBurn: return float4(blendColorBurn(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_HardLight: return float4(blendOverlay(dest.rgb, src.rgb) * src.a, dest.a * src.a);
+        case BlendMode_SoftLight: return float4(blendSoftLight(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Difference: return float4(abs(dest.rgb - src.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Exclusion: return float4((dest.rgb + src.rgb - 2.0 * dest.rgb * src.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Hue: return float4(blendHue(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Saturation: return float4(blendSaturation(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Color: return float4(blendColor(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_Luminosity: return float4(blendLuminosity(src.rgb, dest.rgb) * src.a, dest.a * src.a);
+        case BlendMode_PlusDarker: return src;
+        case BlendMode_PlusLighter: return src;
+    }
+    
+    return src;
+}
+
+float4 fillMask(thread FragmentInput& input, thread texture2d<half>& tex0, thread texture2d<half>& tex1) {
+    float4 col = fillImage(input, tex0);
+    float alpha = float4(tex1.sample(texSampler, input.ObjectCoord)).a;
+    return float4(col.rgb * alpha, col.a * alpha);
+}
+
 //float4 GetCol(float4x4 m, uint i) { return float4(m[0][i], m[1][i], m[2][i], m[3][i]); }
 
 #define VISUALIZE_CLIP 0
 
-void applyClip(thread FragmentInput& input, constant Uniforms& u, thread float4& outColor) {
+void applyClip(float2 objCoord, constant Uniforms& u, thread float4& outColor) {
     for (uint i = 0; i < u.ClipSize; i++) {
         float4x4 data = u.Clip[i];
         float2 origin = data[0].xy;
@@ -529,16 +695,16 @@ void applyClip(thread FragmentInput& input, constant Uniforms& u, thread float4&
         Unpack(data[1], radii_x, radii_y);
         bool inverse = bool(data[3].z);
         
-        float2 p = input.ObjectCoord;
+        float2 p = objCoord;
         p = transformAffine(p, data[2].xy, data[2].zw, data[3].xy);
         p -= origin;
         float d_clip = sdRoundRect(p, size, radii_x, radii_y) * (inverse ? -1.0 : 1.0);
         
 #if VISUALIZE_CLIP
-        if (abs(d_clip) < 3.0)
+        if (abs(d_clip) < 1.0)
             outColor = float4(0.9, 1.0, 0.0, 1.0);
 #else
-        float alpha = antialias2(-d_clip);
+        float alpha = antialias(-d_clip, AA_WIDTH, -AA_WIDTH);
         outColor = float4(outColor.rgb * alpha, outColor.a * alpha);
 #endif
     }
@@ -547,7 +713,8 @@ void applyClip(thread FragmentInput& input, constant Uniforms& u, thread float4&
 // Fragment function
 fragment float4 fragmentShader(FragmentInput input [[stage_in]],
                                constant Uniforms &uniforms [[buffer(FragmentIndex_Uniforms)]],
-                               texture2d<half> tex [[texture(0)]])
+                               texture2d<half> tex0 [[texture(0)]],
+                               texture2d<half> tex1 [[texture(1)]])
 {
     const uint FillType_Solid = 0u;
     const uint FillType_Image = 1u;
@@ -557,22 +724,38 @@ fragment float4 fragmentShader(FragmentInput input [[stage_in]],
     const uint FillType_Stroke_SDF = 5u;
     const uint FillType_Box_Decorations = 6u;
     const uint FillType_Rounded_Rect = 7u;
+    const uint FillType_Box_Shadow = 8u;
+    const uint FillType_Blend = 9u;
+    const uint FillType_Mask = 10u;
     
     float4 outColor = input.Color;
     
     switch (FillType(input))
     {
         case FillType_Solid: outColor = fillSolid(input); break;
-        case FillType_Image: outColor = fillImage(input, tex); break;
-        case FillType_Pattern_Image: outColor = fillPatternImage(input, uniforms, tex); break;
+        case FillType_Image: outColor = fillImage(input, tex0); break;
+        case FillType_Pattern_Image: outColor = fillPatternImage(input, uniforms, tex0); break;
         case FillType_Pattern_Gradient: outColor = fillPatternGradient(input, uniforms); break;
-        case FillType_Fill_SDF: outColor = fillSDF(input, tex); break;
-        case FillType_Stroke_SDF: outColor = fillStrokeSDF(input, tex); break;
+        case FillType_Fill_SDF: outColor = fillSDF(input, tex0); break;
+        case FillType_Stroke_SDF: outColor = fillStrokeSDF(input, tex0); break;
         case FillType_Box_Decorations: outColor = fillBoxDecorations(input); break;
-        case FillType_Rounded_Rect: outColor = fillRoundedRect(input); break;
+        case FillType_Rounded_Rect: outColor = fillRoundedRect(input, uniforms); break;
+        case FillType_Box_Shadow: outColor = fillBoxShadow(input); break;
+        case FillType_Blend: outColor = fillBlend(input, tex0, tex1); break;
+        case FillType_Mask: outColor = fillMask(input, tex0, tex1); break;
     }
     
-    applyClip(input, uniforms, outColor);
+    applyClip(input.ObjectCoord, uniforms, outColor);
+    
+    return outColor;
+}
+
+fragment float4 pathFragmentShader(PathFragmentInput input [[stage_in]],
+                                   constant Uniforms &uniforms [[buffer(FragmentIndex_Uniforms)]])
+{
+    float4 outColor = input.Color;
+    
+    applyClip(input.ObjectCoord, uniforms, outColor);
     
     return outColor;
 }

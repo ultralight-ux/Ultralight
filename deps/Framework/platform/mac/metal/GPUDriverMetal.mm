@@ -36,8 +36,9 @@ void GPUDriverMetal::CreateTexture(uint32_t texture_id,
     if (!bitmap->IsEmpty()) {
         [texture replaceRegion: { { 0, 0, 0 }, {bitmap->width(), bitmap->height(), 1} }
                    mipmapLevel:0
-                     withBytes:bitmap->pixels()
+                     withBytes:bitmap->LockPixels()
                    bytesPerRow:bitmap->row_bytes()];
+        bitmap->UnlockPixels();
     }
 }
 
@@ -52,7 +53,7 @@ void GPUDriverMetal::UpdateTexture(uint32_t texture_id,
     auto& texture_entry = i->second;
     
     // GPU is running behind, overflowing our ring buffer, wait a bit
-    while (texture_entry.current().owning_frame_id_ - gpu_frame_id_.load() >= (int64_t)RingBufferSize)
+    while (texture_entry.current().owning_frame_id_ && (texture_entry.current().owning_frame_id_ - gpu_frame_id_.load() >= (int64_t)RingBufferSize))
         usleep(1000);
     
     if (texture_entry.current().owning_frame_id_ > gpu_frame_id_.load())
@@ -73,8 +74,9 @@ void GPUDriverMetal::UpdateTexture(uint32_t texture_id,
     if (!bitmap->IsEmpty()) {
         [texture replaceRegion: { { 0, 0, 0 }, {bitmap->width(), bitmap->height(), 1} }
                    mipmapLevel:0
-                     withBytes:bitmap->pixels()
+                     withBytes:bitmap->LockPixels()
                    bytesPerRow:bitmap->row_bytes()];
+        bitmap->UnlockPixels();
     }
 }
 
@@ -128,16 +130,12 @@ void GPUDriverMetal::BindRenderBuffer(uint32_t render_buffer_id) {
             return;
         
         texture = j->second.current().texture;
-        render_buffer_width_ = renderBuffer.viewport_width;
-        render_buffer_height_ = renderBuffer.viewport_height;
         
         clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 0.0);
     } else {
         texture = context_->view().currentDrawable.texture;
         uint32_t screen_width, screen_height;
         context_->screen_size(screen_width, screen_height);
-        render_buffer_width_ = screen_width;
-        render_buffer_height_ = screen_height;
         
         clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
     }
@@ -159,23 +157,6 @@ void GPUDriverMetal::BindRenderBuffer(uint32_t render_buffer_id) {
     [context_->command_buffer() renderCommandEncoderWithDescriptor:renderPassDescriptor];
     render_encoder_render_buffer_id_ = render_buffer_id;
     render_encoder_.label = @"UltralightRenderEncoder";
-    
-    // Set the region of the drawable to which we'll draw.
-    [render_encoder_ setViewport:(MTLViewport){0.0, 0.0, render_buffer_width_ * context_->scale(), render_buffer_height_ * context_->scale(), -1.0, 1.0 }];
-    
-    [render_encoder_ setRenderPipelineState:context_->render_pipeline_state()];
-}
-    
-void GPUDriverMetal::SetRenderBufferViewport(uint32_t render_buffer_id,
-                                             uint32_t width,
-                                             uint32_t height) {
-    auto i = render_buffers_.find(render_buffer_id);
-    if (i == render_buffers_.end())
-        return;
-    
-    auto renderBuffer = i->second;
-    renderBuffer.viewport_width = width;
-    renderBuffer.viewport_height = height;
 }
 
 void GPUDriverMetal::ClearRenderBuffer(uint32_t render_buffer_id) {
@@ -199,7 +180,7 @@ void GPUDriverMetal::CreateGeometry(uint32_t geometry_id,
     auto& buffer = geometry_entry.current();
     auto& vertex_buffer = buffer.vertex_buffer_;
     auto& index_buffer = buffer.index_buffer_;
-    
+
     static_assert(sizeof(ultralight::Vertex_2f_4ub_2f_2f_28f) == sizeof(Vertex), "must be equal");
     
     vertex_buffer = [context_->device() newBufferWithLength:vertices.size
@@ -225,7 +206,7 @@ void GPUDriverMetal::UpdateGeometry(uint32_t geometry_id,
     auto& geometry_entry = i->second;
     
     // GPU is running behind, overflowing our ring buffer, wait a bit
-    while (geometry_entry.current().owning_frame_id_ - gpu_frame_id_.load() >= (int64_t)RingBufferSize)
+    while (geometry_entry.current().owning_frame_id_ && (geometry_entry.current().owning_frame_id_ - gpu_frame_id_.load() >= (int64_t)RingBufferSize))
         usleep(1000);
     
     if (geometry_entry.current().owning_frame_id_ > gpu_frame_id_.load())
@@ -273,8 +254,19 @@ void GPUDriverMetal::DrawGeometry(uint32_t geometry_id,
     
     BindRenderBuffer(state.render_buffer_id);
     
+    // Set the region of the drawable to which we'll draw.
+    [render_encoder_ setViewport:(MTLViewport){0.0, 0.0, state.viewport_width * context_->scale(), state.viewport_height * context_->scale(), -1.0, 1.0 }];
+    
+    if (state.shader_type == kShaderType_Fill)
+        [render_encoder_ setRenderPipelineState:context_->render_pipeline_state()];
+    else
+        [render_encoder_ setRenderPipelineState:context_->path_render_pipeline_state()];
+    
     if (state.texture_1_id)
         BindTexture(0, state.texture_1_id);
+    
+    if (state.texture_2_id)
+        BindTexture(1, state.texture_2_id);
     
     SetGPUState(state);
     
@@ -343,7 +335,7 @@ void GPUDriverMetal::SetGPUState(const GPUState& state) {
     uint32_t screen_width, screen_height;
     context_->screen_size(screen_width, screen_height);
     Uniforms uniforms;
-    uniforms.State = { 0.0f, (float)render_buffer_width_, (float)render_buffer_height_, (float)context_->scale() };
+    uniforms.State = { 0.0f, (float)state.viewport_width, (float)state.viewport_height, (float)context_->scale() };
     uniforms.Transform = ToFloat4x4(state.transform);
     uniforms.Scalar4[0] = { state.uniform_scalar[0], state.uniform_scalar[1], state.uniform_scalar[2], state.uniform_scalar[3] };
     uniforms.Scalar4[1] = { state.uniform_scalar[4], state.uniform_scalar[5], state.uniform_scalar[6], state.uniform_scalar[7] };

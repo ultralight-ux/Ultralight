@@ -51,6 +51,8 @@ public:
     // Inherited from PlatformGPUContext
     virtual id<MTLDevice> device() { return device_; }
     virtual id<MTLRenderPipelineState> render_pipeline_state() { return render_pipeline_state_; }
+    virtual id<MTLRenderPipelineState> path_render_pipeline_state() { return path_render_pipeline_state_; }
+
     virtual id<MTLCommandBuffer> command_buffer() { return command_buffer_; }
     virtual MTKView* view() { return view_; }
     virtual void set_scale(double scale) { scale_ = scale; }
@@ -76,18 +78,12 @@ public:
         // Load all the shader files with a .metal file extension in the project
         id<MTLLibrary> defaultLibrary = [device_ newDefaultLibrary];
         
-        // Load the vertex function from the library
-        id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
-        
-        // Load the fragment function from the library
-        id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
-        
-        // Configure a pipeline descriptor that is used to create a pipeline state
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
-        pipelineStateDescriptor.label = @"Simple Pipeline";
-        pipelineStateDescriptor.vertexFunction = vertexFunction;
-        pipelineStateDescriptor.fragmentFunction = fragmentFunction;
+        pipelineStateDescriptor.label = @"Fill Pipeline";
+        pipelineStateDescriptor.vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+        pipelineStateDescriptor.fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat;
+        
         auto colorAttachmentDesc = pipelineStateDescriptor.colorAttachments[0];
         colorAttachmentDesc.blendingEnabled = true;
         colorAttachmentDesc.rgbBlendOperation = MTLBlendOperationAdd;
@@ -98,7 +94,7 @@ public:
         colorAttachmentDesc.destinationAlphaBlendFactor = MTLBlendFactorOne;
         
         render_pipeline_state_ = [device_ newRenderPipelineStateWithDescriptor:pipelineStateDescriptor
-                                                                 error:&error];
+                                                                         error:&error];
         if (!render_pipeline_state_)
         {
             // Pipeline State creation could fail if we haven't properly set up our pipeline descriptor.
@@ -106,6 +102,33 @@ public:
             //  went wrong.  (Metal API validation is enabled by default when a debug build is run
             //  from Xcode)
             NSLog(@"Failed to created pipeline state, error %@", error);
+            return false;
+        }
+        
+        MTLRenderPipelineDescriptor *pathPipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
+        pathPipelineStateDescriptor.label = @"Fill Path Pipeline";
+        pathPipelineStateDescriptor.vertexFunction = [defaultLibrary newFunctionWithName:@"pathVertexShader"];
+        pathPipelineStateDescriptor.fragmentFunction = [defaultLibrary newFunctionWithName:@"pathFragmentShader"];
+        pathPipelineStateDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat;
+        
+        auto pathColorAttachmentDesc = pathPipelineStateDescriptor.colorAttachments[0];
+        pathColorAttachmentDesc.blendingEnabled = true;
+        pathColorAttachmentDesc.rgbBlendOperation = MTLBlendOperationAdd;
+        pathColorAttachmentDesc.alphaBlendOperation = MTLBlendOperationAdd;
+        pathColorAttachmentDesc.sourceRGBBlendFactor = MTLBlendFactorOne;
+        pathColorAttachmentDesc.destinationRGBBlendFactor = MTLBlendFactorOneMinusSourceAlpha;
+        pathColorAttachmentDesc.sourceAlphaBlendFactor = MTLBlendFactorOneMinusDestinationAlpha;
+        pathColorAttachmentDesc.destinationAlphaBlendFactor = MTLBlendFactorOne;
+        
+        path_render_pipeline_state_ = [device_ newRenderPipelineStateWithDescriptor:pathPipelineStateDescriptor
+                                                                              error:&error];
+        if (!path_render_pipeline_state_)
+        {
+            // Pipeline State creation could fail if we haven't properly set up our pipeline descriptor.
+            //  If the Metal API validation is enabled, we can find out more information about what
+            //  went wrong.  (Metal API validation is enabled by default when a debug build is run
+            //  from Xcode)
+            NSLog(@"Failed to created path pipeline state, error %@", error);
             return false;
         }
         
@@ -124,6 +147,7 @@ public:
 protected:
     id<MTLDevice> device_;
     id<MTLRenderPipelineState> render_pipeline_state_;
+    id<MTLRenderPipelineState> path_render_pipeline_state_;
     id<MTLCommandQueue> command_queue_;
     id<MTLCommandBuffer> command_buffer_;
     MTKView* view_;

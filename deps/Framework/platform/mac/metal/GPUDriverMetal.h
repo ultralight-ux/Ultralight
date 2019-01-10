@@ -45,10 +45,6 @@ public:
     
     virtual void BindRenderBuffer(uint32_t render_buffer_id);
     
-    virtual void SetRenderBufferViewport(uint32_t render_buffer_id,
-                                         uint32_t width,
-                                         uint32_t height);
-    
     virtual void ClearRenderBuffer(uint32_t render_buffer_id);
     
     virtual void DestroyRenderBuffer(uint32_t render_buffer_id);
@@ -108,8 +104,6 @@ protected:
     uint32_t render_encoder_render_buffer_id_;
     bool needs_render_buffer_clear_;
     uint32_t render_buffer_clear_id_;
-    double render_buffer_width_;
-    double render_buffer_height_;
     
     uint32_t next_texture_id_ = 1;
     uint32_t next_render_buffer_id_ = 1; // 0 is reserved for screen
@@ -117,7 +111,7 @@ protected:
     
     struct Texture {
         id<MTLTexture> texture;
-        int64_t owning_frame_id_;
+        int64_t owning_frame_id_ = 0;
     };
     
     typedef std::map<uint32_t, RingBuffer<Texture>> TextureMap;
@@ -129,7 +123,7 @@ protected:
     struct GeometryBuffer {
         id<MTLBuffer> vertex_buffer_;
         id<MTLBuffer> index_buffer_;
-        int64_t owning_frame_id_;
+        int64_t owning_frame_id_ = 0;
     };
     
     typedef std::map<uint32_t, RingBuffer<GeometryBuffer>> GeometryMap;

@@ -39,6 +39,13 @@ typedef struct
     simd::float4 Data5;
     simd::float4 Data6;
 } Vertex;
+
+typedef struct
+{
+    simd::float2 Position;
+    simd::uchar4 Color;
+    simd::float2 ObjCoord;
+} PathVertex;
 #pragma pack(pop)
 
 
