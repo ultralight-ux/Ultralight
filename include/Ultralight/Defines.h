@@ -10,6 +10,10 @@
 #include <cstddef>
 #include <limits.h>
 
+#ifdef SWIG
+#define UExport
+#else
+
 // Require C++11 Support
 #if defined(_MSC_VER)
 #   if _MSC_VER < 1800 
@@ -33,6 +37,8 @@
 #else
 #  define UExport __attribute__((visibility("default")))
 #define _thread_local __thread
+#endif
+
 #endif
 
 #define ULTRALIGHT_VERSION "0.9.1"
