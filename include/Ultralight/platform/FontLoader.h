@@ -16,8 +16,21 @@ class UExport FontLoader {
 public:
   virtual ~FontLoader();
 
-  // Last resort fallback font family name.
+  /**
+   * Fallback font family name. Will be used if all other fonts fail to load.
+   */
   virtual String16 fallback_font() const = 0;
+
+  /**
+   * Fallback font family name that can render the specified characters. This
+   * is mainly used to support CJK (Chinese, Japanese, Korean) text display.
+   *
+   * @param  characters  One or more UTF-16 characters.
+   * @param  weight      Font weight.
+   * @param  italic      Whether or not italic is requested.
+   * @param  size        Font size.
+   */
+  virtual String16 fallback_font_for_characters(const String16& characters, int weight, bool italic, float size) const = 0;
 
   /**
    * Load font with a certain font description.

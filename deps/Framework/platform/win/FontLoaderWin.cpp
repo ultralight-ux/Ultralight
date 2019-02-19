@@ -54,27 +54,181 @@ static int CALLBACK matchImprovingEnumProc(CONST LOGFONT* candidate, CONST TEXTM
   return 1;
 }
 
+static USHORT ReadUShort(BYTE* p)
+{
+  return ((USHORT)p[0] << 8) + ((USHORT)p[1]);
+}
+
+static DWORD ReadDWord(BYTE* p)
+{
+  return ((LONG)p[0] << 24) + ((LONG)p[1] << 16) + ((LONG)p[2] << 8) + ((LONG)p[3]);
+}
+
+static DWORD ReadTag(BYTE* p)
+{
+  return ((LONG)p[3] << 24) + ((LONG)p[2] << 16) + ((LONG)p[1] << 8) + ((LONG)p[0]);
+}
+
+static void WriteDWord(BYTE* p, DWORD dw)
+{
+  p[0] = (BYTE)((dw >> 24) & 0xFF);
+  p[1] = (BYTE)((dw >> 16) & 0xFF);
+  p[2] = (BYTE)((dw >> 8) & 0xFF);
+  p[3] = (BYTE)((dw) & 0xFF);
+}
+
+static DWORD RoundUpToDWord(DWORD val)
+{
+  return (val + 3) & ~3;
+}
+
+#define TTC_FILE 0x66637474
+
+const DWORD sizeOfFixedHeader = 12;
+const DWORD offsetOfTableCount = 4;
+
+const DWORD sizeOfTableEntry = 16;
+const DWORD offsetOfTableTag = 0;
+const DWORD offsetOfTableChecksum = 4;
+const DWORD offsetOfTableOffset = 8;
+const DWORD offsetOfTableLength = 12;
+
+static bool ExtractFontData(HDC hdc, DWORD& fontDataSize, BYTE*& fontData)
+{
+  bool ok = false;
+  fontData = NULL;
+  fontDataSize = 0;
+
+  // Check if font is in TrueType collection
+  if (GetFontData(hdc, TTC_FILE, 0, NULL, 0) != GDI_ERROR)
+  {
+    // Extract font data from TTC (TrueType Collection)
+    // 1. Read number of tables in the font (ushort value at offset 2)
+    USHORT nTables;
+    BYTE uShortBuf[2];
+    if (GetFontData(hdc, 0, 4, uShortBuf, 2) == GDI_ERROR)
+    {
+      return false;
+    }
+    nTables = ReadUShort(uShortBuf);
+
+    // 2. Calculate memory needed for the whole font header and read it into buffer
+    DWORD headerSize = sizeOfFixedHeader + nTables * sizeOfTableEntry;
+    BYTE* fontHeader = new BYTE[headerSize];
+    if (!fontHeader)
+    {
+      return false;
+    }
+
+    if (GetFontData(hdc, 0, 0, fontHeader, headerSize) == GDI_ERROR)
+    {
+      delete[] fontHeader;
+      return false;
+    }
+
+    // 3. Calculate total font size. 
+    //    Tables are padded to 4-byte boundaries, so length should be rounded up to dword.
+    DWORD bufferSize = headerSize;
+    USHORT i;
+    for (i = 0; i < nTables; i++)
+    {
+      DWORD tableLength = ReadDWord(fontHeader + sizeOfFixedHeader + i * sizeOfTableEntry + offsetOfTableLength);
+      if (i < nTables - 1)
+      {
+        bufferSize += RoundUpToDWord(tableLength);
+      }
+      else
+      {
+        bufferSize += tableLength;
+      }
+    }
+
+    // 4. Copying header into target buffer.
+    //    Patch offsets with correct values while copying data.
+    BYTE* buffer = new BYTE[bufferSize];
+    if (buffer == NULL)
+    {
+      delete[] fontHeader;
+      return false;
+    }
+    memcpy(buffer, fontHeader, headerSize);
+
+    // 5. Get table data from GDI, write it into known place 
+    //    inside target buffer and fix offset value.
+    DWORD runningOffset = headerSize;
+
+    for (i = 0; i < nTables; i++)
+    {
+      BYTE* entryData = fontHeader + sizeOfFixedHeader + i * sizeOfTableEntry;
+      DWORD tableTag = ReadTag(entryData + offsetOfTableTag);
+      DWORD tableLength = ReadDWord(entryData + offsetOfTableLength);
+
+      // Write new offset for this table.
+      WriteDWord(buffer + sizeOfFixedHeader + i * sizeOfTableEntry + offsetOfTableOffset, runningOffset);
+
+      //Get font data from GDI and place it into target buffer
+      if (GetFontData(hdc, tableTag, 0, buffer + runningOffset, tableLength) == GDI_ERROR)
+      {
+        delete[] buffer;
+        delete[] fontHeader;
+        return false;
+      }
+      runningOffset += tableLength;
+
+      // Pad tables (except last) with zero's
+      if (i < nTables - 1)
+      {
+        while (runningOffset % 4 != 0)
+        {
+          buffer[runningOffset] = 0;
+          ++runningOffset;
+        }
+      }
+    }
+    delete[] fontHeader;
+    fontDataSize = bufferSize;
+    fontData = buffer;
+  }
+  else
+  {
+    // Check if font is TrueType
+    DWORD bufferSize = GetFontData(hdc, 0, 0, NULL, 0);
+    if (bufferSize != GDI_ERROR)
+    {
+      BYTE* buffer = new BYTE[bufferSize];
+      if (buffer != NULL)
+      {
+        ok = (GetFontData(hdc, 0, 0, buffer, bufferSize) != GDI_ERROR);
+        if (ok)
+        {
+          fontDataSize = bufferSize;
+          fontData = buffer;
+        }
+        else
+        {
+          delete[] buffer;
+        }
+      }
+    }
+  }
+  return ok;
+}
+
 ultralight::Ref<ultralight::Buffer> GetFontData(const HFONT fontHandle)
 {
   HDC hdc = ::CreateCompatibleDC(NULL);
   if (hdc != NULL && fontHandle != NULL)
   {
     ::SelectObject(hdc, fontHandle);
-    const DWORD size = ::GetFontData(hdc, 0, 0, NULL, 0);
-    if (size > 0)
-    {
-      char* buffer = new char[size];
-      if (::GetFontData(hdc, 0, 0, buffer, size) == size)
-      {
-        auto result = ultralight::Buffer::Create(buffer, size);
-        delete[] buffer;
-        ::DeleteDC(hdc);
-        return result;
-      }
-      delete[] buffer;
-    }
+    DWORD fontDataSize;
+    BYTE* fontData;
+    bool ok = ExtractFontData(hdc, fontDataSize, fontData);
+    auto result = ultralight::Buffer::Create(fontData, fontDataSize);
+    delete[] fontData;
     ::DeleteDC(hdc);
+    return result;
   }
+
   return ultralight::Buffer::Create(nullptr, 0);
 }
 
@@ -201,6 +355,11 @@ namespace ultralight {
 
 String16 FontLoaderWin::fallback_font() const {
   return "Times New Roman";
+}
+
+String16 FontLoaderWin::fallback_font_for_characters(const String16& characters, int weight, bool italic, float size) const {
+  // TODO, use WinAPI to get the correct font (eg, Yu Gothic for Japanese on Win10)
+  return "Yu Gothic";
 }
 
 Ref<Buffer> FontLoaderWin::Load(const String16& family, int weight, bool italic, float size) {

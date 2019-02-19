@@ -13227,6 +13227,10 @@ String16 FontLoaderRoboto::fallback_font() const {
   return "Roboto";
 }
 
+String16 FontLoaderRoboto::fallback_font_for_characters(const String16& characters, int weight, bool italic, float size) const {
+  return fallback_font();
+}
+
 Ref<Buffer> FontLoaderRoboto::Load(const String16& family, int weight, bool italic, float size) {
   return Buffer::Create(Roboto_Regular_ttf, Roboto_Regular_ttf_len);
 }

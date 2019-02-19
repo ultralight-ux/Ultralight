@@ -281,59 +281,59 @@ ULExport void ulViewFireMouseEvent(ULView view, ULMouseEvent mouse_event);
 ULExport void ulViewFireScrollEvent(ULView view, ULScrollEvent scroll_event);
 
 typedef void
-(*ULChangeTitleCallback) (ULView caller, ULString title);
+(*ULChangeTitleCallback) (void* user_data, ULView caller, ULString title);
 
 /// Set callback for when the page title changes
-ULExport void ulViewSetChangeTitleCallback(ULView view, ULChangeTitleCallback callback);
+ULExport void ulViewSetChangeTitleCallback(ULView view, ULChangeTitleCallback callback, void* user_data);
 
 typedef void
-(*ULChangeURLCallback) (ULView caller, ULString url);
+(*ULChangeURLCallback) (void* user_data, ULView caller, ULString url);
 
 /// Set callback for when the page URL changes
-ULExport void ulViewSetChangeURLCallback(ULView view, ULChangeURLCallback callback);
+ULExport void ulViewSetChangeURLCallback(ULView view, ULChangeURLCallback callback, void* user_data);
 
 typedef void
-(*ULChangeTooltipCallback) (ULView caller, ULString tooltip);
+(*ULChangeTooltipCallback) (void* user_data, ULView caller, ULString tooltip);
 
 /// Set callback for when the tooltip changes (usually as result of a mouse hover)
-ULExport void ulViewSetChangeTooltipCallback(ULView view, ULChangeTooltipCallback callback);
+ULExport void ulViewSetChangeTooltipCallback(ULView view, ULChangeTooltipCallback callback, void* user_data);
 
 typedef void
-(*ULChangeCursorCallback) (ULView caller, ULCursor cursor);
+(*ULChangeCursorCallback) (void* user_data, ULView caller, ULCursor cursor);
 
 /// Set callback for when the mouse cursor changes
-ULExport void ulViewSetChangeCursorCallback(ULView view, ULChangeCursorCallback callback);
+ULExport void ulViewSetChangeCursorCallback(ULView view, ULChangeCursorCallback callback, void* user_data);
 
 typedef void
-(*ULAddConsoleMessageCallback) (ULView caller, ULMessageSource source, ULMessageLevel level, ULString message, unsigned int line_number, unsigned int column_number, ULString source_id);
+(*ULAddConsoleMessageCallback) (void* user_data, ULView caller, ULMessageSource source, ULMessageLevel level, ULString message, unsigned int line_number, unsigned int column_number, ULString source_id);
 
 /// Set callback for when a message is added to the console (useful for JavaScript / network errors and debugging)
-ULExport void ulViewSetAddConsoleMessageCallback(ULView view, ULAddConsoleMessageCallback callback);
+ULExport void ulViewSetAddConsoleMessageCallback(ULView view, ULAddConsoleMessageCallback callback, void* user_data);
 
 typedef void
-(*ULBeginLoadingCallback) (ULView caller);
+(*ULBeginLoadingCallback) (void* user_data, ULView caller);
 
 /// Set callback for when the page begins loading new URL into main frame
-ULExport void ulViewSetBeginLoadingCallback(ULView view, ULBeginLoadingCallback callback);
+ULExport void ulViewSetBeginLoadingCallback(ULView view, ULBeginLoadingCallback callback, void* user_data);
 
 typedef void
-(*ULFinishLoadingCallback) (ULView caller);
+(*ULFinishLoadingCallback) (void* user_data, ULView caller);
 
 /// Set callback for when the page finishes loading URL into main frame
-ULExport void ulViewSetFinishLoadingCallback(ULView view, ULFinishLoadingCallback callback);
+ULExport void ulViewSetFinishLoadingCallback(ULView view, ULFinishLoadingCallback callback, void* user_data);
 
 typedef void
-(*ULUpdateHistoryCallback) (ULView caller);
+(*ULUpdateHistoryCallback) (void* user_data, ULView caller);
 
 /// Set callback for when the history (back/forward state) is modified
-ULExport void ulViewSetUpdateHistoryCallback(ULView view, ULUpdateHistoryCallback callback);
+ULExport void ulViewSetUpdateHistoryCallback(ULView view, ULUpdateHistoryCallback callback, void* user_data);
 
 typedef void
-(*ULDOMReadyCallback) (ULView caller);
+(*ULDOMReadyCallback) (void* user_data, ULView caller);
 
 /// Set callback for when all JavaScript has been parsed and the document is ready.
 /// This is the best time to make any initial JavaScript calls to your page.
-ULExport void ulViewSetDOMReadyCallback(ULView view, ULDOMReadyCallback callback);
+ULExport void ulViewSetDOMReadyCallback(ULView view, ULDOMReadyCallback callback, void* user_data);
 
 /***********************
  * String
