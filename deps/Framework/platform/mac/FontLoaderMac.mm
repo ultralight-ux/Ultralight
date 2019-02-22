@@ -8,6 +8,11 @@ String16 FontLoaderMac::fallback_font() const {
     return "Helvetica";
 }
 
+String16 FontLoaderMac::fallback_font_for_characters(const String16& characters, int weight, bool italic, float size) const {
+    // TODO
+    return fallback_font();
+}
+
 static NSString* ToNSString(const String16& str) {
     auto pathData = [[NSData alloc] initWithBytesNoCopy:const_cast<void*>(reinterpret_cast<const void*>(str.data()))
                                                  length:str.length() * sizeof(Char16)
