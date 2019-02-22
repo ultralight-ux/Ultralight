@@ -3,9 +3,6 @@
 #include <Ultralight/Defines.h>
 #include <Ultralight/KeyCodes.h>
 #include <Ultralight/String.h>
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 #ifdef __OBJC__
 #import <AppKit/NSEvent.h>
 #endif
@@ -41,7 +38,7 @@ public:
 
 #ifdef _WIN32
   // Create a KeyEvent directly from a Windows keyboard event.
-  KeyEvent(Type type, WPARAM wparam, LPARAM lparam, bool is_system_key);
+  KeyEvent(Type type, uintptr_t wparam, intptr_t lparam, bool is_system_key);
 #endif
 
 #ifdef __OBJC__

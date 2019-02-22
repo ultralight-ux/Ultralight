@@ -7,9 +7,6 @@
 
 #include <stddef.h>
 #include <JavaScriptCore/JavaScript.h>
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 #ifdef __OBJC__
 #import <AppKit/NSEvent.h>
 #endif
@@ -422,7 +419,7 @@ ULExport ULKeyEvent ulCreateKeyEvent(ULKeyEventType type, unsigned int modifiers
 
 #ifdef _WIN32
 /// Create a key event from native Windows event.
-ULExport ULKeyEvent ulCreateKeyEventWindows(ULKeyEventType type, WPARAM wparam, LPARAM lparam, bool is_system_key);
+ULExport ULKeyEvent ulCreateKeyEventWindows(ULKeyEventType type, uintptr_t wparam, intptr_t lparam, bool is_system_key);
 #endif
 
 #ifdef __OBJC__
