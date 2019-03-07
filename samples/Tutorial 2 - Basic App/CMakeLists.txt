@@ -1,19 +1,16 @@
+set(APP_NAME Tutorial2)
+include_directories("${ULTRALIGHT_INCLUDE_DIRS}")
 link_directories("${ULTRALIGHT_LIBRARY_DIRS}")
-
 link_libraries(UltralightCore AppCore Ultralight WebCore)
 
-include_directories("${ULTRALIGHT_INCLUDE_DIRS}")
+add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE "main.cpp")
 
-if (MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
-elseif (UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+if (APPLE)
+  # Enable High-DPI on macOS through our custom Info.plist template
+  set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.in) 
 endif()
 
-add_executable(Tutorial2 WIN32 "main.cpp")
-
 # Copy all binaries to target directory
-add_custom_command(TARGET Tutorial2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIRS}" $<TARGET_FILE_DIR:Tutorial2>)  
+add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIRS}" $<TARGET_FILE_DIR:${APP_NAME}>)  
 
