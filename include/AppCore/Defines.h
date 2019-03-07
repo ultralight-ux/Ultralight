@@ -35,7 +35,7 @@
 #define DISABLE_NATIVE_WCHAR_T
 #endif
 #else
-#  define UExport __attribute__((visibility("default")))
+#  define AExport __attribute__((visibility("default")))
 #define _thread_local __thread
 #endif
 

@@ -1,11 +1,6 @@
 link_directories("${ULTRALIGHT_LIBRARY_DIRS}")
 
-if (NOT APPLE)
-    link_libraries(UltralightCore AppCore Ultralight WebCore)
-else ()
-    # On macOS the last two libraries are Frameworks so we must pass special flags to the linker
-    link_libraries(UltralightCore AppCore "-framework Ultralight -framework WebCore -Wl,-F${ULTRALIGHT_LIBRARY_DIRS}")
-endif()
+link_libraries(UltralightCore AppCore Ultralight WebCore)
 
 include_directories("${ULTRALIGHT_INCLUDE_DIRS}")
 

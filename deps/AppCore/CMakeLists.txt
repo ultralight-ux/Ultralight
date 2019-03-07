@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(AppCore)
 set_property(DIRECTORY . PROPERTY FOLDER "AppCore")
+set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SDK_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+get_filename_component(SDK_ROOT "../../"
+                       REALPATH)
 
 include_directories("${SDK_ROOT}/include")
 
@@ -40,23 +43,51 @@ if (WIN32)
     
     add_definitions(-DAPPCORE_IMPLEMENTATION -D_UNICODE -DNOMINMAX)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        link_directories("${SDK_ROOT}/lib/win/x64")
+        set(LIB_DIR "${SDK_ROOT}/lib/win/x64")
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        link_directories("${SDK_ROOT}/lib/win/x86")
+        set(LIB_DIR "${SDK_ROOT}/lib/win/x86")
     endif()
+    set(AppCore_LIBRARIES "${LIB_DIR}/Ultralight.lib ${LIB_DIR}/UltralightCore.lib ${LIB_DIR}/WebCore.lib Shcore.lib Shlwapi.lib Usp10.lib d3d11.lib d3dcompiler.lib")
 elseif (APPLE)
-    link_directories("${SDK_ROOT}/lib/mac")
+    list(APPEND AppCore_SOURCES
+        "src/mac/AppMac.h"
+        "src/mac/AppMac.mm"
+        "src/mac/MonitorMac.h"
+        "src/mac/MonitorMac.mm"
+        "src/mac/WindowMac.h"
+        "src/mac/WindowMac.mm"
+        "src/mac/AppDelegate.h"
+        "src/mac/AppDelegate.m"
+        "src/mac/ViewController.h"
+        "src/mac/ViewController.mm"
+        "src/mac/ViewDelegate.h"
+        "src/mac/ViewDelegate.mm"
+        "src/mac/WindowDelegate.h"
+        "src/mac/WindowDelegate.mm"
+        "src/mac/metal/GPUContextMetal.h"
+        "src/mac/metal/GPUContextMetal.mm"
+        "src/mac/metal/GPUDriverMetal.h"
+        "src/mac/metal/GPUDriverMetal.mm"
+        "shaders/metal/Shaders.metal"
+    )
+    set(LIB_DIR "${SDK_ROOT}/bin/mac")
+    set(AppCore_LIBRARIES "${LIB_DIR}/libUltralight.dylib" "${LIB_DIR}/libUltralightCore.dylib" "${LIB_DIR}/libWebCore.dylib")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    set_source_files_properties("shaders/metal/Shaders.metal" PROPERTIES LANGUAGE METAL)
 elseif (UNIX)
-    link_directories("${SDK_ROOT}/lib/linux")
+    set(LIB_DIR "${SDK_ROOT}/bin/linux")
 endif()
 
 
+message("SDK_ROOT = ${SDK_ROOT}")
+message("LIB_DIR = ${LIB_DIR}")
+
 add_library(AppCore SHARED ${AppCore_SOURCES})
-link_directories("${SDK_ROOT}/lib")
-target_link_libraries (AppCore Ultralight UltralightCore WebCore)
+target_link_libraries (AppCore ${AppCore_LIBRARIES})
 
 if (WIN32)
     target_link_libraries (AppCore Shcore.lib Shlwapi.lib Usp10.lib d3d11.lib d3dcompiler.lib)
 elseif (APPLE)
-    set_target_properties(AppCore PROPERTIES LINK_FLAGS "-framework Ultralight -Wl,-F${SDK_ROOT}/lib")
+    set_target_properties(AppCore PROPERTIES LINK_FLAGS "-framework Cocoa -framework Metal -framework Foundation -framework CoreFoundation -framework MetalKit")
+    set_property (TARGET AppCore APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
 endif ()

@@ -72,5 +72,5 @@ elseif (UNIX)
     
 endif ()
 
-add_subdirectory(deps)
+#add_subdirectory(deps)
 add_subdirectory(samples)
