@@ -75,7 +75,37 @@ elseif (APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
     set_source_files_properties("shaders/metal/Shaders.metal" PROPERTIES LANGUAGE METAL)
 elseif (UNIX)
+    set(GLFW_SOURCE_DIR "${SDK_ROOT}/deps/AppCore/deps/glfw")
+
+    # Disable various GLFW options
+    option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
+    option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
+    option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+    option(GLFW_INSTALL "Generate installation target" OFF)
+    
+    list(APPEND AppCore_SOURCES
+        "src/linux/AppGLFW.h"
+        "src/linux/AppGLFW.cpp"
+        "src/linux/MonitorGLFW.h"
+        "src/linux/MonitorGLFW.cpp"
+        "src/linux/WindowGLFW.h"
+        "src/linux/WindowGLFW.cpp"
+        "src/linux/gl/GPUContextGL.h"
+        "src/linux/gl/GPUContextGL.cpp"
+        "src/linux/gl/GPUDriverGL.h"
+        "src/linux/gl/GPUDriverGL.cpp"
+        "${GLFW_SOURCE_DIR}/deps/glad/glad.h"
+        "${GLFW_SOURCE_DIR}/deps/glad.c"
+    )
+                 
+    add_subdirectory("deps/glfw")
+    include_directories("${GLFW_SOURCE_DIR}/include")
+    include_directories("${GLFW_SOURCE_DIR}/deps")
+    
     set(LIB_DIR "${SDK_ROOT}/bin/linux")
+    
+    link_libraries(glfw)
+    set(AppCore_LIBRARIES "${LIB_DIR}/libUltralight.so" "${LIB_DIR}/libUltralightCore.so" "${LIB_DIR}/libWebCore.so")
 endif()
 
 
@@ -85,9 +115,7 @@ message("LIB_DIR = ${LIB_DIR}")
 add_library(AppCore SHARED ${AppCore_SOURCES})
 target_link_libraries (AppCore ${AppCore_LIBRARIES})
 
-if (WIN32)
-    target_link_libraries (AppCore Shcore.lib Shlwapi.lib Usp10.lib d3d11.lib d3dcompiler.lib)
-elseif (APPLE)
+if (APPLE)
     set_target_properties(AppCore PROPERTIES LINK_FLAGS "-framework Cocoa -framework Metal -framework Foundation -framework CoreFoundation -framework MetalKit")
     set_property (TARGET AppCore APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
 endif ()

@@ -17,8 +17,10 @@ void OverlayManager::Add(Overlay* overlay) {
 void OverlayManager::Remove(Overlay* overlay) {
   overlays_.erase(std::remove(overlays_.begin(), overlays_.end(), overlay), overlays_.end());
 
-  if (focused_overlay_ == overlay)
+  if (focused_overlay_ == overlay) {
     focused_overlay_ = nullptr;
+    is_dragging_ = false;
+  }
 
   if (hovered_overlay_ == overlay)
     hovered_overlay_ = nullptr;
@@ -35,10 +37,25 @@ void OverlayManager::FireKeyEvent(const ultralight::KeyEvent& evt) {
 }
 
 void OverlayManager::FireMouseEvent(const ultralight::MouseEvent& evt) {
+  if (is_dragging_) {
+    MouseEvent rel_evt = evt;
+    rel_evt.x -= hovered_overlay_->x();
+    rel_evt.y -= hovered_overlay_->y();
+
+    focused_overlay_->view()->FireMouseEvent(rel_evt);
+
+    if (evt.type == ultralight::MouseEvent::kType_MouseUp && evt.button == MouseEvent::kButton_Left)
+      is_dragging_ = false;
+
+    return;
+  }
+
   hovered_overlay_ = HitTest(evt.x, evt.y);
 
-  if (evt.type == ultralight::MouseEvent::kType_MouseDown)
+  if (evt.type == ultralight::MouseEvent::kType_MouseDown && evt.button == MouseEvent::kButton_Left) {
     focused_overlay_ = HitTest(evt.x, evt.y);
+    is_dragging_ = true;
+  }
 
   if (hovered_overlay_) {
     MouseEvent rel_evt = evt;

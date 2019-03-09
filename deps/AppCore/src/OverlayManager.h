@@ -32,6 +32,7 @@ protected:
   std::vector<Overlay*> overlays_;
   Overlay* focused_overlay_ = nullptr;
   Overlay* hovered_overlay_ = nullptr;
+  bool is_dragging_ = false;
 };
 
 }  // namespace ultralight
