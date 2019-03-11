@@ -2,6 +2,7 @@
 /build64
 /deps/AppCore/Build
 /deps/AppCore/Build32
+/deps/AppCore/build
 obj/
 .vs/
 *.db

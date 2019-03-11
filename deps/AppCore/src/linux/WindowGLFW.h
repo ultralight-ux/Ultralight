@@ -3,6 +3,7 @@
 #include <Ultralight/Listener.h>
 #include "../RefCountedImpl.h"
 #include "../OverlayManager.h"
+#include <cmath>
 
 typedef struct GLFWwindow GLFWwindow;
 typedef struct GLFWcursor GLFWcursor;
