@@ -1,13 +1,25 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file String32.h
+///
+/// @brief The header for the String32 class.
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #pragma once
 #include <Ultralight/Defines.h>
 #include <stddef.h>
 
 namespace ultralight {
 
-/**
-* UTF-32 String container class.
-*/
+///
+/// @brief  A UTF-32 string container.
+///
 class UExport String32 {
 public:
   // Make an empty String32

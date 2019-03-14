@@ -1,4 +1,16 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file Geometry.h
+///
+/// @brief The header for various geometry definitions and helpers
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #pragma once
 #include <Ultralight/Defines.h>
 #include <memory.h>
@@ -7,9 +19,9 @@
 
 namespace ultralight {
 
-/**
- * 2D Vector convenience class
- */
+///
+/// 2D Vector Helper
+///
 struct UExport vec2 {
   union {
     float value[2];
@@ -145,9 +157,9 @@ struct UExport vec2 {
   }
 };
 
-/**
- * 3D Vector convenience class
- */
+///
+/// 3D Vector Helper
+///
 struct UExport vec3 {
   union {
     float value[3];
@@ -276,9 +288,9 @@ struct UExport vec3 {
   }
 };
 
-/**
- * 4D Vector convenience class.
- */
+///
+/// 4D Vector Helper
+///
 struct UExport vec4 {
   union {
     float value[4];
@@ -396,12 +408,14 @@ struct UExport vec4 {
   }
 };
 
-// Point typedef
+///
+/// Point is typedef'd to a 2D vector
+///
 typedef vec2 Point;
 
-/**
- * Rectangle convenience class
- */
+///
+/// Float Rectangle Helper
+///
 struct UExport Rect {
   union {
     float value[4];
@@ -516,9 +530,9 @@ struct UExport Rect {
   }
 };
 
-/**
- * Integer rectangle convenience class
- */
+///
+/// Integer Rectangle Helper
+///
 struct UExport IntRect {
   union {
     int value[4];
@@ -635,9 +649,9 @@ struct UExport IntRect {
   }
 };
 
-/**
- * Rounded Rectangle convenience class.
- */
+///
+/// Rounded Rectangle Helper
+///
 struct UExport RoundedRect {
   Rect rect;
   float radii_x[4];

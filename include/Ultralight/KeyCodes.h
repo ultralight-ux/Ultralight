@@ -1,10 +1,24 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file KeyCodes.h
+///
+/// @brief The header for the KeyCodes definitions.
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #pragma once
 
 namespace ultralight {
 
+///
 /// Namespace containing all the key-code definitions for KeyboardEvent.
 /// Most of these correspond directly to the key-code values on Windows.
+  ///
 namespace KeyCodes {
 
   // GK_BACK (08) BACKSPACE key

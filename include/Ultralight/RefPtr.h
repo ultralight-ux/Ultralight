@@ -1,4 +1,16 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file RefPtr.h
+///
+/// @brief The header for all ref-counting utilities.
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 /*
 * Portions of the below code are derived from 'RefPtr.h' from Apple's WTF,
 * with the following license header:
@@ -34,6 +46,10 @@
 
 namespace ultralight {
   
+///
+/// @brief  Interface for all ref-counted objects that will be managed using
+///         the Ref<> and RefPtr<> smart pointers.
+///
 class UExport RefCounted {
  public:
   virtual void AddRef() const = 0;
@@ -47,39 +63,55 @@ inline void adopted(const void*) { }
 
 template<typename T> class Ref;
 
-//
-// All ref-counted object are created with an initial ref-count of '1'.
-// The AdoptRef() helper returns a Ref<T> without calling AddRef().
-// This is used for creating new objects, like so:
-//
-//   Ref<Object> ref = AdoptRef(*new ObjectImpl());
-//
+///
+/// @brief  Helper for wrapping new objects with the Ref smart pointer.
+///
+/// All ref-counted object are created with an initial ref-count of '1'.
+/// The AdoptRef() helper returns a Ref<T> without calling AddRef().
+/// This is used for creating new objects, like so:
+///
+///   Ref<Object> ref = AdoptRef(*new ObjectImpl());
+///
 template<typename T> Ref<T> AdoptRef(T&);
 
-/**
- * Smart pointer class that stores a RefCounted instance and is guaranteed
- * to not be NULL (stores a reference, not a pointer).
- */
+///
+/// @brief  A non-nullable smart pointer.
+///
+/// This smart pointer automatically manages the lifetime of a RefCounted
+/// object. Also guarantees that the managed instance is not NULL.
+///
 template<typename T> class Ref {
 public:
+  ///
+  /// Destroy Ref (wll decrement ref-count by one)
+  ///
   ~Ref()
   {
     if (instance_)
       instance_->Release();
   }
 
+  ///
+  /// Construct Ref from a reference. (Will increment ref-count by one)
+  ///
   Ref(T& object)
     : instance_(&object)
   {
     instance_->AddRef();
   }
 
+  ///
+  /// Copy constructor.
+  ///
   Ref(const Ref& other)
     : instance_(other.instance_)
   {
     instance_->AddRef();
   }
 
+  ///
+  /// Copy constructor with internal type conversion.
+  ///
   template<typename U>
   Ref(Ref<U>& other)
     : instance_(other.ptr())
@@ -87,6 +119,9 @@ public:
     instance_->AddRef();
   }
 
+  ///
+  /// Copy constructor with internal type conversion.
+  ///
   template<typename U>
   Ref(const Ref<U>& other)
     : instance_(other.ptr())
@@ -94,12 +129,18 @@ public:
     instance_->AddRef();
   }
 
+  ///
+  /// Move constructor.
+  ///
   Ref(Ref&& other)
     : instance_(&other.LeakRef())
   {
     assert(instance_);
   }
 
+  ///
+  /// Move constructor.
+  ///
   template<typename U>
   Ref(Ref<U>&& other)
     : instance_(&other.LeakRef())
@@ -159,10 +200,24 @@ public:
   const T* operator->() const { assert(instance_); return instance_; }
   T* operator->() { assert(instance_); return instance_; }
 
+  ///
+  /// Get a pointer to wrapped object.
+  ///
   const T* ptr() const { assert(instance_); return instance_; }
+
+  ///
+  /// Get a pointer to wrapped object.
+  ///
   T* ptr() { assert(instance_); return instance_; }
 
+  ///
+  /// Get a reference to wrapped object.
+  ///
   const T& get() const { assert(instance_); return *instance_; }
+
+  ///
+  /// Get a reference to wrapped object.
+  ///
   T& get() { assert(instance_); return *instance_; }
 
   operator T&() { assert(instance_); return *instance_; }
@@ -217,21 +272,33 @@ Ref<T> AdoptRef(T& reference)
   return Ref<T>(reference, Ref<T>::Adopt);
 }
 
-/**
- * Smart pointer class that stores a RefCounted instance (may be NULL).
- */
+///
+/// @brief  A nullable smart pointer.
+///
+/// This smart pointer automatically manages the lifetime of a RefCounted
+/// object. The managed instance may be NULL.
+///
 template<typename T> class RefPtr {
  public:
+  ///
+  /// Construct a NULL ref-pointer.
+  ///
   RefPtr() 
     : instance_(nullptr)
   {
   }
 
+  ///
+  /// Construct a NULL ref-pointer.
+  ///
   RefPtr(std::nullptr_t)
     : instance_(nullptr)
   {
   }
 
+  ///
+  /// Construct from a pointer. (Will increment ref-count by one)
+  ///
   RefPtr(T* other)
     : instance_(other)
   {
@@ -239,6 +306,9 @@ template<typename T> class RefPtr {
       instance_->AddRef();
   }
 
+  ///
+  /// Copy constructor.
+  ///
   RefPtr(const RefPtr& other) 
     : instance_(other.instance_) 
   {
@@ -246,6 +316,9 @@ template<typename T> class RefPtr {
       instance_->AddRef();
   }
 
+  ///
+  /// Copy constructor with internal type conversion.
+  ///
   template<typename U>
   RefPtr(const RefPtr<U>& other) 
     : instance_(other.instance_) 
@@ -254,17 +327,26 @@ template<typename T> class RefPtr {
       instance_->AddRef();
   }
 
+  ///
+  /// Move constructor.
+  ///
   RefPtr(RefPtr&& other) 
     : instance_(other.LeakRef())
   {
   }
 
+  ///
+  /// Move constructor.
+  ///
   template<typename U>
   RefPtr(RefPtr<U>&& other) 
     : instance_(other.LeakRef())
   {
   }
 
+  ///
+  /// Construct from a Ref
+  ///
   template<typename U>
   RefPtr(const Ref<U>& other)
     : instance_(other.instance_)
@@ -273,9 +355,15 @@ template<typename T> class RefPtr {
       instance_->AddRef();
   }
 
+  ///
+  /// Construct by moving from a Ref
+  ///
   template<typename U>
   RefPtr(Ref<U>&& other);
 
+  ///
+  /// Destroy RefPtr (wll decrement ref-count by one)
+  ///
   ~RefPtr()
   {
     T* old_value = std::move(instance_);
@@ -284,6 +372,9 @@ template<typename T> class RefPtr {
       old_value->Release();
   }
 
+  ///
+  /// Get a pointer to wrapped object.
+  ///
   T* get() const { return instance_; }
 
   T* LeakRef() {

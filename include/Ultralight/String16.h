@@ -1,4 +1,16 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file String16.h
+///
+/// @brief The header for the String16 class.
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #pragma once
 #include <Ultralight/Defines.h>
 #include <Ultralight/RefPtr.h>
@@ -10,7 +22,7 @@ namespace detail {
   template<int> struct selector;
   template<> struct selector<4> { typedef char16_t Char16; };
   template<> struct selector<2> { typedef wchar_t Char16; };
-}  // namespace detail
+}
 
 #ifdef DISABLE_NATIVE_WCHAR_T
 // Force Char16 type to use char16_t, used on Windows when native wchar_t support is disabled.
@@ -20,9 +32,9 @@ typedef char16_t Char16;
 typedef detail::selector<sizeof(wchar_t)>::Char16 Char16;
 #endif
 
-/**
- * UTF-16 String container class.
- */
+///
+/// @brief  A UTF-16 string container.
+///
 class UExport String16 {
 public:
   // Make an empty String16
@@ -88,9 +100,9 @@ private:
   size_t length_;
 };
 
-/**
-* UTF-16 String Vector.
-*/
+///
+/// @brief  A UTF-16 string vector.
+///
 class UExport String16Vector : public RefCounted {
 public:
   // Create an empty string vector

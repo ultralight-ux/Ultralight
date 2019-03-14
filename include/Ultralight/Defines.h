@@ -1,4 +1,16 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file Defines.h
+///
+/// @brief Common platform definitions
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #pragma once
 
 // Needed for limit defines, like INTMAX_MAX, which is used by the std C++ library
@@ -41,4 +53,27 @@
 
 #endif
 
-#define ULTRALIGHT_VERSION "0.9.1"
+#define ULTRALIGHT_VERSION "1.0.0"
+
+///
+/// @mainpage Ultralight C++ API Reference
+///
+/// @section intro_sec Introduction
+///
+/// Hi there, welcome to the C++ API Reference for Ultralight!
+///
+/// Ultralight is a fast, lightweight HTML UI engine for desktop apps.
+///
+/// If this is your first time exploring the API, we recommend
+/// starting with ultralight::Renderer and ultralight::View.
+///
+///
+/// @section usefullinks_sec Useful Links
+/// - Home:   <https://ultralig.ht> -- Get the latest binaries
+/// - Docs:   <https://docs.ultralig.ht> -- API overview, code snippets, tutorials and more!
+/// - Slack:  <http://chat.ultralig.ht/> -- Stuck? Have questions? Come chat with us!
+/// - GitHub: <https://github.com/ultralight-ux/ultralight> -- Report issues and browse code
+///
+/// @section copyright_sec Copyright
+/// Documentation is copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///

@@ -1,3 +1,16 @@
+///
+/// @file CAPI.h
+///
+/// @brief The C-language API for AppCore
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #ifndef APPCORE_CAPI_H
 #define APPCORE_CAPI_H
 
@@ -33,7 +46,8 @@ AExport ULWindow ULAppGetWindow(ULApp app);
 typedef void
 (*ULUpdateCallback) (void* user_data);
 
-AExport void ULAppSetUpdateCallback(ULApp app, ULUpdateCallback callback, void* user_data);
+AExport void ULAppSetUpdateCallback(ULApp app, ULUpdateCallback callback,
+                                    void* user_data);
 
 AExport bool ULAppIsRunning(ULApp app);
 
@@ -52,19 +66,24 @@ AExport int ULMonitorGetWidth(ULMonitor monitor);
 AExport int ULMonitorGetHeight(ULMonitor monitor);
 
 AExport ULWindow ULCreateWindow(ULMonitor monitor, unsigned int width,
-	unsigned int height, bool fullscreen, unsigned int window_flags);
+	                              unsigned int height, bool fullscreen,
+                                unsigned int window_flags);
 
 AExport void ULDestroyWindow(ULWindow window);
 
 typedef void
 (*ULCloseCallback) (void* user_data);
 
-AExport void ULWindowSetCloseCallback(ULWindow window, ULCloseCallback callback, void* user_data);
+AExport void ULWindowSetCloseCallback(ULWindow window,
+                                      ULCloseCallback callback,
+                                      void* user_data);
 
 typedef void
 (*ULResizeCallback) (void* user_data, int width, int height);
 
-AExport void ULWindowSetResizeCallback(ULWindow window, ULResizeCallback callback, void* user_data);
+AExport void ULWindowSetResizeCallback(ULWindow window,
+                                       ULResizeCallback callback,
+                                       void* user_data);
 
 AExport int ULWindowGetWidth(ULWindow window);
 

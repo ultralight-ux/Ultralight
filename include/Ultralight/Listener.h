@@ -1,4 +1,16 @@
-// Copyright 2018 Ultralight, Inc. All rights reserved.
+///
+/// @file Listener.h
+///
+/// @brief The header for View listener interfaces.
+///
+/// @author
+///
+/// This file is a part of Ultralight, a fast, lightweight, HTML UI engine
+///
+/// Website: <http://ultralig.ht>
+///
+/// Copyright (C) 2019 Ultralight, Inc. All rights reserved.
+///
 #pragma once
 #include <Ultralight/Defines.h>
 #include <Ultralight/String.h>
@@ -7,9 +19,9 @@ namespace ultralight {
 
 class View;
 
-/**
- * MessageSource enumeration, used with ViewListener::OnAddConsoleMessage
- */
+///
+/// MessageSource types, @see ViewListener::OnAddConsoleMessage
+///
 enum MessageSource {
   kMessageSource_XML = 0,
   kMessageSource_JS,
@@ -24,9 +36,9 @@ enum MessageSource {
   kMessageSource_Other,
 };
 
-/**
-* MessageLevel enumeration, used with ViewListener::OnAddConsoleMessage
-*/
+///
+/// MessageLevel types, @see ViewListener::OnAddConsoleMessage
+///
 enum MessageLevel {
   kMessageLevel_Log = 1,
   kMessageLevel_Warning = 2,
@@ -35,9 +47,9 @@ enum MessageLevel {
   kMessageLevel_Info = 5,
 };
 
-/**
-* Cursor enumeration, used with ViewListener::OnChangeCursor
-*/
+///
+/// Cursor types, @see ViewListener::OnChangeCursor
+///
 enum Cursor {
   kCursor_Pointer = 0,
   kCursor_Cross,
@@ -85,30 +97,42 @@ enum Cursor {
   kCursor_Custom
 };
 
-/**
- * Listener interface for View events, set with View::set_view_listener
- */
+///
+/// @brief  Interface for View-related events
+///
+/// @note   For more info @see View::set_view_listener
+///
 class UExport ViewListener {
 public:
   virtual ~ViewListener() {}
 
-  // Called when the page title changes
+  ///
+  /// Called when the page title changes
+  ///
   virtual void OnChangeTitle(ultralight::View* caller,
                              const String& title) {}
 
-  // Called when the page URL changes
+  ///
+  /// Called when the page URL changes
+  ///
   virtual void OnChangeURL(ultralight::View* caller,
                            const String& url) {}
 
-  // Called when the tooltip changes (usually as result of a mouse hover)
+  ///
+  /// Called when the tooltip changes (usually as result of a mouse hover)
+  ///
   virtual void OnChangeTooltip(ultralight::View* caller,
                                const String& tooltip) {}
 
-  // Called when the mouse cursor changes
+  ///
+  /// Called when the mouse cursor changes
+  ///
   virtual void OnChangeCursor(ultralight::View* caller,
                               Cursor cursor) {}
 
-  // Called when a message is added to the console (useful for errors / debug)
+  ///
+  /// Called when a message is added to the console (useful for errors / debug)
+  ///
   virtual void OnAddConsoleMessage(ultralight::View* caller,
                                    MessageSource source,
                                    MessageLevel level,
@@ -118,24 +142,34 @@ public:
                                    const String& source_id) {}
 };
 
-/**
- * Listener interface for Load events, set with View::set_load_listener
- */
+///
+/// @brief  Interface for Load-related events
+///
+/// @note   For more info @see View::set_load_listener
+///
 class UExport LoadListener {
 public:
   virtual ~LoadListener() {}
 
-  // Called when the page begins loading new URL into main frame
+  ///
+  /// Called when the page begins loading new URL into main frame
+  ///
   virtual void OnBeginLoading(ultralight::View* caller) {}
 
-  // Called when the page finishes loading URL into main frame
+  ///
+  /// Called when the page finishes loading URL into main frame
+  ///
   virtual void OnFinishLoading(ultralight::View* caller) {}
 
-  // Called when the history (back/forward state) is modified
+  ///
+  /// Called when the history (back/forward state) is modified
+  ///
   virtual void OnUpdateHistory(ultralight::View* caller) {}
 
-  // Called when all JavaScript has been parsed and the document is ready.
-  // This is the best time to make any initial JavaScript calls to your page.
+  ///
+  /// Called when all JavaScript has been parsed and the document is ready.
+  /// This is the best time to make any initial JavaScript calls to your page.
+  ///
   virtual void OnDOMReady(ultralight::View* caller) {}
 };
 
