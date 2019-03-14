@@ -93,6 +93,33 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
   return 0;
 }
 
+void CenterHwndOnMainMonitor(HWND hwnd)
+{
+  RECT rect;
+  GetWindowRect(hwnd, &rect);
+  LPRECT prc = &rect;
+
+  // Get main monitor
+  HMONITOR hMonitor = MonitorFromPoint({ 1,1 }, MONITOR_DEFAULTTONEAREST);
+
+  MONITORINFO mi;
+  RECT        rc;
+  int         w = prc->right - prc->left;
+  int         h = prc->bottom - prc->top;
+
+  mi.cbSize = sizeof(mi);
+  GetMonitorInfo(hMonitor, &mi);
+
+  rc = mi.rcMonitor;
+
+  prc->left = rc.left + (rc.right - rc.left - w) / 2;
+  prc->top = rc.top + (rc.bottom - rc.top - h) / 2;
+  prc->right = prc->left + w;
+  prc->bottom = prc->top + h;
+
+  SetWindowPos(hwnd, NULL, rect.left, rect.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
 WindowWin::WindowWin(Monitor* monitor, uint32_t width, uint32_t height,
   bool fullscreen, unsigned int window_flags) : monitor_(monitor), is_fullscreen_(fullscreen) {
 
@@ -144,6 +171,8 @@ WindowWin::WindowWin(Monitor* monitor, uint32_t width, uint32_t height,
   window_data_.is_resizing_modal = false;
 
   SetWindowLongPtr(hwnd_, GWLP_USERDATA, (LONG_PTR)&window_data_);
+
+  CenterHwndOnMainMonitor(hwnd_);
 
   ShowWindow(hwnd_, SW_SHOW);
 
