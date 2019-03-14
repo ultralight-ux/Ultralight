@@ -16,6 +16,8 @@ set(AppCore_SOURCES
     "${SDK_ROOT}/include/AppCore/Monitor.h"
     "${SDK_ROOT}/include/AppCore/Overlay.h"
     "${SDK_ROOT}/include/AppCore/Window.h"
+    "${SDK_ROOT}/include/AppCore/CAPI.h"
+    "src/CAPI.cpp"
     "src/JSHelpers.cpp"
     "src/Overlay.cpp"
     "src/OverlayManager.h"
