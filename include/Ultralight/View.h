@@ -199,6 +199,21 @@ public:
   ///
   virtual LoadListener* load_listener() const = 0;
 
+  ///
+  /// Set whether or not this View should be repainted during the next
+  /// call to Renderer::Render
+  ///
+  /// @note  This flag is automatically set whenever the page content changes
+  ///        but you can set it directly in case you need to force a repaint.
+  ///
+  virtual void set_needs_paint(bool needs_paint) = 0;
+
+  ///
+  /// Whether or not this View should be repainted during the next call to
+  /// Renderer::Render.
+  ///
+  virtual bool needs_paint() const = 0;
+
 protected:
   virtual ~View();
 };

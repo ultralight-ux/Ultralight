@@ -70,148 +70,148 @@ struct C_Overlay {
 };
 
 
-ULApp ULCreateApp() {
+ULApp ulCreateApp() {
   return new C_App{ App::Create() };
 }
 
-void ULDestroyApp(ULApp app) {
+void ulDestroyApp(ULApp app) {
   delete app;
 }
 
-void ULAppSetWindow(ULApp app, ULWindow window) {
+void ulAppSetWindow(ULApp app, ULWindow window) {
   app->val->set_window(window->val);
   app->c_window = window;
 }
 
-ULWindow ULAppGetWindow(ULApp app) {
+ULWindow ulAppGetWindow(ULApp app) {
   return app->c_window;
 }
 
-void ULAppSetUpdateCallback(ULApp app, ULUpdateCallback callback, void* user_data) {
+void ulAppSetUpdateCallback(ULApp app, ULUpdateCallback callback, void* user_data) {
   app->update_callback = callback;
   app->update_callback_data = user_data;
 }
 
-bool ULAppIsRunning(ULApp app) {
+bool ulAppIsRunning(ULApp app) {
   return app->val->is_running();
 }
 
-ULMonitor ULAppGetMainMonitor(ULApp app) {
+ULMonitor ulAppGetMainMonitor(ULApp app) {
   return reinterpret_cast<ULMonitor>(app->val->main_monitor());
 }
 
-ULRenderer ULAppGetRenderer(ULApp app) {
+ULRenderer ulAppGetRenderer(ULApp app) {
   return app->c_renderer;
 }
 
-void ULAppRun(ULApp app) {
+void ulAppRun(ULApp app) {
   app->val->Run();
 }
 
-void ULAppQuit(ULApp app) {
+void ulAppQuit(ULApp app) {
   app->val->Quit();
 }
 
-double ULMonitorGetScale(ULMonitor monitor) {
+double ulMonitorGetScale(ULMonitor monitor) {
   return reinterpret_cast<Monitor*>(monitor)->scale();
 }
 
-int ULMonitorGetWidth(ULMonitor monitor) {
+int ulMonitorGetWidth(ULMonitor monitor) {
   return reinterpret_cast<Monitor*>(monitor)->width();
 }
 
-int ULMonitorGetHeight(ULMonitor monitor) {
+int ulMonitorGetHeight(ULMonitor monitor) {
   return reinterpret_cast<Monitor*>(monitor)->height();
 }
 
-ULWindow ULCreateWindow(ULMonitor monitor, unsigned int width,
+ULWindow ulCreateWindow(ULMonitor monitor, unsigned int width,
   unsigned int height, bool fullscreen, unsigned int window_flags) {
   return new C_Window(Window::Create(reinterpret_cast<Monitor*>(monitor), width, height,
     fullscreen, window_flags));
 }
 
-void ULDestroyWindow(ULWindow window) {
+void ulDestroyWindow(ULWindow window) {
   delete window;
 }
 
-void ULWindowSetCloseCallback(ULWindow window, ULCloseCallback callback, void* user_data) {
+void ulWindowSetCloseCallback(ULWindow window, ULCloseCallback callback, void* user_data) {
   window->close_callback = callback;
   window->close_callback_data = user_data;
 }
 
-void ULWindowSetResizeCallback(ULWindow window, ULResizeCallback callback, void* user_data) {
+void ulWindowSetResizeCallback(ULWindow window, ULResizeCallback callback, void* user_data) {
   window->resize_callback = callback;
   window->resize_callback_data = user_data;
 }
 
-int ULWindowGetWidth(ULWindow window) {
+int ulWindowGetWidth(ULWindow window) {
   return window->val->width();
 }
 
-int ULWindowGetHeight(ULWindow window) {
+int ulWindowGetHeight(ULWindow window) {
   return window->val->height();
 }
 
-bool ULWindowIsFullscreen(ULWindow window) {
+bool ulWindowIsFullscreen(ULWindow window) {
   return window->val->is_fullscreen();
 }
 
-double ULWindowGetScale(ULWindow window) {
+double ulWindowGetScale(ULWindow window) {
   return window->val->scale();
 }
 
-void ULWindowSetTitle(ULWindow window, const char* title) {
+void ulWindowSetTitle(ULWindow window, const char* title) {
   window->val->SetTitle(title);
 }
 
-void ULWindowSetCursor(ULWindow window, ULCursor cursor) {
+void ulWindowSetCursor(ULWindow window, ULCursor cursor) {
   window->val->SetCursor((Cursor)cursor);
 }
 
-void ULWindowClose(ULWindow window) {
+void ulWindowClose(ULWindow window) {
   window->val->Close();
 }
 
-int ULWindowDeviceToPixel(ULWindow window, int val) {
+int ulWindowDeviceToPixel(ULWindow window, int val) {
   return window->val->DeviceToPixels(val);
 }
 
-int ULWindowPixelsToDevice(ULWindow window, int val) {
+int ulWindowPixelsToDevice(ULWindow window, int val) {
   return window->val->PixelsToDevice(val);
 }
 
-ULOverlay ULCreateOverlay(int width, int height, int x, int y) {
+ULOverlay ulCreateOverlay(int width, int height, int x, int y) {
   return new C_Overlay(Overlay::Create(width, height, x, y));
 }
 
-void ULDestroyOverlay(ULOverlay overlay) {
+void ulDestroyOverlay(ULOverlay overlay) {
   delete overlay;
 }
 
-ULView ULOverlayGetView(ULOverlay overlay) {
+ULView ulOverlayGetView(ULOverlay overlay) {
   return overlay->c_view;
 }
 
-int ULOverlayGetWidth(ULOverlay overlay) {
+int ulOverlayGetWidth(ULOverlay overlay) {
   return overlay->val->width();
 }
 
-int ULOverlayGetHeight(ULOverlay overlay) {
+int ulOverlayGetHeight(ULOverlay overlay) {
   return overlay->val->height();
 }
 
-int ULOverlayGetX(ULOverlay overlay) {
+int ulOverlayGetX(ULOverlay overlay) {
   return overlay->val->x();
 }
 
-int ULOverlayGetY(ULOverlay overlay) {
+int ulOverlayGetY(ULOverlay overlay) {
   return overlay->val->y();
 }
 
-void ULOverlayMoveTo(ULOverlay overlay, int x, int y) {
+void ulOverlayMoveTo(ULOverlay overlay, int x, int y) {
   overlay->val->MoveTo(x, y);
 }
 
-void ULOverlayResize(ULOverlay overlay, int width, int height) {
+void ulOverlayResize(ULOverlay overlay, int width, int height) {
   overlay->val->Resize(width, height);
 }

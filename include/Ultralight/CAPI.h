@@ -477,6 +477,20 @@ ULExport void ulViewSetDOMReadyCallback(ULView view,
                                         ULDOMReadyCallback callback,
                                         void* user_data);
 
+///
+/// Set whether or not a view should be repainted during the next call to
+/// ulRender.
+///
+/// @note  This flag is automatically set whenever the page content changes
+///        but you can set it directly in case you need to force a repaint.
+///
+ULExport void ulViewSetNeedsPaint(ULView view, bool needs_paint);
+
+///
+/// Whether or not a view should be painted during the next call to ulRender.
+///
+ULExport bool ulViewGetNeedsPaint(ULView view);
+
 /******************************************************************************
  * String
  *****************************************************************************/

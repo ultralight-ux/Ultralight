@@ -35,91 +35,91 @@ typedef struct C_Window* ULWindow;
 typedef struct C_Monitor* ULMonitor;
 typedef struct C_Overlay* ULOverlay;
 
-AExport ULApp ULCreateApp();
+AExport ULApp ulCreateApp();
 
-AExport void ULDestroyApp(ULApp app);
+AExport void ulDestroyApp(ULApp app);
 
-AExport void ULAppSetWindow(ULApp app, ULWindow window);
+AExport void ulAppSetWindow(ULApp app, ULWindow window);
 
-AExport ULWindow ULAppGetWindow(ULApp app);
+AExport ULWindow ulAppGetWindow(ULApp app);
 
 typedef void
 (*ULUpdateCallback) (void* user_data);
 
-AExport void ULAppSetUpdateCallback(ULApp app, ULUpdateCallback callback,
+AExport void ulAppSetUpdateCallback(ULApp app, ULUpdateCallback callback,
                                     void* user_data);
 
-AExport bool ULAppIsRunning(ULApp app);
+AExport bool ulAppIsRunning(ULApp app);
 
-AExport ULMonitor ULAppGetMainMonitor(ULApp app);
+AExport ULMonitor ulAppGetMainMonitor(ULApp app);
 
-AExport ULRenderer ULAppGetRenderer(ULApp app);
+AExport ULRenderer ulAppGetRenderer(ULApp app);
 
-AExport void ULAppRun(ULApp app);
+AExport void ulAppRun(ULApp app);
 
-AExport void ULAppQuit(ULApp app);
+AExport void ulAppQuit(ULApp app);
 
-AExport double ULMonitorGetScale(ULMonitor monitor);
+AExport double ulMonitorGetScale(ULMonitor monitor);
 
-AExport int ULMonitorGetWidth(ULMonitor monitor);
+AExport int ulMonitorGetWidth(ULMonitor monitor);
 
-AExport int ULMonitorGetHeight(ULMonitor monitor);
+AExport int ulMonitorGetHeight(ULMonitor monitor);
 
-AExport ULWindow ULCreateWindow(ULMonitor monitor, unsigned int width,
+AExport ULWindow ulCreateWindow(ULMonitor monitor, unsigned int width,
 	                              unsigned int height, bool fullscreen,
                                 unsigned int window_flags);
 
-AExport void ULDestroyWindow(ULWindow window);
+AExport void ulDestroyWindow(ULWindow window);
 
 typedef void
 (*ULCloseCallback) (void* user_data);
 
-AExport void ULWindowSetCloseCallback(ULWindow window,
+AExport void ulWindowSetCloseCallback(ULWindow window,
                                       ULCloseCallback callback,
                                       void* user_data);
 
 typedef void
 (*ULResizeCallback) (void* user_data, int width, int height);
 
-AExport void ULWindowSetResizeCallback(ULWindow window,
+AExport void ulWindowSetResizeCallback(ULWindow window,
                                        ULResizeCallback callback,
                                        void* user_data);
 
-AExport int ULWindowGetWidth(ULWindow window);
+AExport int ulWindowGetWidth(ULWindow window);
 
-AExport int ULWindowGetHeight(ULWindow window);
+AExport int ulWindowGetHeight(ULWindow window);
 
-AExport bool ULWindowIsFullscreen(ULWindow window);
+AExport bool ulWindowIsFullscreen(ULWindow window);
 
-AExport double ULWindowGetScale(ULWindow window);
+AExport double ulWindowGetScale(ULWindow window);
 
-AExport void ULWindowSetTitle(ULWindow window, const char* title);
+AExport void ulWindowSetTitle(ULWindow window, const char* title);
 
-AExport void ULWindowSetCursor(ULWindow window, ULCursor cursor);
+AExport void ulWindowSetCursor(ULWindow window, ULCursor cursor);
 
-AExport void ULWindowClose(ULWindow window);
+AExport void ulWindowClose(ULWindow window);
 
-AExport int ULWindowDeviceToPixel(ULWindow window, int val);
+AExport int ulWindowDeviceToPixel(ULWindow window, int val);
 
-AExport int ULWindowPixelsToDevice(ULWindow window, int val);
+AExport int ulWindowPixelsToDevice(ULWindow window, int val);
 
-AExport ULOverlay ULCreateOverlay(int width, int height, int x, int y);
+AExport ULOverlay ulCreateOverlay(int width, int height, int x, int y);
 
-AExport void ULDestroyOverlay(ULOverlay overlay);
+AExport void ulDestroyOverlay(ULOverlay overlay);
 
-AExport ULView ULOverlayGetView(ULOverlay overlay);
+AExport ULView ulOverlayGetView(ULOverlay overlay);
 
-AExport int ULOverlayGetWidth(ULOverlay overlay);
+AExport int ulOverlayGetWidth(ULOverlay overlay);
 
-AExport int ULOverlayGetHeight(ULOverlay overlay);
+AExport int ulOverlayGetHeight(ULOverlay overlay);
 
-AExport int ULOverlayGetX(ULOverlay overlay);
+AExport int ulOverlayGetX(ULOverlay overlay);
 
-AExport int ULOverlayGetY(ULOverlay overlay);
+AExport int ulOverlayGetY(ULOverlay overlay);
 
-AExport void ULOverlayMoveTo(ULOverlay overlay, int x, int y);
+AExport void ulOverlayMoveTo(ULOverlay overlay, int x, int y);
 
-AExport void ULOverlayResize(ULOverlay overlay, int width, int height);
+AExport void ulOverlayResize(ULOverlay overlay, int width, int height);
 
 #ifdef __cplusplus
 }

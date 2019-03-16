@@ -49,7 +49,8 @@ if (WIN32)
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
         set(LIB_DIR "${SDK_ROOT}/lib/win/x86")
     endif()
-    set(AppCore_LIBRARIES "${LIB_DIR}/Ultralight.lib ${LIB_DIR}/UltralightCore.lib ${LIB_DIR}/WebCore.lib Shcore.lib Shlwapi.lib Usp10.lib d3d11.lib d3dcompiler.lib")
+    set(AppCore_LIBRARIES "${LIB_DIR}/Ultralight.lib" "${LIB_DIR}/UltralightCore.lib" "${LIB_DIR}/WebCore.lib" 
+      "Shcore.lib" "Shlwapi.lib" "Usp10.lib" "d3d11.lib" "d3dcompiler.lib")
 elseif (APPLE)
     list(APPEND AppCore_SOURCES
         "src/mac/AppMac.h"
