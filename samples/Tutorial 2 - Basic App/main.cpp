@@ -1,9 +1,6 @@
 #include <AppCore/App.h>
 #include <AppCore/Window.h>
 #include <AppCore/Overlay.h>
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 
 using namespace ultralight;
 
@@ -20,20 +17,17 @@ public:
 	virtual void OnChangeScale(double scale) {}
 };
 
-#ifdef _WIN32
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-#else
 int main() {
-#endif
   auto app = App::Create();
-  app->set_window(Window::Create(app->main_monitor(), WIDTH, HEIGHT, false, 0));
-  auto overlay = Overlay::Create(WIDTH, HEIGHT, 0, 0);
-
-  app->window()->set_listener(new Listener(overlay.ptr()));
-  app->window()->SetTitle("Hello!");
-
+    
+  auto window = Window::Create(app->main_monitor(), WIDTH, HEIGHT, false, 0);
+  window->SetTitle("Hello!");
+    
+  auto overlay = Overlay::Create(window, WIDTH, HEIGHT, 0, 0);
+  window->set_listener(new Listener(overlay.ptr()));
   overlay->view()->LoadHTML("Hello World!");
 
+  app->set_window(window);
   app->Run();
 
   return 0;

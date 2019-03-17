@@ -71,9 +71,23 @@ void OverlayManager::FireScrollEvent(const ultralight::ScrollEvent& evt) {
     hovered_overlay_->view()->FireScrollEvent(evt);
 }
 
+void OverlayManager::FocusOverlay(Overlay* overlay) {
+  if (!is_dragging_)
+    focused_overlay_ = overlay;
+}
+
+void OverlayManager::UnfocusOverlay(Overlay* overlay) {
+  if (focused_overlay_ == overlay)
+    focused_overlay_ = nullptr;
+}
+
+bool OverlayManager::IsOverlayFocused(Overlay* overlay) const {
+  return focused_overlay_ == overlay;
+}
+
 Overlay* OverlayManager::HitTest(int x, int y) {
   for (auto& i : overlays_) {
-    if (x >= i->x() && y >= i->y() && x < i->x() + i->width() && y < i->y() + i->height())
+    if (!i->is_hidden() && x >= i->x() && y >= i->y() && x < i->x() + i->width() && y < i->y() + i->height())
       return i;
   }
 

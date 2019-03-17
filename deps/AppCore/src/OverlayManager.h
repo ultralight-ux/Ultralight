@@ -26,6 +26,12 @@ public:
 
   virtual void FireScrollEvent(const ultralight::ScrollEvent& evt);
 
+  virtual void FocusOverlay(Overlay* overlay);
+
+  virtual void UnfocusOverlay(Overlay* overlay);
+
+  virtual bool IsOverlayFocused(Overlay* overlay) const;
+
 protected:
   Overlay* HitTest(int x, int y);
 

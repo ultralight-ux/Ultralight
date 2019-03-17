@@ -11,7 +11,7 @@
 * to simplify sample code.
 */
 
-namespace framework {
+namespace ultralight {
 
 /**
  * Set the current JSContext.
@@ -41,7 +41,7 @@ public:
   JSString(const char* str);
 
   // Create from Ultralight String
-  JSString(const ultralight::String& str);
+  JSString(const String& str);
 
   // Take ownership of existing JSStringRef
   JSString(JSStringRef str);
@@ -54,8 +54,8 @@ public:
   // Assignment operator
   JSString& operator=(const JSString& other);
 
-  // Cast to ultralight::String
-  operator ultralight::String();
+  // Cast to String
+  operator String();
 
   // Cast to JSStringRef
   operator JSStringRef() const { return instance_; }
@@ -111,7 +111,7 @@ public:
   JSValue(const char* val);
 
   // Create string JSValue
-  JSValue(const ultralight::String& val);
+  JSValue(const String& val);
 
   // Create string JSValue
   JSValue(JSString val);
@@ -179,7 +179,7 @@ public:
 
   operator int64_t() const { return ToInteger(); }
 
-  operator ultralight::String() const { return ToString(); }
+  operator String() const { return ToString(); }
 
   operator JSString() const { return ToString(); }
 
@@ -382,4 +382,4 @@ JSObject JSGlobalObject();
  */
 JSValue JSEval(const JSString& str);
 
-}  // namespace framework
+}  // namespace ultralight

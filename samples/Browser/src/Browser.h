@@ -1,26 +1,17 @@
-#include <Framework/Application.h>
-#include <Framework/GPUContext.h>
-#include <Ultralight/Renderer.h>
+#include <AppCore/AppCore.h>
 #include "UI.h"
 
-class Browser : public framework::Application,
-                public framework::WindowListener {
+using namespace ultralight;
+
+class Browser {
 public:
-  Browser(framework::Window& window);
+  Browser();
   virtual ~Browser();
-
-  // Inherited from Application
-  virtual void Update();
-
-  // Inherited from WindowListener
-  virtual void OnKeyEvent(const ultralight::KeyEvent& evt);
-  virtual void OnMouseEvent(const ultralight::MouseEvent& evt);
-  virtual void OnScrollEvent(const ultralight::ScrollEvent& evt);
-  virtual void OnResize(int width, int height);
+    
+  virtual void Run();
 
 protected:
-  framework::Window& window_;
-  std::unique_ptr<framework::GPUContext> gpu_context_;
-  ultralight::RefPtr<ultralight::Renderer> renderer_;
+  RefPtr<App> app_;
+  RefPtr<Window> window_;
   std::unique_ptr<UI> ui_;
 };

@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cassert>
 
-namespace framework {
+namespace ultralight {
 
 static JSContextRef g_context = nullptr;
 
@@ -18,7 +18,7 @@ JSString::JSString(const char* str) {
   instance_ = JSStringCreateWithUTF8CString(str);
 }
 
-JSString::JSString(const ultralight::String& str) {
+JSString::JSString(const String& str) {
   instance_ = JSStringCreateWithCharacters((JSChar*)str.utf16().data(), str.utf16().length());
 }
 
@@ -42,8 +42,8 @@ JSString& JSString::operator=(const JSString& other) {
   return *this;
 }
 
-JSString::operator ultralight::String() {
-  return ultralight::String16((ultralight::Char16*)JSStringGetCharactersPtr(instance_),
+JSString::operator String() {
+  return String16((Char16*)JSStringGetCharactersPtr(instance_),
                               JSStringGetLength(instance_));
 }
 
@@ -97,7 +97,7 @@ JSValue::JSValue(const char* val) : ctx_(GetJSContext()) {
   JSValueProtect(ctx_, instance_);
 }
 
-JSValue::JSValue(const ultralight::String& val) : ctx_(GetJSContext()) {
+JSValue::JSValue(const String& val) : ctx_(GetJSContext()) {
   instance_ = JSValueMakeString(ctx_, JSString(val));
   JSValueProtect(ctx_, instance_);
 }
@@ -537,4 +537,4 @@ JSValue JSEval(const JSString& str) {
   return JSEvaluateScript(GetJSContext(), str, 0, 0, 0, 0);
 }
 
-}  // namespace framework
+}  // namespace ultralight

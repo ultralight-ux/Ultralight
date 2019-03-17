@@ -19,6 +19,9 @@ class OverlayImpl : public Overlay,
                     public RefCountedImpl<OverlayImpl> {
 public:
   virtual void Draw() override {
+    if (is_hidden_)
+      return;
+
     UpdateGeometry();
 
     driver_->DrawGeometry(geometry_id_, 6, 0, gpu_state_);
@@ -38,8 +41,8 @@ public:
     // Update these now since they were invalidated
     RenderTarget target = view_->render_target();
     gpu_state_.texture_1_id = target.texture_id;
-    gpu_state_.viewport_width = (float) App::instance()->window()->width();
-    gpu_state_.viewport_height = (float) App::instance()->window()->height();
+    gpu_state_.viewport_width = (float) window_->width();
+    gpu_state_.viewport_height = (float) window_->height();
   }
 
   void UpdateGeometry() {
@@ -60,8 +63,8 @@ public:
       Matrix identity;
       identity.SetIdentity();
 
-      gpu_state_.viewport_width = (float) App::instance()->window()->width();
-      gpu_state_.viewport_height = (float) App::instance()->window()->height();
+      gpu_state_.viewport_width = (float) window_->width();
+      gpu_state_.viewport_height = (float) window_->height();
       gpu_state_.transform = ConvertAffineTo4x4(identity);
       gpu_state_.enable_blend = true;
       gpu_state_.enable_texturing = true;
@@ -152,6 +155,28 @@ public:
 
   virtual int y() const override { return y_; }
 
+  virtual bool is_hidden() const override { return is_hidden_; }
+
+  virtual void Hide() override {
+    is_hidden_ = true;
+  }
+
+  virtual void Show() override {
+    is_hidden_ = false;
+  }
+
+  virtual bool has_focus() const override {
+    return window_->overlay_manager()->IsOverlayFocused((Overlay*)this);
+  }
+
+  virtual void Focus() override {
+    window_->overlay_manager()->FocusOverlay((Overlay*)this);
+  }
+
+  virtual void Unfocus() override {
+    window_->overlay_manager()->UnfocusOverlay((Overlay*)this);
+  }
+
   virtual void MoveTo(int x, int y) override {
     x_ = x;
     y_ = y;
@@ -161,27 +186,28 @@ public:
   REF_COUNTED_IMPL(OverlayImpl);
 
 protected:
-  OverlayImpl(int width, int height, int x, int y) :
-    view_(App::instance()->renderer()->CreateView(width, height, false)),
+  OverlayImpl(Ref<Window> window, int width, int height, int x, int y) :
+    window_(window), view_(App::instance()->renderer()->CreateView(width, height, false)),
     width_(width), height_(height), x_(x), y_(y), needs_update_(true),
     driver_(Platform::instance().gpu_driver()) {
-    if (App::instance())
-      App::instance()->window()->overlay_manager()->Add(this);
+    window_->overlay_manager()->Add(this);
   }
 
   ~OverlayImpl() {
     if (App::instance()) {
-      App::instance()->window()->overlay_manager()->Remove(this);
+      window_->overlay_manager()->Remove(this);
 
       if (vertices_.size())
         driver_->DestroyGeometry(geometry_id_);
     }
   }
 
+  Ref<Window> window_;
   int width_;
   int height_;
   int x_;
   int y_;
+  bool is_hidden_ = false;
   ultralight::Ref<ultralight::View> view_;
   ultralight::GPUDriver* driver_;
   std::vector<ultralight::Vertex_2f_4ub_2f_2f_28f> vertices_;
@@ -195,8 +221,8 @@ protected:
   DISALLOW_COPY_AND_ASSIGN(OverlayImpl);
 };
 
-Ref<Overlay> Overlay::Create(int width, int height, int x, int y) {
-  return AdoptRef(*new OverlayImpl(width, height, x, y));
+Ref<Overlay> Overlay::Create(Ref<Window> window, int width, int height, int x, int y) {
+  return AdoptRef(*new OverlayImpl(window, width, height, x, y));
 }
 
 Overlay::~Overlay() {}

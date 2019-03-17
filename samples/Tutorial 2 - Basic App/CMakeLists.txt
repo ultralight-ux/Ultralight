@@ -10,6 +10,11 @@ if (APPLE)
   set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.in) 
 endif()
 
+if (MSVC)
+  # Tell MSVC to use main instead of WinMain for Windows subsystem executables
+  set_target_properties(${APP_NAME} PROPERTIES LINK_FLAGS "/ENTRY:mainCRTStartup")
+endif()
+
 # Copy all binaries to target directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIRS}" $<TARGET_FILE_DIR:${APP_NAME}>)  

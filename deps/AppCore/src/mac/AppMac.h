@@ -9,6 +9,7 @@ namespace ultralight {
     
 class AppMac;
 class GPUContextMetal;
+class FileSystemMac;
     
 class AppMac : public App,
                public RefCountedImpl<AppMac>,
@@ -58,6 +59,7 @@ protected:
   RefPtr<Window> window_;
   MonitorMac main_monitor_;
   std::unique_ptr<GPUContextMetal> gpu_context_;
+  std::unique_ptr<FileSystemMac> file_system_;
 };
     
     

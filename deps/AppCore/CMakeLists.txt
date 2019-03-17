@@ -67,11 +67,13 @@ elseif (APPLE)
         "src/mac/ViewDelegate.mm"
         "src/mac/WindowDelegate.h"
         "src/mac/WindowDelegate.mm"
+        "src/mac/FileSystemMac.h"
+        "src/mac/FileSystemMac.mm"
         "src/mac/metal/GPUContextMetal.h"
         "src/mac/metal/GPUContextMetal.mm"
         "src/mac/metal/GPUDriverMetal.h"
         "src/mac/metal/GPUDriverMetal.mm"
-        "shaders/metal/Shaders.metal"
+#        "shaders/metal/Shaders.metal"
     )
     set(LIB_DIR "${SDK_ROOT}/bin/mac")
     set(AppCore_LIBRARIES "${LIB_DIR}/libUltralight.dylib" "${LIB_DIR}/libUltralightCore.dylib" "${LIB_DIR}/libWebCore.dylib")

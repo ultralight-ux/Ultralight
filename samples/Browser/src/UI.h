@@ -1,26 +1,29 @@
 #pragma once
-#include <Framework/Overlay.h>
-#include <Framework/Window.h>
-#include <Framework/JSHelpers.h>
+#include <AppCore/AppCore.h>
 #include "Tab.h"
 #include <map>
 #include <memory>
 
-using framework::JSObject;
-using framework::JSArgs;
-using framework::JSFunction;
+using ultralight::JSObject;
+using ultralight::JSArgs;
+using ultralight::JSFunction;
+using namespace ultralight;
 
 /**
 * Browser UI implementation. Renders the toolbar/addressbar/tabs in top pane.
 */
-class UI : public framework::Overlay,
-           public ultralight::LoadListener {
-public:
-  UI(ultralight::Ref<ultralight::Renderer> renderer, ultralight::GPUDriver* driver, framework::Window& window);
+class UI : public WindowListener,
+           public LoadListener {
+ public:
+  UI(Ref<Window> window);
   ~UI();
+               
+  // Inherited from WindowListener
+  virtual void OnClose() override;
+  virtual void OnResize(int width, int height) override;
 
-  // Inherited from ultralight::Listener::Load
-  virtual void OnDOMReady(ultralight::View* caller) override;
+  // Inherited from LoadListener
+  virtual void OnDOMReady(View* caller) override;
 
   // Called by UI JavaScript
   void OnBack(const JSObject& obj, const JSArgs& args);
@@ -32,31 +35,24 @@ public:
   void OnActiveTabChange(const JSObject& obj, const JSArgs& args);
   void OnRequestChangeURL(const JSObject& obj, const JSArgs& args);
 
-  // Inhrerited from Overlay, we may dispatch input to a focused tab instead
-  virtual void Draw() override;
-  virtual void FireKeyEvent(const ultralight::KeyEvent& evt) override;
-  virtual void FireMouseEvent(const ultralight::MouseEvent& evt) override;
-  virtual void FireScrollEvent(const ultralight::ScrollEvent& evt) override;
-  virtual void Resize(int width, int height) override;
-
 protected:
   void CreateNewTab();
-  void UpdateTabTitle(uint64_t id, const ultralight::String& title);
-  void UpdateTabURL(uint64_t id, const ultralight::String& url);
+  void UpdateTabTitle(uint64_t id, const String& title);
+  void UpdateTabURL(uint64_t id, const String& url);
   void UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, bool can_go_forward);
 
   void SetLoading(bool is_loading);
   void SetCanGoBack(bool can_go_back);
   void SetCanGoForward(bool can_go_forward);
-  void SetURL(const ultralight::String& url);
-  void SetCursor(ultralight::Cursor cursor);
+  void SetURL(const String& url);
+  void SetCursor(Cursor cursor);
 
   Tab* active_tab() { return tabs_.empty() ? nullptr : tabs_[active_tab_id_].get(); }
+               
+  Ref<View> view() { return overlay_->view(); }
 
-  ultralight::Ref<ultralight::Renderer> renderer_;
-  ultralight::GPUDriver* driver_;
-  framework::Window& window_;
-  int screen_width_;
+  Ref<Window> window_;
+  RefPtr<Overlay> overlay_;
   int ui_height_;
   int tab_height_;
   float scale_;
@@ -64,8 +60,7 @@ protected:
   std::map<uint64_t, std::unique_ptr<Tab>> tabs_;
   uint64_t active_tab_id_ = 0;
   uint64_t tab_id_counter_ = 0;
-  bool tab_has_focus_ = false;
-  ultralight::Cursor cur_cursor_;
+  Cursor cur_cursor_;
 
   JSFunction updateBack;
   JSFunction updateForward;

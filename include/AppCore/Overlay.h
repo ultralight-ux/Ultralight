@@ -28,6 +28,9 @@ public:
   ///
   /// Create a new Overlay.
   ///
+  /// @param  window  The window to create the Overlay in. (we currently only
+  ///                 support one window per application)
+  ///
   /// @param  width   The width in device coordinates.
   ///
   /// @param  height  The height in device coordinates.
@@ -38,7 +41,7 @@ public:
   /// @param  y       The y-position (offset from the top of the Window), in
   ///                 device coordinates.
   ///
-  static Ref<Overlay> Create(int width, int height, int x, int y);
+  static Ref<Overlay> Create(Ref<Window> window, int width, int height, int x, int y);
 
   ///
   /// Get the underlying View.
@@ -66,6 +69,36 @@ public:
   /// coordinates.
   ///
   virtual int y() const = 0;
+
+  ///
+  /// Whether or not the overlay is hidden (not drawn).
+  ///
+  virtual bool is_hidden() const = 0;
+
+  ///
+  /// Hide the overlay (will no longer be drawn)
+  ///
+  virtual void Hide() = 0;
+
+  ///
+  /// Show the overlay.
+  ///
+  virtual void Show() = 0;
+
+  ///
+  /// Whether or not this overlay has keyboard focus.
+  ///
+  virtual bool has_focus() const = 0;
+
+  ///
+  /// Grant this overlay exclusive keyboard focus.
+  ///
+  virtual void Focus() = 0;
+
+  ///
+  /// Remove keyboard focus.
+  ///
+  virtual void Unfocus() = 0;
 
   ///
   /// Move the overlay to a new position (in device coordinates).

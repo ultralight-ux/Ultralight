@@ -1,11 +1,16 @@
 #include <AppCore/CAPI.h>
 #include <AppCore/AppCore.h>
+#include <Ultralight/platform/Platform.h>
+#include <Ultralight/platform/Config.h>
 
 using namespace ultralight;
 
 // Undocumented functions from Ultralight's CAPI, each must be destroyed
 ULExport ULRenderer C_WrapRenderer(Ref<Renderer> renderer);
 ULExport ULView C_WrapView(Ref<View> view);
+struct C_Config {
+  Config val;
+};
 
 struct C_App : public AppListener {
 	Ref<App> val;
@@ -70,7 +75,8 @@ struct C_Overlay {
 };
 
 
-ULApp ulCreateApp() {
+ULApp ulCreateApp(ULConfig config) {
+  Platform::instance().set_config(config->val);
   return new C_App{ App::Create() };
 }
 
@@ -180,8 +186,8 @@ int ulWindowPixelsToDevice(ULWindow window, int val) {
   return window->val->PixelsToDevice(val);
 }
 
-ULOverlay ulCreateOverlay(int width, int height, int x, int y) {
-  return new C_Overlay(Overlay::Create(width, height, x, y));
+ULOverlay ulCreateOverlay(ULWindow window, int width, int height, int x, int y) {
+  return new C_Overlay(Overlay::Create(window->val, width, height, x, y));
 }
 
 void ulDestroyOverlay(ULOverlay overlay) {
@@ -214,4 +220,28 @@ void ulOverlayMoveTo(ULOverlay overlay, int x, int y) {
 
 void ulOverlayResize(ULOverlay overlay, int width, int height) {
   overlay->val->Resize(width, height);
+}
+
+bool ulOverlayIsHidden(ULOverlay overlay) {
+  return overlay->val->is_hidden();
+}
+
+void ulOverlayHide(ULOverlay overlay) {
+  overlay->val->Hide();
+}
+
+void ulOverlayShow(ULOverlay overlay) {
+  overlay->val->Show();
+}
+
+bool ulOverlayHasFocus(ULOverlay overlay) {
+  return overlay->val->has_focus();
+}
+
+void ulOverlayFocus(ULOverlay overlay) {
+  overlay->val->Focus();
+}
+
+void ulOverlayUnfocus(ULOverlay overlay) {
+  overlay->val->Unfocus();
 }

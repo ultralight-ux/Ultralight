@@ -2,19 +2,11 @@
 
 static UI* g_ui = 0;
 
-using namespace framework;
-
 #define UI_HEIGHT 79
 
-UI::UI(ultralight::Ref<ultralight::Renderer> renderer, ultralight::GPUDriver* driver, framework::Window& window) :
-  renderer_(renderer),
-  driver_(driver),
-  window_(window),
-  screen_width_(window.width()),
-  ui_height_(UI_HEIGHT),
-  tab_height_(window.height() - UI_HEIGHT),
-  scale_((float)window.scale()),
-  Overlay(renderer, driver, window, window.width(), UI_HEIGHT, 0, 0) {
+UI::UI(Ref<Window> window) : window_(window) {
+  int window_width = App::instance()->window()->width();
+  overlay_ = Overlay::Create(window_, window_width, UI_HEIGHT, 0, 0);
   g_ui = this;
 
   view()->set_load_listener(this);
@@ -24,6 +16,19 @@ UI::UI(ultralight::Ref<ultralight::Renderer> renderer, ultralight::GPUDriver* dr
 UI::~UI() {
   view()->set_load_listener(nullptr);
   g_ui = nullptr;
+}
+
+void UI::OnClose() {
+}
+
+void UI::OnResize(int width, int height) {
+  RefPtr<Window> window = App::instance()->window();
+  int tab_height = window->height() - UI_HEIGHT;
+  overlay_->Resize(window->width(), UI_HEIGHT);
+  for (auto& tab : tabs_) {
+    if (tab.second)
+      tab.second->Resize(window->width(), tab_height);
+  }
 }
 
 void UI::OnDOMReady(ultralight::View* caller) {
@@ -83,8 +88,8 @@ void UI::OnRequestTabClose(const JSObject& obj, const JSArgs& args) {
     if (!tab)
       return;
 
-    if (tabs_.size() == 1)
-      window_.Close();
+    if (tabs_.size() == 1 && App::instance())
+      App::instance()->Quit();
 
     if (id != active_tab_id_) {
       tabs_[id].reset();
@@ -108,6 +113,9 @@ void UI::OnActiveTabChange(const JSObject& obj, const JSArgs& args) {
     auto& tab = tabs_[id];
     if (!tab)
       return;
+      
+    tabs_[active_tab_id_]->overlay()->Hide();
+    tabs_[active_tab_id_]->overlay()->Unfocus();
 
     if (tabs_[active_tab_id_]->ready_to_close()) {
       tabs_[active_tab_id_].reset();
@@ -115,6 +123,9 @@ void UI::OnActiveTabChange(const JSObject& obj, const JSArgs& args) {
     }
 
     active_tab_id_ = id;
+    tabs_[active_tab_id_]->overlay()->Show();
+    tabs_[active_tab_id_]->overlay()->Focus();
+      
     auto tab_view = tabs_[active_tab_id_]->view();
     SetLoading(tab_view->is_loading());
     SetCanGoBack(tab_view->CanGoBack());
@@ -134,57 +145,10 @@ void UI::OnRequestChangeURL(const JSObject& obj, const JSArgs& args) {
   }
 }
 
-void UI::Draw() {
-  Overlay::Draw();
-
-  if (!tabs_.empty())
-    tabs_[active_tab_id_]->Draw();
-}
-
-void UI::FireKeyEvent(const ultralight::KeyEvent& evt) {
-  if (tab_has_focus_ && !tabs_.empty())
-    tabs_[active_tab_id_]->FireKeyEvent(evt);
-  else
-    Overlay::FireKeyEvent(evt);
-}
-
-void UI::FireMouseEvent(const ultralight::MouseEvent& evt) {
-  if (evt.type == ultralight::MouseEvent::kType_MouseMoved) {
-    if (!tabs_.empty())
-      tabs_[active_tab_id_]->FireMouseEvent(evt);
-
-    Overlay::FireMouseEvent(evt);
-    return;
-  } else if (evt.type == ultralight::MouseEvent::kType_MouseDown &&
-             evt.button == ultralight::MouseEvent::kButton_Left) {
-    // Do Hit-Testing and Focus UI or Tab
-    tab_has_focus_ = evt.y > ui_height_;
-  }
-
-  if (tab_has_focus_ && !tabs_.empty())
-    tabs_[active_tab_id_]->FireMouseEvent(evt);
-  else
-    Overlay::FireMouseEvent(evt);
-}
-
-void UI::FireScrollEvent(const ultralight::ScrollEvent& evt) {
-  if (!tabs_.empty())
-    tabs_[active_tab_id_]->FireScrollEvent(evt);
-}
-
-void UI::Resize(int width, int height) {
-  screen_width_ = window_.width();
-  tab_height_ = window_.height() - UI_HEIGHT;
-  Overlay::Resize(window_.width(), UI_HEIGHT);
-  for (auto& tab : tabs_) {
-    if (tab.second)
-      tab.second->Resize(screen_width_, tab_height_);
-  }
-}
-
 void UI::CreateNewTab() {
   uint64_t id = tab_id_counter_++;
-  tabs_[id].reset(new Tab(this, id));
+  RefPtr<Window> window = App::instance()->window();
+  tabs_[id].reset(new Tab(this, id, window->width(), window->height() - UI_HEIGHT, 0, UI_HEIGHT));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
   addTab({ id, "New Tab", "" });
@@ -208,7 +172,6 @@ void UI::UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, boo
 }
 
 void UI::SetLoading(bool is_loading) {
-  JSContextRef ctx = view()->js_context();
   updateLoading({ is_loading });
 }
 
@@ -225,5 +188,6 @@ void UI::SetURL(const ultralight::String& url) {
 }
 
 void UI::SetCursor(ultralight::Cursor cursor) {
-  window_.SetCursor(cursor);
+  if (App::instance())
+    App::instance()->window()->SetCursor(cursor);
 }

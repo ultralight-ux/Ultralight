@@ -40,7 +40,7 @@ public:
     return (int)round(val / scale());
   }
 
-  virtual OverlayManager* overlay_manager() override { return this; }
+  virtual OverlayManager* overlay_manager() const override { return const_cast<WindowMac*>(this); }
 
   REF_COUNTED_IMPL(WindowMac);
 

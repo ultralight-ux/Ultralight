@@ -133,7 +133,7 @@ public:
 
 protected:
   virtual ~Window();
-  virtual OverlayManager* overlay_manager() = 0;
+  virtual OverlayManager* overlay_manager() const = 0;
 
   friend class OverlayImpl;
 };
