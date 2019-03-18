@@ -52,7 +52,7 @@ This package contains everything you need to start building cross-platform HTML 
 		- [Evaluating Scripts](#evaluating-scripts)
 		- [Calling JS Functions from C++](#calling-js-functions-from-c)
 		- [Calling C++ Functions from JS](#calling-c-functions-from-js)
- - [Using the Framework Code](#using-the-framework-code)
+ - [Using the AppCore Code](#using-the-appcore-code)
 
 # Getting Started
 
@@ -212,9 +212,11 @@ Ultralight also exposes the full __JavaScriptCore__ API so that users can make n
 
 ## Platform Handlers
 
-Most OS-specific tasks in Ultralight have been left up to the user to provide via a virtual platform interface. This keeps the codebase small and grants users greater control over the behavior of the library.
+Most OS-specific tasks in Ultralight can be overridden by users via the `Platform` interface.
 
-At a minimum, users are expected to provide a `Config`, `GPUDriver`, and `FontLoader` before creating the `Renderer`.
+Default platform implementations have been provided for everything except the `FileSystem` interface.
+
+Of special note, the default GPUDriver is an offscreen OpenGL implementation that renders each View to a bitmap (see `View::bitmap`). This isn't the most performant option so you should instead use a native driver for each platform (eg, Metal on macOS). Platform-native drivers are automatically used when creating a Window through the AppCore API.
 
 ```cpp
 auto& platform = Platform::instance();
@@ -246,7 +248,7 @@ Platform::instance().set_config(config_);
 
 The virtual __GPUDriver__ interface is used to perform all rendering in Ultralight.
 
-Reference implementations for Direct3D11, OpenGL 3.2, Metal 2, and others are provided in the Framework code (see `deps/Framework/platform/` in the SDK).
+Reference implementations for Direct3D11, OpenGL 3.2, Metal 2, and others are provided in the AppCore code (see `deps/AppCore/src/` in the SDK).
 
 ```cpp
 class UExport GPUDriver
@@ -319,8 +321,6 @@ public:
 
 The virtual __FontLoader__ interface is used to load font files (TrueType and OpenType files, usually stored somewhere in the Operating System) by font family.
 
-Reference implementations for Windows and macOS, as well as a simple loader that simply returns an embedded Roboto TTF for all queries (`FontLoaderRoboto`) is provided in the Framework code (see `deps/Framework/platform/` in the SDK).
-
 ```cpp
 class UExport FontLoader
 {
@@ -341,8 +341,6 @@ public:
 The virtual __FileSystem__ interface is used for loading File URLs (eg, `file:///page.html`) and the JavaScript FileSystem API.
 
 This API should be used to load any HTML/JS/CSS assets you've bundled with your application.
-
-Reference implementations for Windows and macOS, as well as a basic FileSystem loader that uses the C++ STL (`FileSystemBasic`) is provided in the Framework code  (see `deps/Framework/platform/` in the SDK).
 
 Only a small subset needs to be implemented to support File URL loading, specifically the following: 
 
@@ -415,9 +413,7 @@ void MyApplication::Update()
 
 ### Drawing View Overlays
 
-Views are rendered to an offscreen texture and so it is the user's responsibility to draw this texture to the screen. To get the __Texture ID__ for a __View__, please see `View::render_target()`.
-
-A reference implementation for a View-based Overlay is supplied within the Framework code (see `/deps/Framework/Overlay.h` and `/deps/Framework/Overlay.cpp`).
+When using your own GPUDriver, Views are rendered to an offscreen texture and so it is the user's responsibility to draw this texture to the screen. To get the __Texture ID__ for a __View__, please see `View::render_target()`.
 
 ## Managing Views
 
@@ -531,10 +527,10 @@ To include this API in your code, simply include `<JavaScriptCore/JavaScript.h>`
 #include <JavaScriptCore/JavaScript.h>
 ```
 
-To simplify things, a C++ wrapper for JavaScriptCore is provided in the Framework code __(we'll be using this in subsequent code examples)__. Simply include `<Framework/JSHelpers.h>` to use it:
+To simplify things, a C++ wrapper for JavaScriptCore is provided in the AppCore code __(we'll be using this in subsequent code examples)__. Simply include `<AppCore/JSHelpers.h>` to use it:
 
 ```cpp
-#include <Framework/JSHelpers.h>
+#include <AppCore/JSHelpers.h>
 ```
 
 ### Set the JSContext
@@ -542,7 +538,7 @@ To simplify things, a C++ wrapper for JavaScriptCore is provided in the Framewor
 Before you can make any calls to JavaScript code (including creating any JSValues, JSObjects, etc.), you should __pass your View's JSContext to `SetJSContext()`__:
 
 ```cpp
-#include <Framework/JSHelpers.h>
+#include <AppCore/JSHelpers.h>
 using namespace framework;
 
 //...
@@ -676,8 +672,8 @@ Now you can call it from JavaScript on the page:
 MyCallback(1, 2, 3, "hello");
 ```
 
-# Using the Framework Code
+# Using the AppCore Code
 
-The Framework code provides a cross-platform base for you to start writing applications with Ultralight-- the only thing you need to provide are HTML assets and application logic.
+The AppCore code provides a cross-platform base for you to start writing applications with Ultralight-- the only thing you need to provide are HTML assets and application logic.
 
-Take a look at the Browser sample code for an example of use.
+Take a look at the Browser sample code and Tutorials for an example of use.
