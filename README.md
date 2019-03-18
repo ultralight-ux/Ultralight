@@ -9,7 +9,6 @@ This package contains everything you need to start building cross-platform HTML 
 | Link              | URL                                 |
 | ----------------- | ----------------------------------- |
 | __Slack Channel__ | <https://chat.ultralig.ht>          |
-| __Support Forum__ | <https://discuss.ultralig.ht>       |
 | __Twitter__       | <https://twitter.com/ultralight_ux> |
 
 
@@ -23,11 +22,8 @@ This package contains everything you need to start building cross-platform HTML 
  - [Building Sample Projects](#building-sample-projects)
  	- [Building Samples with CMake (All Platforms)](#building-samples-with-cmake-all-platforms)
         - [Building 64-bit on Windows](#building-64-bit-on-windows)
- 	- [Building Additional Samples (Windows)](#building-samples-windows)
- 	- [Building Additional Samples (macOS)](#building-samples-macos)
  - [Using the C++ API](#using-the-c-api)
  	- [Compiler / Linker Flags](#compiler--linker-flags)
- 		- [Disabling RTTI](#disabling-rtti)
  		- [Setting Your Include Directories](#setting-your-include-directories)
  		- [Linking to the Library (Windows / MSVC)](#linking-to-the-library-windows--msvc)
  		- [Linking to the Library (Linux)](#linking-to-the-library-linux)
@@ -67,20 +63,16 @@ Before you get started, you will need the following on each platform:
 All platforms include an __OpenGL-based sample (powered by GLFW)__. To build these cross-platform CMake/GLFW samples you will need:
 
  - CMake 2.8.12 or later
- - OpenGL 3.2 or later
  - Compiler with C++11 or later
 
 ### Windows Build Requirements
 
  - In addition to the above...
  	- Visual Studio 2015 or later
- 	- DirectX 11+ or later __[optional], only for D3D11-based Samples__
- 		* _Note: The DirectX SDK is included with the Windows SDK in Windows 8+_
 
 ### macOS Build Requirements
  - In addition to the above...
  	- XCode 8.0+ or later
- 	- Metal 2 (macOS High Sierra or later) __[optional], only for Metal-based Samples__
 
 ### Linux Build Requirements
 
@@ -126,39 +118,9 @@ On __Windows__ the projects will be built to:
 /build/samples/Browser/$(Configuration)
 ```
 
-## Building Additional Samples (Windows Only)
-
-A D3D11-based Browser sample is included on Windows, open the following solution in Visual Studio to build and run it:
-
-```
-/samples/Browser/projects/win/Browser.sln
-```
-
-## Building Additional Samples (macOS Only)
-
-A Metal-based Browser sample is included on macOS, open the following project in XCode to build and run it:
-
-```
-/samples/Browser/projects/mac/Browser.xcodeproj
-```
-
 # Using the C++ API
 
 ## Compiler / Linker Flags
-
-### Disabling RTTI
-
-Ultralight is built __without Run-Time Type Information (RTTI)__, you will need to disable RTTI in your C++ flags to link successfully to the library.
-
-Check your compiler's documentation on how to disable RTTI, on __MSVC__ the command-line flag is `/GR-`, and on __GCC/Clang__ it is `-fno-rtti`. Here's a CMake script that sets these automatically per-platform:
-
-```
-if (MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
-elseif (UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
-endif()
-```
 
 ### Setting your Include Directories
 
@@ -166,12 +128,6 @@ To use Ultralight in your C++ code, simply add the following directory to your p
 
 ```
 $(ULTRALIGHT_SDK_ROOT)/include/
-```
-
-If you will be using any of the framework code (additional code that helps set up platform-specific windows, GPU contexts/drivers, file systems, JavaScript, etc.), you should also include the following: 
-
-```
-$(ULTRALIGHT_SDK_ROOT)/deps/
 ```
 
 ### Linking to the Library (Windows / MSVC)
@@ -198,7 +154,10 @@ Then, go to __Linker &rarr; Input &rarr; Additional Dependencies__ and add the f
 Ultralight.lib
 UltralightCore.lib
 WebCore.lib
+AppCore.lib
 ```
+
+> *__Note__: `AppCore.lib` is optional, only link if you use the AppCore API headers..*
 
 ### Linking to the Library (Linux)
 
@@ -207,24 +166,29 @@ First, copy the shared libraries in `$(ULTRALIGHT_SDK_ROOT)/bin/linux` to your O
 Then, add the following to your Makefile's `LDFLAGS`:
 
 ```
--lUltralight -lUltralightCore -lWebCore
+-lUltralight -lUltralightCore -lWebCore -lAppCore
 ```
+
+> *__Note__: `-lAppCore` is optional, only link if you use the AppCore API headers..*
 
 ### Linking to the Library (macOS)
 
 Within XCode, select your target and go to __General &rarr; Linked Frameworks and Libraries__ and add the following:
 
 ```
-Ultralight.framework
-WebCore.framework
-UltralightCore.dylib
+libUltralightCore.dylib
+libUltralight.dylib
+libWebCore.dylib
+libAppCore.dylib
 ```
 
 Or alternatively, if you are building with a Makefile, add the following to your `LDFLAGS`:
 
 ```
--lUltralightCore -framework Ultralight -framework WebCore 
+-lUltralight -lUltralightCore -lWebCore -lAppCore
 ```
+
+> *__Note__: AppCore is optional, only link if you use the AppCore API headers..*
 
 ## API Headers
 
@@ -234,12 +198,17 @@ Simply include `<Ultralight/Ultralight.h>` at the top of your code to import the
 #include <Ultralight/Ultralight.h>
 ```
 
+If you want to use the optional AppCore API (cross-platform windowing/drawing layer), you should also include `<AppCore/AppCore.h>` at the top of your code.
+
+```cpp
+#include <AppCore/AppCore.h>
+```
+
 Ultralight also exposes the full __JavaScriptCore__ API so that users can make native calls to/from the JavaScript VM. To include these headers simply add:
 
 ```cpp
 #include <JavaScriptCore/JavaScriptCore.h>
 ```
-
 
 ## Platform Handlers
 
