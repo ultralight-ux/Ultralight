@@ -95,6 +95,8 @@ elseif (UNIX)
         "src/linux/MonitorGLFW.cpp"
         "src/linux/WindowGLFW.h"
         "src/linux/WindowGLFW.cpp"
+        "src/linux/FileSystemBasic.h"
+        "src/linux/FileSystemBasic.cpp"
         "src/linux/gl/GPUContextGL.h"
         "src/linux/gl/GPUContextGL.cpp"
         "src/linux/gl/GPUDriverGL.h"

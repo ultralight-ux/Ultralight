@@ -5,6 +5,7 @@
 #include <Ultralight/platform/Config.h>
 #include <GLFW/glfw3.h>
 #include "WindowGLFW.h"
+#include "FileSystemBasic.h"
 #include <thread>
 #include <chrono>
 
@@ -31,6 +32,9 @@ AppGLFW::AppGLFW() {
   config.device_scale_hint = main_monitor_->scale();
   config.face_winding = kFaceWinding_Clockwise;
   Platform::instance().set_config(config);
+
+  file_system_.reset(new FileSystemBasic("assets/"));
+  Platform::instance().set_file_system(file_system_.get());
 
   renderer_ = Renderer::Create();
 }
