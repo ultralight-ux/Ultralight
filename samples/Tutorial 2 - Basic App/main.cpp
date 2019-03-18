@@ -19,15 +19,15 @@ public:
 
 int main() {
   auto app = App::Create();
-    
+  
   auto window = Window::Create(app->main_monitor(), WIDTH, HEIGHT, false, 0);
   window->SetTitle("Hello!");
-    
+  app->set_window(window);
+
   auto overlay = Overlay::Create(window, WIDTH, HEIGHT, 0, 0);
   window->set_listener(new Listener(overlay.ptr()));
   overlay->view()->LoadHTML("Hello World!");
 
-  app->set_window(window);
   app->Run();
 
   return 0;
