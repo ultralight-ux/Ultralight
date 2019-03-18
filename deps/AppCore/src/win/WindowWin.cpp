@@ -26,8 +26,9 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     WINDOWDATA()->is_resizing_modal = true;
     break;
   case WM_SIZE:
-    if (!WINDOWDATA()->is_resizing_modal)
-      WINDOW()->OnResize(WINDOW()->width(), WINDOW()->height());
+    if (WINDOWDATA())
+      if (!WINDOWDATA()->is_resizing_modal)
+        WINDOW()->OnResize(WINDOW()->width(), WINDOW()->height());
     break;
   case WM_EXITSIZEMOVE:
     WINDOWDATA()->is_resizing_modal = false;
@@ -145,13 +146,25 @@ WindowWin::WindowWin(Monitor* monitor, uint32_t width, uint32_t height,
     exit(-1);
   }
 
+  DWORD style = WS_SYSMENU;
+  if (window_flags & kWindowFlags_Borderless)
+    style |= WS_POPUP;
+  else
+    style |= WS_BORDER;
+  if (window_flags & kWindowFlags_Titled)
+    style |= WS_CAPTION;
+  if (window_flags & kWindowFlags_Resizable)
+    style |= WS_SIZEBOX;
+  if (window_flags & kWindowFlags_Maximizable)
+    style |= WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+
   // Create window
   RECT rc = { 0, 0, (LONG)DeviceToPixels(width), (LONG)DeviceToPixels(height) };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
   hwnd_ = ::CreateWindowEx(NULL
     , class_name
     , _T("")
-    , fullscreen ? (WS_EX_TOPMOST | WS_POPUP) : WS_OVERLAPPEDWINDOW
+    , fullscreen ? (WS_EX_TOPMOST | WS_POPUP) : style
     , fullscreen ? 0 : CW_USEDEFAULT
     , fullscreen ? 0 : CW_USEDEFAULT
     , fullscreen ? DeviceToPixels(width) : (rc.right - rc.left)
