@@ -9,8 +9,20 @@ namespace ultralight {
 WindowMac::WindowMac(Monitor* monitor, uint32_t width, uint32_t height,
   bool fullscreen, unsigned int window_flags) : monitor_(monitor), is_fullscreen_(fullscreen) {
   NSRect frame = NSMakeRect(0, 0, width, height);
+  NSWindowStyleMask style = 0;
+  if (window_flags & kWindowFlags_Borderless)
+    style |= NSWindowStyleMaskBorderless;
+  else
+    style |= NSWindowStyleMaskClosable;
+  if (window_flags & kWindowFlags_Titled)
+    style |= NSWindowStyleMaskTitled;
+  if (window_flags & kWindowFlags_Resizable)
+    style |= NSWindowStyleMaskResizable;
+  if (window_flags & kWindowFlags_Maximizable)
+    style |= NSWindowStyleMaskMiniaturizable;
+
   window_  = [[NSWindow alloc] initWithContentRect:frame
-                                         styleMask:NSWindowStyleMaskClosable | NSWindowStyleMaskTitled | NSWindowStyleMaskResizable
+                                         styleMask:style
                                              backing:NSBackingStoreBuffered
                                                defer:NO];
   [window_ center];
