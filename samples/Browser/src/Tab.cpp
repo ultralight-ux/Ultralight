@@ -2,6 +2,9 @@
 #include "UI.h"
 #include <iostream>
 #include <string>
+#if _WIN32
+#include <Windows.h>
+#endif
 
 Tab::Tab(UI* ui, uint64_t id, int width, int height, int x, int y) : ui_(ui), id_(id) {
   overlay_ = Overlay::Create(ui->window_, width, height, x, y);

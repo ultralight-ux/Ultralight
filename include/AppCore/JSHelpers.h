@@ -1,4 +1,5 @@
 #pragma once
+#include <AppCore/Defines.h>
 #include <JavaScriptCore/JavaScript.h>
 #include <JavaScriptCore/JSStringRef.h>
 #include <Ultralight/String.h>
@@ -21,18 +22,18 @@ namespace ultralight {
  *       The only things you can create without a JSContext are JSString's and
  *       the empty JSFunction constructor.
  */
-void SetJSContext(JSContextRef ctx);
+void AExport SetJSContext(JSContextRef ctx);
 
 /**
  * Get the current JSContext.
  */
-JSContextRef GetJSContext();
+JSContextRef AExport GetJSContext();
 
 /**
  * JSString wrapper that automatically manages lifetime
  * and provides helpful conversions.
  */
-class JSString {
+class AExport JSString {
 public:
   // Create empty string
   JSString();
@@ -69,16 +70,16 @@ class JSObject;
 class JSFunction;
 
 // Used with the JSValue constructor to create "Null" types
-struct JSValueNullTag {};
+struct AExport JSValueNullTag {};
 
 // Used with the JSValue constructor to create "Undefined" types
-struct JSValueUndefinedTag {};
+struct AExport JSValueUndefinedTag {};
 
 /**
  * JSValue wrapper that automatically manages lifetime and
  * provides helpful conversions.
  */
-class JSValue {
+class AExport JSValue {
 public:
   // Create null (empty) JSValue
   JSValue();
@@ -217,7 +218,7 @@ typedef std::function<JSValue(const JSObject&, const JSArgs&)> JSCallbackWithRet
  * to object property, binding C++ callbacks to object properties via function objects,
  * as well as value query via the JSValue interface.
  */
-class JSPropertyValue : public JSValue {
+class AExport JSPropertyValue : public JSValue {
 public:
   virtual ~JSPropertyValue();
 
@@ -249,7 +250,7 @@ protected:
  * JSArray wrapper that automatically manages lifetime and provides
  * convenient access to indices and Array functions.
  */
-class JSArray {
+class AExport JSArray {
 public:
   // Create empty Array
   JSArray();
@@ -295,7 +296,7 @@ protected:
  * JSObject wrapper that automatically manages lifetime and provides
  * convenient access to properties.
  */
-class JSObject {
+class AExport JSObject {
 public:
   // Create empty Object
   JSObject();
@@ -337,7 +338,7 @@ protected:
 * JSFunction wrapper that automatically manages lifetime and provides
 * convenient function invocation operators.
 */
-class JSFunction {
+class AExport JSFunction {
 public:
   // Create an empty Function.
   // NOTE: It is OKAY to create this without calling SetJSContext() first.
@@ -375,11 +376,11 @@ protected:
  * Get the Global Object for the current JSContext.
  * In JavaScript, this would be equivalent to the "window" object.
  */
-JSObject JSGlobalObject();
+JSObject AExport JSGlobalObject();
 
 /**
  * Evaluate a string of JavaScript and return a result.
  */
-JSValue JSEval(const JSString& str);
+JSValue AExport JSEval(const JSString& str);
 
 }  // namespace ultralight
