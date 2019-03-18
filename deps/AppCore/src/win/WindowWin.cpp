@@ -76,12 +76,12 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
   case WM_LBUTTONUP:
   case WM_MBUTTONUP:
   case WM_RBUTTONUP:
-    WINDOWDATA()->cur_btn = MouseEvent::kButton_None;
     WINDOW()->FireMouseEvent(
     { MouseEvent::kType_MouseUp,
       WINDOW()->PixelsToDevice(GET_X_LPARAM(lParam)),
       WINDOW()->PixelsToDevice(GET_Y_LPARAM(lParam)),
       WINDOWDATA()->cur_btn });
+	WINDOWDATA()->cur_btn = MouseEvent::kButton_None;
     break;
   case WM_MOUSEWHEEL:
     WINDOW()->FireScrollEvent(
