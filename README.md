@@ -83,7 +83,7 @@ Common requirements for all platforms
 
 ## Building Samples with CMake (All Platforms)
 
-To generate projects for your platform and build, run the following from this directory:
+To generate projects for your platform and build, run the following from __the root of the SDK__:
 
 ```
 mkdir build
