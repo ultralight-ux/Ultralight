@@ -7,27 +7,42 @@ using namespace ultralight;
 #define WIDTH 300
 #define HEIGHT 300
 
-class Listener : public WindowListener {
-    Overlay* overlay_;
-public:
-    Listener(Overlay* overlay) : overlay_(overlay) {}
-	virtual ~Listener() {}
-	virtual void OnClose() {}
-	virtual void OnResize(int width, int height) { overlay_->Resize(width, height); }
-	virtual void OnChangeScale(double scale) {}
-};
-
 int main() {
+  ///
+  /// Create our main App instance.
+  ///
   auto app = App::Create();
   
+  ///
+  /// Create our Window using default window flags.
+  ///
   auto window = Window::Create(app->main_monitor(), WIDTH, HEIGHT, false, 0);
+
+  ///
+  /// Set our window title.
+  ///
   window->SetTitle("Hello!");
+
+  ///
+  /// Bind our App's main window.
+  ///
+  /// @note This MUST be done before creating any overlays or calling App::Run
+  ///
   app->set_window(window);
 
+  ///
+  /// Create our Overlay, use the same dimensions as our Window.
+  ///
   auto overlay = Overlay::Create(window, WIDTH, HEIGHT, 0, 0);
-  window->set_listener(new Listener(overlay.ptr()));
-  overlay->view()->LoadHTML("Hello World!");
 
+  ///
+  /// Load a string of HTML into our overlay's View
+  ///
+  overlay->view()->LoadHTML("<center>Hello World!</center>");
+
+  ///
+  /// Run our main loop.
+  ///
   app->Run();
 
   return 0;
