@@ -19,12 +19,12 @@ public:
     /// Create our Window with the Resizable window flag.
     ///
     window_ = Window::Create(app_->main_monitor(), 300, 300, false,
-      kWindowFlags_Resizable);
+      kWindowFlags_Titled | kWindowFlags_Resizable);
 
     ///
     /// Set our window title.
     ///
-    window_->SetTitle("Hello!");
+    window_->SetTitle("Tutorial 3 - Resize Me!");
 
     ///
     /// Bind our App's main window.

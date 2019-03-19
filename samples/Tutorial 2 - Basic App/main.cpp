@@ -13,12 +13,12 @@ int main() {
   ///
   /// Create our Window using default window flags.
   ///
-  auto window = Window::Create(app->main_monitor(), 300, 300, false, 0);
+  auto window = Window::Create(app->main_monitor(), 300, 300, false, kWindowFlags_Titled);
 
   ///
   /// Set our window title.
   ///
-  window->SetTitle("Hello!");
+  window->SetTitle("Tutorial 2 - Basic App");
 
   ///
   /// Bind our App's main window.

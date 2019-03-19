@@ -85,12 +85,12 @@ int main() {
   ///
   /// Create our Window using default window flags.
   ///
-  auto window = Window::Create(app->main_monitor(), 300, 300, false, 0);
+  auto window = Window::Create(app->main_monitor(), 300, 300, false, kWindowFlags_Titled);
 
   ///
   /// Set our window title.
   ///
-  window->SetTitle("Tutorial 3");
+  window->SetTitle("Tutorial 4 - JavaScript");
 
   ///
   /// Bind our App's main window.
