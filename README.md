@@ -4,6 +4,22 @@ __Welcome to the Ultralight Universal SDK!__
 
 This package contains everything you need to start building cross-platform HTML apps.
 
+__What is Ultralight?__
+
+Ultralight is a lightweight, pure-GPU, HTML rendering engine for native apps. Our aim is to provide support for the majority of the HTML5/CSS/JavaScript spec while still being as lightweight (in binary size and memory usage) as possible.
+
+The motivation for this project stemmed from the observation that Chromium and other layout engines have become suboptimal for use in desktop app UI due to a separate set of design goals (running untrusted code, favoring performance over memory, the need to support every web platform feature under the sun, etc.).
+
+Most native apps also need finer control over low-level platform functionality (such as file system, rendering, clipboard, etc.). Ultralight aims to not just be lightweight, but to offer native app developers much deeper integration with the underlying HTML engine.
+
+Ultralight is also pure-GPU, meaning that all rendering (text, shadows, images, CSS transforms), is done via the GPU. The renderer emits abstract GPU commands (see the GPUDriver interface) which can then be handled by whichever graphics API you prefer (we provide stock implementations for D3D11, OpenGL, and Metal as of this writing).
+
+__Cross-Platform AppCore Runtime__
+
+On top of Ultralight, we've built an additional layer called AppCore that handles window creation, native event loops, native graphics API drivers, and more.
+
+AppCore is intended to be used by those intending to build a standalone HTML-based desktop app and will eventually offer an API similar to Electron.
+
 ## Useful Links
 
 | Link              | URL                                 |
@@ -16,9 +32,6 @@ This package contains everything you need to start building cross-platform HTML 
 
  - [Getting Started](#getting-started)
  	- [Build Requirements](#build-requirements)
- 		- [Windows Build Requirements](#windows-build-requirements)
- 		- [macOS Build Requirements](#macos-build-requirements)
- 		- [Linux Build Requirements](#linux-build-requirements)
  - [Building Sample Projects](#building-sample-projects)
  	- [Building Samples with CMake (All Platforms)](#building-samples-with-cmake-all-platforms)
         - [Building 64-bit on Windows](#building-64-bit-on-windows)
@@ -60,25 +73,10 @@ Before you get started, you will need the following on each platform:
 
 ## Build Requirements
 
-All platforms include an __OpenGL-based sample (powered by GLFW)__. To build these cross-platform CMake/GLFW samples you will need:
+Common requirements for all platforms 
 
  - CMake 2.8.12 or later
  - Compiler with C++11 or later
-
-### Windows Build Requirements
-
- - In addition to the above...
- 	- Visual Studio 2015 or later
-
-### macOS Build Requirements
- - In addition to the above...
- 	- XCode 8.0+ or later
-
-### Linux Build Requirements
-
- - In addition to the above...
- 	- 64-bit Debian-based OS (__Debian 9.5.0+__ OR __Ubuntu 12.04.5+__)
-
 
 # Building Sample Projects
 
