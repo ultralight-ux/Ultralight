@@ -4,9 +4,6 @@
 
 using namespace ultralight;
 
-#define WIDTH 300
-#define HEIGHT 300
-
 int main() {
   ///
   /// Create our main App instance.
@@ -16,7 +13,7 @@ int main() {
   ///
   /// Create our Window using default window flags.
   ///
-  auto window = Window::Create(app->main_monitor(), WIDTH, HEIGHT, false, 0);
+  auto window = Window::Create(app->main_monitor(), 300, 300, false, 0);
 
   ///
   /// Set our window title.
@@ -33,7 +30,7 @@ int main() {
   ///
   /// Create our Overlay, use the same dimensions as our Window.
   ///
-  auto overlay = Overlay::Create(window, WIDTH, HEIGHT, 0, 0);
+  auto overlay = Overlay::Create(window, window->width(), window->height(), 0, 0);
 
   ///
   /// Load a string of HTML into our overlay's View

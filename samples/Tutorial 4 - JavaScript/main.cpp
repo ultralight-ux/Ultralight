@@ -5,9 +5,6 @@
 
 using namespace ultralight;
 
-#define WIDTH 300
-#define HEIGHT 300
-
 class MyApp : public LoadListener {
   RefPtr<Overlay> overlay_;
 public:
@@ -88,7 +85,7 @@ int main() {
   ///
   /// Create our Window using default window flags.
   ///
-  auto window = Window::Create(app->main_monitor(), WIDTH, HEIGHT, false, 0);
+  auto window = Window::Create(app->main_monitor(), 300, 300, false, 0);
 
   ///
   /// Set our window title.

@@ -2,4 +2,5 @@
 add_subdirectory("Browser")
 add_subdirectory("Tutorial 1 - Render to PNG")
 add_subdirectory("Tutorial 2 - Basic App")
-add_subdirectory("Tutorial 3 - JavaScript")
+add_subdirectory("Tutorial 3 - Resizable App")
+add_subdirectory("Tutorial 4 - JavaScript")
