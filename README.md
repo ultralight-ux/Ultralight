@@ -8,7 +8,7 @@ __What is Ultralight?__
 
 Ultralight is a lightweight, pure-GPU, HTML rendering engine for native apps. Our aim is to provide support for the majority of the HTML5/CSS/JavaScript spec while still being as lightweight (in binary size and memory usage) as possible.
 
-The motivation for this project stemmed from the observation that Chromium and other layout engines have become suboptimal for use in desktop app UI due to a separate set of design goals (running untrusted code, favoring performance over memory, the need to support every web platform feature under the sun, etc.).
+The motivation for this project stemmed from the observation that Chromium and other layout engines have become suboptimal for use in desktop app UI due to a separate set of design goals (running untrusted code, favoring performance at the cost of memory, the need to support every web platform feature under the sun, etc.).
 
 Most native apps also need finer control over low-level platform functionality (such as file system, rendering, clipboard, etc.). Ultralight aims to not just be lightweight, but to offer native app developers much deeper integration with the underlying HTML engine.
 
@@ -26,6 +26,7 @@ AppCore is intended to be used by those intending to build a standalone HTML-bas
 | ----------------- | ----------------------------------- |
 | __Slack Channel__ | <https://chat.ultralig.ht>          |
 | __Twitter__       | <https://twitter.com/ultralight_ux> |
+| __API Docs__      | <https://ultralig.ht/api/1_0/>      |
 
 
 # Table of Contents
