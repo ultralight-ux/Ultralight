@@ -22,11 +22,12 @@ AppCore is intended to be used by those intending to build a standalone HTML-bas
 
 ## Useful Links
 
-| Link              | URL                                 |
-| ----------------- | ----------------------------------- |
-| __Slack Channel__ | <https://chat.ultralig.ht>          |
-| __Twitter__       | <https://twitter.com/ultralight_ux> |
-| __API Docs__      | <https://ultralig.ht/api/1_0/>      |
+| Link                   | URL                                 |
+| ---------------------- | ----------------------------------- |
+| __Slack Channel__      | <https://chat.ultralig.ht>          |
+| __Twitter__            | <https://twitter.com/ultralight_ux> |
+| __API Reference__      | <https://ultralig.ht/api/1_0/>      |
+| __Docs (In Progress)__ | <https://docs.ultralig.ht>          |
 
 
 # Table of Contents
@@ -235,12 +236,12 @@ The most common things to customize are `face_winding` for front-facing triangle
 You can also set the default font (instead of Times New Roman).
 
 ```cpp
-Config config_;
+Config config;
 config.face_winding = kFaceWinding_Clockwise; // CW in D3D, CCW in OGL
 config.device_scale_hint = 1.0;               // Set DPI to monitor DPI scale
 config.font_family_standard = "Segoe UI";     // Default font family
 
-Platform::instance().set_config(config_);
+Platform::instance().set_config(config);
 ```
 
 ### GPUDriver
