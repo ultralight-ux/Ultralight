@@ -1,6 +1,7 @@
 #include <AppCore/JSHelpers.h>
 #include <cstring>
 #include <cassert>
+#include <vector>
 
 namespace ultralight {
 
@@ -196,6 +197,67 @@ JSValue::operator JSArray() const { return ToArray(); }
 JSValue::operator JSFunction() const { return ToFunction(); }
 
 JSValueRef JSValue::instance() const { return instance_; }
+
+// JSArgs -------------------------------------------------
+#define GetVector() (*reinterpret_cast<std::vector<JSValue>*>(instance_))
+#define GetVectorConst() (*reinterpret_cast<const std::vector<JSValue>*>(instance_))
+
+JSArgs::JSArgs() {
+  instance_ = new std::vector<JSValue>();
+}
+
+JSArgs::JSArgs(const std::initializer_list<JSValue>& values) {
+  instance_ = new std::vector<JSValue>(values);
+}
+
+JSArgs::JSArgs(const JSArgs& other) {
+  instance_ = new std::vector<JSValue>(*reinterpret_cast<std::vector<JSValue>*>(other.instance_));
+}
+
+JSArgs::~JSArgs() {
+  delete reinterpret_cast<std::vector<JSValue>*>(instance_);
+}
+
+JSArgs& JSArgs::operator=(const JSArgs& other) {
+  GetVector() = *reinterpret_cast<std::vector<JSValue>*>(other.instance_);
+  return *this;
+}
+
+JSValue JSArgs::operator[](size_t pos) {
+  return GetVector()[pos];
+}
+
+const JSValue JSArgs::operator[](size_t pos) const {
+  return GetVectorConst()[pos];
+}
+
+bool JSArgs::empty() const {
+  return GetVectorConst().empty();
+}
+
+size_t JSArgs::size() const {
+  return GetVectorConst().size();
+}
+
+void JSArgs::clear() {
+  GetVector().clear();
+}
+
+void JSArgs::push_back(const JSValue& val) {
+  GetVector().push_back(val);
+}
+
+void JSArgs::pop_back() {
+  GetVector().pop_back();
+}
+
+JSValue* JSArgs::data() {
+  return GetVector().data();
+}
+
+const JSValue* JSArgs::data() const {
+  return GetVectorConst().data();
+}
 
 // JSPropertyValue ----------------------------------------
 

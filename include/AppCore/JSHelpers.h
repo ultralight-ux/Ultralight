@@ -4,7 +4,6 @@
 #include <JavaScriptCore/JSStringRef.h>
 #include <Ultralight/String.h>
 #include <functional>
-#include <vector>
 #include <memory>
 
 /**
@@ -205,7 +204,37 @@ protected:
   friend class JSFunction;
 };
 
-typedef std::vector<JSValue> JSArgs;
+/**
+* A vector of JSValues, used for passing around arguments in JSCallback.
+* We don't expose std::vector directly because of ABI concerns.
+*/
+class AExport JSArgs {
+public:
+  JSArgs();
+  JSArgs(const std::initializer_list<JSValue>& values);
+  JSArgs(const JSArgs& other);
+  ~JSArgs();
+
+  JSArgs& operator=(const JSArgs& other);
+
+  JSValue operator[](size_t pos);
+  const JSValue operator[](size_t pos) const;
+
+  bool empty() const;
+
+  size_t size() const;
+
+  void clear();
+
+  void push_back(const JSValue& val);
+  void pop_back();
+
+  JSValue* data();
+  const JSValue* data() const;
+protected:
+  void* instance_;
+};
+
 typedef std::function<void(const JSObject&, const JSArgs&)> JSCallback;
 typedef std::function<JSValue(const JSObject&, const JSArgs&)> JSCallbackWithRetval;
 
