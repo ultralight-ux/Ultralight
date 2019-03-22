@@ -37,6 +37,8 @@ if (WIN32)
         "src/win/MonitorWin.cpp"
         "src/win/WindowWin.h"
         "src/win/WindowWin.cpp"
+        "src/win/WindowsUtil.h"
+        "src/win/WindowsUtil.cpp"
         "src/win/d3d11/GPUDriverD3D11.h"
         "src/win/d3d11/GPUDriverD3D11.cpp"
         "src/win/d3d11/GPUContextD3D11.h"
@@ -50,7 +52,7 @@ if (WIN32)
         set(LIB_DIR "${SDK_ROOT}/lib/win/x86")
     endif()
     set(AppCore_LIBRARIES "${LIB_DIR}/Ultralight.lib" "${LIB_DIR}/UltralightCore.lib" "${LIB_DIR}/WebCore.lib" 
-      "Shcore.lib" "Shlwapi.lib" "Usp10.lib" "d3d11.lib" "d3dcompiler.lib")
+      "Shlwapi.lib" "Usp10.lib" "d3d11.lib" "d3dcompiler.lib")
 elseif (APPLE)
     list(APPEND AppCore_SOURCES
         "src/mac/AppMac.h"

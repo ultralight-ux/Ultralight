@@ -2,7 +2,6 @@
 #include <AppCore/App.h>
 #include <AppCore/Window.h>
 #include "../RefCountedImpl.h"
-#include "MonitorWin.h"
 #include "FontLoaderWin.h"
 #include "FileSystemWin.h"
 #include <vector>
@@ -12,6 +11,8 @@ namespace ultralight {
 
 class GPUContextD3D11;
 class GPUDriverD3D11;
+class WindowsUtil;
+class MonitorWin;
 
 class AppWin : public App,
                public RefCountedImpl<AppWin>,
@@ -58,7 +59,8 @@ protected:
   AppListener* listener_ = nullptr;
   RefPtr<Renderer> renderer_;
   RefPtr<Window> window_;
-  MonitorWin main_monitor_;
+  std::unique_ptr<WindowsUtil> windows_util_;
+  std::unique_ptr<MonitorWin> main_monitor_;
   std::unique_ptr<FontLoaderWin> font_loader_;
   std::unique_ptr<FileSystemWin> file_system_;
   std::unique_ptr<GPUContextD3D11> gpu_context_;

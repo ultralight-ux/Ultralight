@@ -1,28 +1,13 @@
 #include "MonitorWin.h"
-#include <ShellScalingAPI.h>
 
 namespace ultralight {
 
-MonitorWin::MonitorWin() {
-  HRESULT hr = SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
-
-  if (hr != S_OK) {
-    MessageBoxW(NULL, (LPCWSTR)L"SetProcessDpiAwareness failed", (LPCWSTR)L"Notification", MB_OK);
-  }
-
+MonitorWin::MonitorWin(WindowsUtil* util) : util_(util) {
   monitor_ = MonitorFromPoint({ 1,1 }, MONITOR_DEFAULTTONEAREST);
 }
 
 double MonitorWin::scale() const {
-  UINT dpix, dpiy;
-  HRESULT hr = GetDpiForMonitor(monitor_, MDT_EFFECTIVE_DPI, &dpix, &dpiy);
-
-  if (hr != S_OK) {
-    MessageBoxW(NULL, (LPCWSTR)L"GetDpiForMonitor failed", (LPCWSTR)L"Notification", MB_OK);
-    return 1.0;
-  }
-
-  return (double)dpix / 96.0;
+  return util_->GetMonitorDPI(monitor_);
 }
 
 int MonitorWin::width() const {

@@ -6,12 +6,19 @@
 #include <Ultralight/platform/Platform.h>
 #include <Ultralight/platform/Config.h>
 #include <Shlwapi.h>
+#include "WindowsUtil.h"
+#include "MonitorWin.h"
 
 namespace ultralight {
 
 AppWin::AppWin() {
+  windows_util_.reset(new WindowsUtil());
+  windows_util_->EnableDPIAwareness();
+
+  main_monitor_.reset(new MonitorWin(windows_util_.get()));
+
   Config config;
-  config.device_scale_hint = main_monitor_.scale();
+  config.device_scale_hint = main_monitor_->scale();
   config.face_winding = kFaceWinding_Clockwise;
   Platform::instance().set_config(config);
 
@@ -58,7 +65,7 @@ void AppWin::set_window(Ref<Window> window) {
 }
 
 Monitor* AppWin::main_monitor() {
-  return &main_monitor_;
+  return main_monitor_.get();
 }
 
 Ref<Renderer> AppWin::renderer() {
