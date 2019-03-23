@@ -12,9 +12,9 @@ public:
 
   virtual double scale() const;
 
-  virtual int width() const;
+  virtual uint32_t width() const;
 
-  virtual int height() const;
+  virtual uint32_t height() const;
 protected:
   GLFWmonitor* monitor_;
 };

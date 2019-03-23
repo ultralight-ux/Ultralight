@@ -18,9 +18,9 @@ public:
 
   virtual WindowListener* listener() override { return listener_; }
 
-  virtual int width() const override;
+  virtual uint32_t width() const override;
 
-  virtual int height() const override;
+  virtual uint32_t height() const override;
 
   virtual bool is_fullscreen() const override { return is_fullscreen_; }
 
@@ -47,7 +47,7 @@ public:
   void set_app_listener(WindowListener* listener) { app_listener_ = listener; }
 
   void OnClose();
-  void OnResize(int width, int height);
+  void OnResize(uint32_t width, uint32_t height);
 
 protected:
   WindowGLFW(Monitor* monitor, uint32_t width, uint32_t height,

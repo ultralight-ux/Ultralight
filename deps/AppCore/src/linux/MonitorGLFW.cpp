@@ -13,14 +13,14 @@ double MonitorGLFW::scale() const {
   return (double)xscale;
 }
 
-int MonitorGLFW::width() const {
+uint32_t MonitorGLFW::width() const {
   const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-  return mode->width;
+  return (uint32_t)mode->width;
 }
 
-int MonitorGLFW::height() const {
+uint32_t MonitorGLFW::height() const {
   const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-  return mode->height;
+  return (uint32_t)mode->height;
 }
 
 }  // namespace ultralight

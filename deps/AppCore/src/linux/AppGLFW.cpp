@@ -46,9 +46,9 @@ AppGLFW::~AppGLFW() {
 void AppGLFW::OnClose() {
 }
 
-void AppGLFW::OnResize(int width, int height) {
+void AppGLFW::OnResize(uint32_t width, uint32_t height) {
   if (gpu_context_)
-    gpu_context_->Resize(width, height);
+    gpu_context_->Resize((int)width, (int)height);
 }
 
 void AppGLFW::set_window(Ref<Window> window) {

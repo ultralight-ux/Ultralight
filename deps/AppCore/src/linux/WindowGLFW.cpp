@@ -100,7 +100,7 @@ static void WindowGLFW_scroll_callback(GLFWwindow* window, double xoffset, doubl
 static void WindowGLFW_window_size_callback(GLFWwindow* window, int width, int height)
 {
   ultralight::WindowGLFW* win = static_cast<ultralight::WindowGLFW*>(glfwGetWindowUserPointer(window));
-  win->OnResize(win->PixelsToDevice(width), win->PixelsToDevice(height));
+  win->OnResize((uint32_t)win->PixelsToDevice(width), (uint32_t)win->PixelsToDevice(height));
 }
 
 } // extern "C"
@@ -161,18 +161,18 @@ WindowGLFW::~WindowGLFW() {
   glfwDestroyWindow(window_);
 }
 
-int WindowGLFW::width() const {
+uint32_t WindowGLFW::width() const {
   // Returns width in device coordinates
   int width, height;
   glfwGetWindowSize(window_, &width, &height);
-  return PixelsToDevice(width);
+  return (uint32_t)PixelsToDevice(width);
 }
 
-int WindowGLFW::height() const {
+uint32_t WindowGLFW::height() const {
   // Return height in device coordinates
   int width, height;
   glfwGetWindowSize(window_, &width, &height);
-  return PixelsToDevice(height);
+  return (uint32_t)PixelsToDevice(height);
 }
 
 double WindowGLFW::scale() const {
@@ -216,7 +216,7 @@ void WindowGLFW::OnClose() {
     app_listener_->OnClose();
 }
 
-void WindowGLFW::OnResize(int width, int height) {
+void WindowGLFW::OnResize(uint32_t width, uint32_t height) {
   if (listener_)
     listener_->OnResize(width, height);
   if (app_listener_)
