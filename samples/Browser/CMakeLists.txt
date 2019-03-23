@@ -15,7 +15,7 @@ add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
 
 if (APPLE)
   # Enable High-DPI on macOS through our custom Info.plist template
-  set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.in) 
+  set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in) 
 endif()
 
 if (MSVC)
