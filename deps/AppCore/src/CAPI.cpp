@@ -55,7 +55,7 @@ struct C_Window : public WindowListener {
       close_callback(close_callback_data);
   }
 
-  virtual void OnResize(int width, int height) override {
+  virtual void OnResize(uint32_t width, uint32_t height) override {
     if (resize_callback)
       resize_callback(resize_callback_data, width, height);
   }
@@ -122,18 +122,18 @@ double ulMonitorGetScale(ULMonitor monitor) {
   return reinterpret_cast<Monitor*>(monitor)->scale();
 }
 
-int ulMonitorGetWidth(ULMonitor monitor) {
+unsigned int ulMonitorGetWidth(ULMonitor monitor) {
   return reinterpret_cast<Monitor*>(monitor)->width();
 }
 
-int ulMonitorGetHeight(ULMonitor monitor) {
+unsigned int ulMonitorGetHeight(ULMonitor monitor) {
   return reinterpret_cast<Monitor*>(monitor)->height();
 }
 
 ULWindow ulCreateWindow(ULMonitor monitor, unsigned int width,
   unsigned int height, bool fullscreen, unsigned int window_flags) {
-  return new C_Window(Window::Create(reinterpret_cast<Monitor*>(monitor), width, height,
-    fullscreen, window_flags));
+  return new C_Window(Window::Create(reinterpret_cast<Monitor*>(monitor),
+    width, height, fullscreen, window_flags));
 }
 
 void ulDestroyWindow(ULWindow window) {
@@ -150,11 +150,11 @@ void ulWindowSetResizeCallback(ULWindow window, ULResizeCallback callback, void*
   window->resize_callback_data = user_data;
 }
 
-int ulWindowGetWidth(ULWindow window) {
+unsigned int ulWindowGetWidth(ULWindow window) {
   return window->val->width();
 }
 
-int ulWindowGetHeight(ULWindow window) {
+unsigned int ulWindowGetHeight(ULWindow window) {
   return window->val->height();
 }
 
@@ -186,7 +186,8 @@ int ulWindowPixelsToDevice(ULWindow window, int val) {
   return window->val->PixelsToDevice(val);
 }
 
-ULOverlay ulCreateOverlay(ULWindow window, int width, int height, int x, int y) {
+ULOverlay ulCreateOverlay(ULWindow window, unsigned int width,
+                          unsigned int height, int x, int y) {
   return new C_Overlay(Overlay::Create(window->val, width, height, x, y));
 }
 
@@ -198,11 +199,11 @@ ULView ulOverlayGetView(ULOverlay overlay) {
   return overlay->c_view;
 }
 
-int ulOverlayGetWidth(ULOverlay overlay) {
+unsigned int ulOverlayGetWidth(ULOverlay overlay) {
   return overlay->val->width();
 }
 
-int ulOverlayGetHeight(ULOverlay overlay) {
+unsigned int ulOverlayGetHeight(ULOverlay overlay) {
   return overlay->val->height();
 }
 
@@ -218,7 +219,8 @@ void ulOverlayMoveTo(ULOverlay overlay, int x, int y) {
   overlay->val->MoveTo(x, y);
 }
 
-void ulOverlayResize(ULOverlay overlay, int width, int height) {
+void ulOverlayResize(ULOverlay overlay, unsigned int width,
+                     unsigned int height) {
   overlay->val->Resize(width, height);
 }
 

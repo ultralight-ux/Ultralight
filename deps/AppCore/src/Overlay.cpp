@@ -27,7 +27,7 @@ public:
     driver_->DrawGeometry(geometry_id_, 6, 0, gpu_state_);
   }
 
-  virtual void Resize(int width, int height) override {
+  virtual void Resize(uint32_t width, uint32_t height) override {
     if (width == width_ && height == height_)
       return;
 
@@ -147,9 +147,9 @@ public:
 
   virtual Ref<View> view() override { return view_; }
 
-  virtual int width() const override { return width_; }
+  virtual uint32_t width() const override { return width_; }
 
-  virtual int height() const override { return height_; }
+  virtual uint32_t height() const override { return height_; }
 
   virtual int x() const override { return x_; }
 
@@ -186,7 +186,7 @@ public:
   REF_COUNTED_IMPL(OverlayImpl);
 
 protected:
-  OverlayImpl(Ref<Window> window, int width, int height, int x, int y) :
+  OverlayImpl(Ref<Window> window, uint32_t width, uint32_t height, int x, int y) :
     window_(window), view_(App::instance()->renderer()->CreateView(width, height, false)),
     width_(width), height_(height), x_(x), y_(y), needs_update_(true),
     driver_(Platform::instance().gpu_driver()) {
@@ -203,8 +203,8 @@ protected:
   }
 
   Ref<Window> window_;
-  int width_;
-  int height_;
+  uint32_t width_;
+  uint32_t height_;
   int x_;
   int y_;
   bool is_hidden_ = false;
@@ -221,7 +221,8 @@ protected:
   DISALLOW_COPY_AND_ASSIGN(OverlayImpl);
 };
 
-Ref<Overlay> Overlay::Create(Ref<Window> window, int width, int height, int x, int y) {
+Ref<Overlay> Overlay::Create(Ref<Window> window, uint32_t width,
+                             uint32_t height, int x, int y) {
   return AdoptRef(*new OverlayImpl(window, width, height, x, y));
 }
 

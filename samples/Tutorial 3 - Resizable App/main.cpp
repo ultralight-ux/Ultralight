@@ -56,12 +56,12 @@ public:
   ///
   /// Inherited from WindowListener, not used.
   ///
-  virtual void OnClose() {}
+  virtual void OnClose() override {}
 
   ///
   /// Inherited from WindowListener, called when the Window is resized.
   ///
-  virtual void OnResize(int width, int height) {
+  virtual void OnResize(uint32_t width, uint32_t height) override {
     ///
     /// Resize our Overlay to match the new Window dimensions.
     ///

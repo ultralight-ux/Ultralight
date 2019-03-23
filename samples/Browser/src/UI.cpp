@@ -5,7 +5,7 @@ static UI* g_ui = 0;
 #define UI_HEIGHT 79
 
 UI::UI(Ref<Window> window) : window_(window) {
-  int window_width = App::instance()->window()->width();
+  uint32_t window_width = App::instance()->window()->width();
   overlay_ = Overlay::Create(window_, window_width, UI_HEIGHT, 0, 0);
   g_ui = this;
 
@@ -21,13 +21,15 @@ UI::~UI() {
 void UI::OnClose() {
 }
 
-void UI::OnResize(int width, int height) {
+void UI::OnResize(uint32_t width, uint32_t height) {
   RefPtr<Window> window = App::instance()->window();
   int tab_height = window->height() - UI_HEIGHT;
+  if (tab_height < 1)
+    tab_height = 1;
   overlay_->Resize(window->width(), UI_HEIGHT);
   for (auto& tab : tabs_) {
     if (tab.second)
-      tab.second->Resize(window->width(), tab_height);
+      tab.second->Resize(window->width(), (uint32_t)tab_height);
   }
 }
 
@@ -148,7 +150,10 @@ void UI::OnRequestChangeURL(const JSObject& obj, const JSArgs& args) {
 void UI::CreateNewTab() {
   uint64_t id = tab_id_counter_++;
   RefPtr<Window> window = App::instance()->window();
-  tabs_[id].reset(new Tab(this, id, window->width(), window->height() - UI_HEIGHT, 0, UI_HEIGHT));
+  int tab_height = window->height() - UI_HEIGHT;
+  if (tab_height < 1)
+    tab_height = 1;
+  tabs_[id].reset(new Tab(this, id, window->width(), (uint32_t)tab_height, 0, UI_HEIGHT));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
   addTab({ id, "New Tab", "" });

@@ -31,11 +31,11 @@ public:
   ///
   /// Get the width of the monitor.
   ///
-  virtual int width() const = 0;
+  virtual uint32_t width() const = 0;
 
   /// Get the height of the monitor.
   ///
-  virtual int height() const = 0;
+  virtual uint32_t height() const = 0;
 };
 
 }  // namespace ultralight

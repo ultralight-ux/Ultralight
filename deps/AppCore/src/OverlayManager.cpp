@@ -87,7 +87,7 @@ bool OverlayManager::IsOverlayFocused(Overlay* overlay) const {
 
 Overlay* OverlayManager::HitTest(int x, int y) {
   for (auto& i : overlays_) {
-    if (!i->is_hidden() && x >= i->x() && y >= i->y() && x < i->x() + i->width() && y < i->y() + i->height())
+    if (!i->is_hidden() && x >= i->x() && y >= i->y() && x < i->x() + (int)i->width() && y < i->y() + (int)i->height())
       return i;
   }
 

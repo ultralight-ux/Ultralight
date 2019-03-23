@@ -204,16 +204,16 @@ WindowWin::~WindowWin() {
   DestroyCursor(cursor_ibeam_);
 }
 
-int WindowWin::width() const {
+uint32_t WindowWin::width() const {
   RECT rc;
   ::GetClientRect(hwnd_, &rc);
-  return PixelsToDevice(rc.right - rc.left);
+  return (uint32_t)PixelsToDevice(rc.right - rc.left);
 }
 
-int WindowWin::height() const {
+uint32_t WindowWin::height() const {
   RECT rc;
   ::GetClientRect(hwnd_, &rc);
-  return PixelsToDevice(rc.bottom - rc.top);
+  return (uint32_t)PixelsToDevice(rc.bottom - rc.top);
 }
 
 double WindowWin::scale() const {
@@ -257,7 +257,7 @@ void WindowWin::OnClose() {
     app_listener_->OnClose();
 }
 
-void WindowWin::OnResize(int width, int height) {
+void WindowWin::OnResize(uint32_t width, uint32_t height) {
   if (listener_)
     listener_->OnResize(width, height);
   if (app_listener_)

@@ -6,7 +6,7 @@
 #include <Windows.h>
 #endif
 
-Tab::Tab(UI* ui, uint64_t id, int width, int height, int x, int y) : ui_(ui), id_(id) {
+Tab::Tab(UI* ui, uint64_t id, uint32_t width, uint32_t height, int x, int y) : ui_(ui), id_(id) {
   overlay_ = Overlay::Create(ui->window_, width, height, x, y);
   view()->set_view_listener(this);
   view()->set_load_listener(this);
@@ -17,7 +17,7 @@ Tab::~Tab() {
   view()->set_load_listener(nullptr);
 }
 
-void Tab::Resize(int width, int height) {
+void Tab::Resize(uint32_t width, uint32_t height) {
   overlay_->Resize(width, height);
 }
 

@@ -40,7 +40,7 @@ public:
   ///
   /// @param  height  The new height (in device coordinates).
   ///
-  virtual void OnResize(int width, int height) = 0;
+  virtual void OnResize(uint32_t width, uint32_t height) = 0;
 };
 
 ///
@@ -89,12 +89,12 @@ public:
   ///
   /// Get the window width (in device coordinates).
   ///
-  virtual int width() const = 0;
+  virtual uint32_t width() const = 0;
 
   ///
   /// Get the window height (in device coordinates).
   ///
-  virtual int height() const = 0;
+  virtual uint32_t height() const = 0;
 
   ///
   /// Whether or not the window is fullscreen.

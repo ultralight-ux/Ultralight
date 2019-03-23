@@ -20,7 +20,7 @@ class UI : public WindowListener,
                
   // Inherited from WindowListener
   virtual void OnClose() override;
-  virtual void OnResize(int width, int height) override;
+  virtual void OnResize(uint32_t width, uint32_t height) override;
 
   // Inherited from LoadListener
   virtual void OnDOMReady(View* caller) override;

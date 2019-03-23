@@ -36,6 +36,16 @@ typedef struct C_Monitor* ULMonitor;
 typedef struct C_Overlay* ULOverlay;
 
 ///
+/// Window creation flags. @see Window::Create
+///
+typedef enum {
+  kWindowFlags_Borderless = 1 << 0,
+  kWindowFlags_Titled = 1 << 1,
+  kWindowFlags_Resizable = 1 << 2,
+  kWindowFlags_Maximizable = 1 << 3,
+} ULWindowFlags;
+
+///
 /// Create the App singleton.
 ///
 /// @param  config  Configuration settings to use.
@@ -117,12 +127,12 @@ AExport double ulMonitorGetScale(ULMonitor monitor);
 ///
 /// Get the width of the monitor (in device coordinates)
 ///
-AExport int ulMonitorGetWidth(ULMonitor monitor);
+AExport unsigned int ulMonitorGetWidth(ULMonitor monitor);
 
 ///
 /// Get the height of the monitor (in device coordinates)
 ///
-AExport int ulMonitorGetHeight(ULMonitor monitor);
+AExport unsigned int ulMonitorGetHeight(ULMonitor monitor);
 
 ///
 /// Create a new Window.
@@ -138,7 +148,7 @@ AExport int ulMonitorGetHeight(ULMonitor monitor);
 /// @param  window_flags  Various window flags.
 ///
 AExport ULWindow ulCreateWindow(ULMonitor monitor, unsigned int width,
-	                            unsigned int height, bool fullscreen,
+	                              unsigned int height, bool fullscreen,
                                 unsigned int window_flags);
 
 ///
@@ -157,7 +167,7 @@ AExport void ulWindowSetCloseCallback(ULWindow window,
                                       void* user_data);
 
 typedef void
-(*ULResizeCallback) (void* user_data, int width, int height);
+(*ULResizeCallback) (void* user_data, unsigned int width, unsigned int height);
 
 ///
 /// Set a callback to be notified when a window resizes
@@ -170,12 +180,12 @@ AExport void ulWindowSetResizeCallback(ULWindow window,
 ///
 /// Get window width (in device coordinates).
 ///
-AExport int ulWindowGetWidth(ULWindow window);
+AExport unsigned int ulWindowGetWidth(ULWindow window);
 
 ///
 /// Get window height (in device coordinates).
 ///
-AExport int ulWindowGetHeight(ULWindow window);
+AExport unsigned int ulWindowGetHeight(ULWindow window);
 
 ///
 /// Get whether or not a window is fullscreen.
@@ -231,7 +241,8 @@ AExport int ulWindowPixelsToDevice(ULWindow window, int val);
 /// @note  Each Overlay is essentially a View and an on-screen quad. You should
 ///        create the Overlay then load content into the underlying View.
 ///
-AExport ULOverlay ulCreateOverlay(ULWindow window, int width, int height, int x, int y);
+AExport ULOverlay ulCreateOverlay(ULWindow window, unsigned int width,
+                                  unsigned int height, int x, int y);
 
 ///
 /// Destroy an overlay.
@@ -246,12 +257,12 @@ AExport ULView ulOverlayGetView(ULOverlay overlay);
 ///
 /// Get the width (in device coordinates).
 ///
-AExport int ulOverlayGetWidth(ULOverlay overlay);
+AExport unsigned int ulOverlayGetWidth(ULOverlay overlay);
 
 ///
 /// Get the height (in device coordinates).
 ///
-AExport int ulOverlayGetHeight(ULOverlay overlay);
+AExport unsigned int ulOverlayGetHeight(ULOverlay overlay);
 
 ///
 /// Get the x-position (offset from the left of the Window), in device
@@ -274,7 +285,8 @@ AExport void ulOverlayMoveTo(ULOverlay overlay, int x, int y);
 /// Resize the overlay (and underlying View), dimensions should be
 /// specified in device coordinates.
 ///
-AExport void ulOverlayResize(ULOverlay overlay, int width, int height);
+AExport void ulOverlayResize(ULOverlay overlay, unsigned int width,
+                             unsigned int height);
 
 ///
 /// Whether or not the overlay is hidden (not drawn).

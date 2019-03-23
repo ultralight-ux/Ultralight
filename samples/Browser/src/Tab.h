@@ -11,7 +11,7 @@ using namespace ultralight;
 class Tab : public ViewListener,
             public LoadListener {
 public:
-  Tab(UI* ui, uint64_t id, int width, int height, int x, int y);
+  Tab(UI* ui, uint64_t id, uint32_t width, uint32_t height, int x, int y);
   ~Tab();
 
   void set_ready_to_close(bool ready) { ready_to_close_ = ready; }
@@ -21,7 +21,7 @@ public:
                 
   Ref<Overlay> overlay() { return *overlay_.get(); }
                 
-  void Resize(int width, int height);
+  void Resize(uint32_t width, uint32_t height);
 
   // Inherited from Listener::View
   virtual void OnChangeTitle(View* caller, const String& title) override;

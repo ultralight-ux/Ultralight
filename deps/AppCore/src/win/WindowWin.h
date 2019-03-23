@@ -21,9 +21,9 @@ public:
 
   virtual WindowListener* listener() override { return listener_; }
 
-  virtual int width() const override;
+  virtual uint32_t width() const override;
 
-  virtual int height() const override;
+  virtual uint32_t height() const override;
 
   virtual bool is_fullscreen() const override { return is_fullscreen_; }
 
@@ -53,7 +53,7 @@ public:
 
   // These are called by WndProc then forwarded to listener(s)
   void OnClose();
-  void OnResize(int width, int height);
+  void OnResize(uint32_t width, uint32_t height);
 
 protected:
   WindowWin(Monitor* monitor, uint32_t width, uint32_t height,
