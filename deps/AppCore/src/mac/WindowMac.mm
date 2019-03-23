@@ -47,12 +47,12 @@ WindowMac::WindowMac(Monitor* monitor, uint32_t width, uint32_t height,
 WindowMac::~WindowMac() {
 }
 
-int WindowMac::width() const {
-  return PixelsToDevice((int)[controller_ metalView].drawableSize.width);
+uint32_t WindowMac::width() const {
+  return (uint32_t)PixelsToDevice((int)[controller_ metalView].drawableSize.width);
 }
 
-int WindowMac::height() const {
-  return PixelsToDevice((int)[controller_ metalView].drawableSize.height);
+uint32_t WindowMac::height() const {
+  return (uint32_t)PixelsToDevice((int)[controller_ metalView].drawableSize.height);
 }
 
 double WindowMac::scale() const {
@@ -77,8 +77,8 @@ void WindowMac::OnClose() {
     app_listener_->OnClose();
 }
 
-void WindowMac::OnResize(int width, int height) {
-  [controller_ metalView].drawableSize = CGSizeMake(DeviceToPixels(width), DeviceToPixels(height));
+void WindowMac::OnResize(uint32_t width, uint32_t height) {
+  [controller_ metalView].drawableSize = CGSizeMake(DeviceToPixels((int)width), DeviceToPixels((int)height));
     
   if (listener_)
     listener_->OnResize(width, height);

@@ -33,9 +33,9 @@ AppMac::~AppMac() {
 void AppMac::OnClose() {
 }
 
-void AppMac::OnResize(int width, int height) {
+void AppMac::OnResize(uint32_t width, uint32_t height) {
   if (gpu_context_)
-    gpu_context_->Resize(width, height);
+    gpu_context_->Resize((int)width, (int)height);
 }
 
 void AppMac::set_window(Ref<Window> window) {

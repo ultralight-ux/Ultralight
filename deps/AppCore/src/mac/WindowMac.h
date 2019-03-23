@@ -18,9 +18,9 @@ public:
 
   virtual WindowListener* listener() override { return listener_; }
 
-  virtual int width() const override;
+  virtual uint32_t width() const override;
 
-  virtual int height() const override;
+  virtual uint32_t height() const override;
 
   virtual bool is_fullscreen() const override { return is_fullscreen_; }
 
@@ -48,7 +48,7 @@ public:
                       
   void OnClose();
   
-  void OnResize(int width, int height);
+  void OnResize(uint32_t width, uint32_t height);
                       
   MTKView* view();
 

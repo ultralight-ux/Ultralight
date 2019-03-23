@@ -19,7 +19,7 @@ public:
 
   virtual void OnClose() override;
 
-  virtual void OnResize(int width, int height) override;
+  virtual void OnResize(uint32_t width, uint32_t height) override;
 
   // Inherited from App
 

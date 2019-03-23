@@ -11,9 +11,9 @@ public:
 
   virtual double scale() const override;
 
-  virtual int width() const override;
+  virtual uint32_t width() const override;
 
-  virtual int height() const override;
+  virtual uint32_t height() const override;
 
 protected:
   NSScreen* screen_;
