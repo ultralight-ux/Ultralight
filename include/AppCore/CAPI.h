@@ -35,9 +35,7 @@ typedef struct C_Window* ULWindow;
 typedef struct C_Monitor* ULMonitor;
 typedef struct C_Overlay* ULOverlay;
 
-///
-/// Window creation flags. @see Window::Create
-///
+/// @abstract Window creation flags. @see Window::Create
 typedef enum {
   kWindowFlags_Borderless = 1 << 0,
   kWindowFlags_Titled = 1 << 1,
@@ -45,123 +43,121 @@ typedef enum {
   kWindowFlags_Maximizable = 1 << 3,
 } ULWindowFlags;
 
-///
-/// Create the App singleton.
-///
-/// @param  config  Configuration settings to use.
-///
-/// @note  You should only create one of these per application lifetime.
-///        
-///        App maintains its own Renderer instance, make sure to set your
-///        Config before creating App. (@see Platform::set_config)
-///
+/// @function ulCreateApp
+/// @abstract Create the App singleton.
+/// @param config Configuration settings to use.
+/// @note You should only create one of these per application lifetime.
+///       App maintains its own Renderer instance, make sure to set your
+///       Config before creating App. (@see Platform::set_config)
 AExport ULApp ulCreateApp(ULConfig config);
 
-///
-/// Destroy the App instance.
-///
+/// @function ulDestroyApp
+/// @abstract Destroy the App instance.
+/// @param app The app that should be destroyed.
 AExport void ulDestroyApp(ULApp app);
 
-///
-/// Set the main window. You must set this before calling ulAppRun.
-///
-/// @param  window  The window to use for all rendering.
-///
-/// @note  We currently only support one Window per App, this will change
-///        later once we add support for multiple driver instances.
-///
+/// @function ulAppSetWindow
+/// @abstract Set the main window. You must set this before calling ulAppRun.
+/// @param app    The app singleton to be used.
+/// @param window The window to use for all rendering.
+/// @note We currently only support one Window per App, this will change
+///       later once we add support for multiple driver instances.
 AExport void ulAppSetWindow(ULApp app, ULWindow window);
 
-///
-/// Get the main window.
-///
+/// @function ulAppGetWindow
+/// @abstract Get the main window.
+/// @param app The app singleton to be used.
 AExport ULWindow ulAppGetWindow(ULApp app);
 
 typedef void
 (*ULUpdateCallback) (void* user_data);
 
-///
-/// Set a callback for whenever the App updates. You should update all app
-/// logic here.
-///
+/// @function ulAppSetUpdateCallback
+/// @abstract Set a callback for whenever the App updates. You should update all app
+///           logic here.
+/// @param app       The app singleton to be used.
+/// @param callback  A static callback function.
+/// @param user_data A user-specified pointer to data that will be passed to the
+///        callback function when called.
 /// @note  This event is fired right before the run loop calls
 ///        Renderer::Update and Renderer::Render.
-///
 AExport void ulAppSetUpdateCallback(ULApp app, ULUpdateCallback callback,
                                     void* user_data);
 
-///
-/// Whether or not the App is running.
-///
+/// @function ulAppIsRunning
+/// @abstract Whether or not the App is running.
+/// @param app The app singleton to be used.
 AExport bool ulAppIsRunning(ULApp app);
 
-///
-/// Get the main monitor (this is never NULL).
-///
+/// @function ulAppGetMainMonitor
+/// @abstract Get the main monitor (this is never NULL).
+/// @param app The app singleton to be used.
 /// @note  We'll add monitor enumeration later.
-///
 AExport ULMonitor ulAppGetMainMonitor(ULApp app);
 
-///
-/// Get the underlying Renderer instance.
-///
+/// @function ulAppGetRenderer
+/// @abstract Get the underlying Renderer instance.
+/// @param app The app singleton to be used.
 AExport ULRenderer ulAppGetRenderer(ULApp app);
 
-///
-/// Run the main loop.
-///
+/// @function ulAppRun
+/// @abstract Run the main loop.
+/// @param app The app singleton to be used.
 /// @note  Make sure to call ulAppSetWindow before calling this.
-///
 AExport void ulAppRun(ULApp app);
 
-///
-/// Quit the application.
-///
+/// @function ulAppQuit
+/// @abstract Quit the application.
+/// @param app The app singleton to be used.
 AExport void ulAppQuit(ULApp app);
 
-///
-/// Get the monitor's DPI scale (1.0 = 100%).
-///
+/// @function ulMonitorGetScale
+/// @abstract Get the monitor's DPI scale (1.0 = 100%).
+/// @param monitor The monitor instance to be used.
+///        (@see ulAppGetMainMonitor)
+/// @note Since we currently only provide a monitor
+///       instance for the main monitor, you will
+///       not be able to obtain the DPI scale for a
+///       secondary or currently inactive monitor.
 AExport double ulMonitorGetScale(ULMonitor monitor);
 
-///
-/// Get the width of the monitor (in device coordinates)
+/// @function ulMonitorGetWidth
+/// @abstract Get the width of the monitor (in device coordinates)
+/// @param monitor The monitor instance to be used.
+///        (@see ulAppGetMainMonitor)
 ///
 AExport unsigned int ulMonitorGetWidth(ULMonitor monitor);
 
-///
-/// Get the height of the monitor (in device coordinates)
-///
+/// @function ulMonitorGetHeight
+/// @abstract Get the height of the monitor (in device coordinates)
+/// @param monitor The monitor instance to be used.
 AExport unsigned int ulMonitorGetHeight(ULMonitor monitor);
 
-///
-/// Create a new Window.
-///
-/// @param  monitor       The monitor to create the Window on.
-///
-/// @param  width         The width (in device coordinates).
-///
-/// @param  height        The height (in device coordinates).
-///
-/// @param  fullscreen    Whether or not the window is fullscreen.
-///
-/// @param  window_flags  Various window flags.
-///
-AExport ULWindow ulCreateWindow(ULMonitor monitor, unsigned int width,
-	                              unsigned int height, bool fullscreen,
+/// @function ulCreateWindow
+/// @abstract Create a new Window.
+/// @param monitor      The monitor to create the Window on.
+/// @param width        The width (in device coordinates).
+/// @param height       The height (in device coordinates).
+/// @param fullscreen   Whether or not the window is fullscreen.
+/// @param window_flags Various window flags.
+AExport ULWindow ulCreateWindow(ULMonitor monitor,
+                                unsigned int width,
+                                unsigned int height,
+                                bool fullscreen,
                                 unsigned int window_flags);
 
-///
-/// Destroy a Window.
-///
+/// @function ulDestroyWindow
+/// @abstract Destroy a Window.
 AExport void ulDestroyWindow(ULWindow window);
 
 typedef void
 (*ULCloseCallback) (void* user_data);
 
-///
-/// Set a callback to be notified when a window closes.
-///
+/// @function ulWindowSetCloseCallback
+/// @abstract Set a callback to be notified when a window closes.
+/// @param callback  A static callback function.
+/// @param user_data A user-specified pointer to data that will be passed
+///        to the callback function when called.
 AExport void ulWindowSetCloseCallback(ULWindow window,
                                       ULCloseCallback callback,
                                       void* user_data);
@@ -169,153 +165,159 @@ AExport void ulWindowSetCloseCallback(ULWindow window,
 typedef void
 (*ULResizeCallback) (void* user_data, unsigned int width, unsigned int height);
 
-///
-/// Set a callback to be notified when a window resizes
-/// (parameters are passed back in device coordinates).
-///
+/// @function ulWindowSetResizeCallback
+/// @abstract Set a callback to be notified when a window resizes
+///           (parameters are passed back in device coordinates).
+/// @param window    The window instance to listen on.
+/// @param callback  A static callback function.
+/// @param user_data A user-specified pointer to data that will be passed
+///        to the callback function when called.
 AExport void ulWindowSetResizeCallback(ULWindow window,
                                        ULResizeCallback callback,
                                        void* user_data);
 
-///
-/// Get window width (in device coordinates).
-///
+/// @function ulWindowGetWidth
+/// @abstract Get window width (in device coordinates).
+/// @param window The window instance to be used.
 AExport unsigned int ulWindowGetWidth(ULWindow window);
 
-///
-/// Get window height (in device coordinates).
-///
+/// @function ulWindowGetHeight
+/// @abstract Get window height (in device coordinates).
+/// @param window The window instance to be used.
 AExport unsigned int ulWindowGetHeight(ULWindow window);
 
-///
-/// Get whether or not a window is fullscreen.
-///
+/// @function ulWindowIsFullscreen
+/// @abstract Get whether or not a window is fullscreen.
+/// @param window The window instance to be used.
 AExport bool ulWindowIsFullscreen(ULWindow window);
 
-///
-/// Get the DPI scale of a window.
-///
+/// @function ulWindowGetScale
+/// @abstract Get the DPI scale of a window.
+/// @param window The window instance to be used.
 AExport double ulWindowGetScale(ULWindow window);
 
-///
-/// Set the window title.
-///
+/// @function ulWindowSetTitle
+/// @abstract Set the window title.
+/// @param window The window instance to be used.
 AExport void ulWindowSetTitle(ULWindow window, const char* title);
 
-///
-/// Set the cursor for a window.
-///
+/// @function ulWindowSetCursor
+/// @abstract Set the cursor for a window.
+/// @param window The window instance to be used.
 AExport void ulWindowSetCursor(ULWindow window, ULCursor cursor);
 
-///
-/// Close a window.
-///
+/// @function ulWindowClose
+/// @abstract Close a window.
+/// @param window The window instance to be closed.
 AExport void ulWindowClose(ULWindow window);
 
-///
-/// Convert device coordinates to pixels using the current DPI scale.
-///
+/// @function ulWindowDeviceToPixel
+/// @abstract Convert device coordinates to pixels using the
+///           current DPI scale.
+/// @param window The window instance whose DPI scale shall be used.
+/// @param val    The X or Y coordinate to be translated.
 AExport int ulWindowDeviceToPixel(ULWindow window, int val);
 
-///
-/// Convert pixels to device coordinates using the current DPI scale.
-///
+/// @function ulWindowPixelsToDevice
+/// @abstract Convert pixels to device coordinates using the
+///           current DPI scale.
+/// @param window The window instance whose DPI scale shall be used.
+/// @param val    The X or Y coordinate to be translated.
 AExport int ulWindowPixelsToDevice(ULWindow window, int val);
 
-///
-/// Create a new Overlay.
-///
-/// @param  window  The window to create the Overlay in. (we currently only
-///                 support one window per application)
-///
+/// @function ulCreateOverlay
+/// @abstract Create a new Overlay.
+/// @param  window  The window to create the Overlay in. (we currently
+///                 only support one window per application)
 /// @param  width   The width in device coordinates.
-///
 /// @param  height  The height in device coordinates.
-///
-/// @param  x       The x-position (offset from the left of the Window), in
-///                 device coordinates.
-///
-/// @param  y       The y-position (offset from the top of the Window), in
-///                 device coordinates.
-///
-/// @note  Each Overlay is essentially a View and an on-screen quad. You should
-///        create the Overlay then load content into the underlying View.
-///
+/// @param  x       The x-position (offset from the left of the Window),
+///                 in device coordinates.
+/// @param  y       The y-position (offset from the top of the Window),
+///                 in device coordinates.
+/// @note  Each Overlay is essentially a View and an on-screen quad. You
+///        should create the Overlay then load content into the underlying
+///        View.
 AExport ULOverlay ulCreateOverlay(ULWindow window, unsigned int width,
                                   unsigned int height, int x, int y);
 
-///
-/// Destroy an overlay.
-///
+/// @function ulDestroyOverlay
+/// @abstract Destroy an overlay.
+/// @param overlay The overlay that shall be destroyed.
 AExport void ulDestroyOverlay(ULOverlay overlay);
 
-///
-/// Get the underlying View.
-///
+/// @function ulOverlayGetView
+/// @abstract Get the underlying View.
+/// @param overlay The overlay whose view shall be returned.
 AExport ULView ulOverlayGetView(ULOverlay overlay);
 
-///
-/// Get the width (in device coordinates).
-///
+/// @function ulOverlayGetWidth
+/// @abstract Get the width (in device coordinates).
+/// @param overlay The overlay whose width shall be returned.
 AExport unsigned int ulOverlayGetWidth(ULOverlay overlay);
 
-///
-/// Get the height (in device coordinates).
-///
+/// @function ulOverlayGetHeight
+/// @abstract Get the height (in device coordinates).
+/// @param overlay The overlay whose height shall be returned.
 AExport unsigned int ulOverlayGetHeight(ULOverlay overlay);
 
-///
-/// Get the x-position (offset from the left of the Window), in device
-/// coordinates.
-///
+/// @function ulOverlayGetX
+/// @abstract Get the x-position (offset from the left of the Window),
+///           in device coordinates.
+/// @param overlay The overlay whose X position shall be determined.
 AExport int ulOverlayGetX(ULOverlay overlay);
 
-///
-/// Get the y-position (offset from the top of the Window), in device
-/// coordinates.
-///
+/// @function ulOverlayGetY
+/// @abstract Get the y-position (offset from the top of the Window),
+///           in device coordinates.
+/// @param overlay The overlay whose Y position shall be determined.
 AExport int ulOverlayGetY(ULOverlay overlay);
 
-///
-/// Move the overlay to a new position (in device coordinates).
-///
+/// @function ulOverlayMoveTo
+/// @abstract Move the overlay to a new position (in device coordinates).
+/// @param overlay The overlay that shall be moved.
+/// @param x The new X-position (in device coordinates) of the overlay.
+/// @param y The new Y-position (in device coordinates) of the overlay.
 AExport void ulOverlayMoveTo(ULOverlay overlay, int x, int y);
 
-///
-/// Resize the overlay (and underlying View), dimensions should be
-/// specified in device coordinates.
-///
+/// @function ulOverlayResize
+/// @abstract Resize the overlay (and underlying View), dimensions should be
+///           specified in device coordinates.
+/// @param overlay The overlay that shall be resized.
+/// @param width   The new width (in device-coordinates) of the overlay.
+/// @param height  The new height (in device-coordinates) of the overlay.
 AExport void ulOverlayResize(ULOverlay overlay, unsigned int width,
                              unsigned int height);
 
-///
-/// Whether or not the overlay is hidden (not drawn).
-///
+/// @function ulOverlayIsHidden
+/// @abstract Whether or not the overlay is hidden (not drawn).
+/// @param overlay The overlay to be used.
 AExport bool ulOverlayIsHidden(ULOverlay overlay);
 
-///
-/// Hide the overlay (will no longer be drawn)
-///
+/// @function ulOverlayHide
+/// @abstract Hide the overlay (will no longer be drawn).
+/// @param overlay The overlay that shall be hidden.
 AExport void ulOverlayHide(ULOverlay overlay);
 
-///
-/// Show the overlay.
-///
+/// @function ulOverlayHide
+/// @abstract Show the overlay (will be drawn again).
+/// @param overlay The overlay that shall be shown.
 AExport void ulOverlayShow(ULOverlay overlay);
 
-///
-/// Whether or not an overlay has keyboard focus.
-///
+/// @function ulOverlayHasFocus
+/// @abstract Whether or not an overlay has keyboard focus.
+/// @param overlay The overlay to be checked for focus.
 AExport bool ulOverlayHasFocus(ULOverlay overlay);
 
-///
-/// Grant this overlay exclusive keyboard focus.
-///
+/// @function ulOverlayFocus
+/// @abstract Grant this overlay exclusive keyboard focus.
+/// @param overlay The overlay that shall be granted exclusive
+///                keyboard focus.
 AExport void ulOverlayFocus(ULOverlay overlay);
 
-///
-/// Remove keyboard focus.
-///
+/// @function ulOverlayUnfocus
+/// @abstract Remove keyboard focus.
+/// @param overlay The overlay whose focus shall be removed.
 AExport void ulOverlayUnfocus(ULOverlay overlay);
 
 #ifdef __cplusplus
