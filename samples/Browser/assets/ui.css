@@ -1,0 +1,47 @@
+* { overflow: hidden; user-select: none; -webkit-user-select: none; }
+body {
+     margin: 0;
+     padding: 0;
+     font-family: "Segoe UI", -apple-system, sans-serif;
+     font-size: 14px;
+}
+#bar {
+     background: linear-gradient(rgba(236, 236, 236, 1.0), rgba(228, 228, 228, 1.0));
+     width: 100%;
+     height: 36px;
+     padding: 5px;
+     border-bottom: 0.8px solid rgba(150, 150, 150, 1.0);
+	 cursor: default;
+}
+#address {
+     border-radius: 3px;
+     border: 1px solid rgba(150, 150, 150, 1.0);
+     height: 30px;
+     width: 80%;
+     background-color: white;
+     display: inline-block;
+     padding: 8px 8px;
+	 margin-top: 1px;
+	 user-select: auto !important;
+	 -webkit-user-select: text !important;
+}
+.icon {
+     cursor: default;
+     fill: rgba(90, 90, 90, 1.0);
+     vertical-align: top;
+     margin-top: 2px;
+     margin-right:2px;
+     margin-left:0px;
+     padding: 2px;
+     display: inline-block;
+}
+.icon.disabled {
+	 fill: rgba(200, 200, 200, 1.0);
+}
+svg#icon_defs path {
+	 fill: inherit;
+}
+.icon:not(.disabled):hover {
+     background-color: rgba(220, 220, 220, 1.0);
+     border-radius: 2px;
+}

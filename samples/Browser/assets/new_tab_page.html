@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>New Tab</title>
+<style type="text/css">
+* { font-family: Segoe UI, -apple-system, sans-serif; }
+h1 { text-align: center; font-size: 4em; color: #DDD; margin: 70px auto; font-weight: normal; }
+div.row { clear: both; width: 652; margin: 0 auto; background-color: black;; }
+div.row div {  }
+div.row div a { 
+width: 150;
+    height: 130;
+    border: 1px solid #DDD;
+    border-width: 1px;
+    box-shadow: 0px 5px 6px rgba(100, 100, 100, 0.1);
+    float: left;
+    margin: 5px;
+    background-color: #FEFEFE;
+    /* padding: 10px; */
+    border-radius: 8px;
+    text-decoration: none;
+    color: #777;
+    font-size: 0.9em;
+    transition: 0.1s;
+	background: linear-gradient(#EEE, #FFF);
+}
+div.row div a.special { background: linear-gradient(#FED, #FFE);}
+div.row div a.special span { background-color: #fefbf6; }
+div.row div a span {
+display: block;
+    height: 1.3em;
+    background-color: #FAFAFA;
+    padding: 8px;
+	border-radius: 8px 8px 0 0;
+    transition: 0.1s;
+}
+pre { font-family: Courier New; color: #888; width: 610px; margin: 70 auto; }
+div.row div a:hover {
+  background-color: #FFF;
+  color: #000;
+  border-color: #CCC;
+  background: linear-gradient(#E8E8E8, #FFF);
+ box-shadow: 0px 5px 12px rgba(100, 100, 100, 0.2);
+}
+div.row div a:hover span {
+background-color: #FCFCFC;
+}
+div.row div a.special:hover { background: linear-gradient(#ffe8c7, #FFE);}
+
+</style>
+</head>
+<body>
+<h1>Ultralight</h1>
+<div class="row">
+  <div><a class="special" href="file:///release_notes.html"><span>Release Notes</span></a></div>
+  <div><a href="http://en.wikipedia.com"><span>Wikipedia</span></a></div>
+  <div><a href="http://github.com"><span>GitHub</span></a></div>
+  <div><a href="http://news.ycombinator.com"><span>Hacker News</span></a></div>
+</div>
+</body>
+</html>

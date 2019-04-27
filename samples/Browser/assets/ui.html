@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="ui.css">
+	<link rel="stylesheet" type="text/css" href="chrome-tabs.css">
+    <script src="ui.js"></script>
+</head>
+
+<body>
+    <button id="chrome-tabs-add-tab">+ New Tab</button>
+    <div class="chrome-tabs" data-chrome-tabs-instance-id="0">
+        <div class="chrome-tabs-content">
+		  
+        </div>
+		
+        <div class="chrome-tabs-bottom-bar" style="z-index: 3;"></div>
+    </div>
+
+    <svg style="display: none;">
+    <defs>
+	  <g id="svg_arrow_back"><path d="M427 277v-42h-260l119 -120l-30 -30l-171 171l171 171l30 -30l-119 -120h260z" /></g>
+	  <g id="svg_arrow_forward"><path d="M256 427l171 -171l-171 -171l-30 30l119 120h-260v42h260l-119 120z" /></g>
+	  <g id="svg_refresh"><path transform="matrix(1 0 0 -1 0 512)" d="M377 377l50 50v-150h-150l69 69c-23 23 -55 38 -90 38c-71 0 -128 -57 -128 -128s57 -128 128 -128c56 0 104 35 121 85h44c-19 -74 -85 -128 -165 -128c-94 0 -170 77 -170 171s76 171 170 171c47 0 90 -19 121 -50z" /></g>
+      <g id="svg_stop"><path d="M405 375l-119 -119l119 -119l-30 -30l-119 119l-119 -119l-30 30l119 119l-119 119l30 30l119 -119l119 119z" /></g>
+	</defs>
+    </svg>
+
+    <div id="bar">
+        <span id="back" class="icon disabled">
+	  <svg viewBox="0 0 512 512" width="20" height="20"><use xlink:href="#svg_arrow_back"/></svg>
+	</span>
+        <span id="forward" class="icon disabled">
+	  <svg viewBox="0 0 512 512" width="20" height="20"><use xlink:href="#svg_arrow_forward"/></svg>
+	</span>
+        <span id="refresh" class="icon">
+	  <svg viewBox="0 0 512 512" width="20" height="20"><use xlink:href="#svg_refresh"/></svg>
+	</span>
+        <span id="stop" class="icon" style="display: none;">
+	  <svg viewBox="0 0 512 512" width="20" height="20"><use xlink:href="#svg_stop"/></svg>
+	</span>
+        <input onfocus="select_next_mouseup = true;" onmouseup="if (select_next_mouseup) this.select(); select_next_mouseup = false;" type="text" id="address"></span>
+    </div>
+	
+	<script src="draggabilly.pkgd.min.js"></script>
+	<script src="chrome-tabs.js"></script>
+	<script>
+      var el = document.querySelector('.chrome-tabs')
+      var chromeTabs = new ChromeTabs()
+	  var select_next_mouseup = false;
+
+      chromeTabs.init(el, {
+        tabOverlapDistance: 14,
+        minWidth: 45,
+        maxWidth: 243
+      })
+	  
+      function addTab(id, title, faviconUrl) {
+	    chromeTabs.addTab({id: id, title: title, favicon: faviconUrl});
+	  }
+	  
+      function updateTab(id, title, faviconUrl) {
+	    const tab = document.querySelector("[data-tab-id='" + id + "']");
+		if (tab)
+		  chromeTabs.updateTab(tab, {title: title, favicon: faviconUrl});
+	  }
+	  
+	  function closeTab(id) {
+        const tab = document.querySelector("[data-tab-id='" + id + "']");
+        if (tab)
+		  chromeTabs.removeTab(tab);
+	  }
+	  
+	  function bindCallbacks() {
+	    el.addEventListener('requestNewTab', ({ detail }) => OnRequestNewTab())
+        el.addEventListener('requestTabClose', ({ detail }) => OnRequestTabClose(detail.tabEl.getAttribute('data-tab-id')))
+	    el.addEventListener('activeTabChange', ({ detail }) => OnActiveTabChange(detail.tabEl.getAttribute('data-tab-id')))
+		document.querySelector('#back').addEventListener('click', event => OnBack())
+		document.querySelector('#forward').addEventListener('click', event => OnForward())
+		document.querySelector('#refresh').addEventListener('click', event => OnRefresh())
+		document.querySelector('#stop').addEventListener('click', event => OnStop())
+		var address = document.querySelector('#address');
+		address.onkeypress = function(e) { if ( e.which == '13' ) { address.blur(); OnRequestChangeURL(address.value); return false; }}
+	  }
+	  
+	  bindCallbacks();
+    </script>
+</body>
+
+</html>
