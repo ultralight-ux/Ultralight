@@ -2,11 +2,11 @@
 #include "UI.h"
 #include <iostream>
 #include <string>
-#if _WIN32
-#include <Windows.h>
-#endif
 
-Tab::Tab(UI* ui, uint64_t id, uint32_t width, uint32_t height, int x, int y) : ui_(ui), id_(id) {
+#define INSPECTOR_HEIGHT 300
+
+Tab::Tab(UI* ui, uint64_t id, uint32_t width, uint32_t height, int x, int y) 
+  : ui_(ui), id_(id), container_width_(width), container_height_(height) {
   overlay_ = Overlay::Create(ui->window_, width, height, x, y);
   view()->set_view_listener(this);
   view()->set_load_listener(this);
@@ -17,8 +17,53 @@ Tab::~Tab() {
   view()->set_load_listener(nullptr);
 }
 
+void Tab::Show() {
+  overlay_->Show();
+  overlay_->Focus();
+
+  if (inspector_overlay_)
+    inspector_overlay_->Show();
+}
+
+void Tab::Hide() {
+  overlay_->Hide();
+  overlay_->Unfocus();
+
+  if (inspector_overlay_)
+    inspector_overlay_->Hide();
+}
+
+void Tab::ToggleInspector() {
+  if (!inspector_overlay_) {
+    inspector_overlay_ = Overlay::Create(ui_->window_, *view()->inspector(), 0, 0);
+  } else {
+    if (inspector_overlay_->is_hidden())
+      inspector_overlay_->Show();
+    else
+      inspector_overlay_->Hide();
+  }
+
+  // Force resize to update layout
+  Resize(container_width_, container_height_);
+}
+
 void Tab::Resize(uint32_t width, uint32_t height) {
-  overlay_->Resize(width, height);
+  container_width_ = width;
+  container_height_ = height;
+
+  uint32_t content_height = container_height_;
+  if (inspector_overlay_ && !inspector_overlay_->is_hidden()) {
+    inspector_overlay_->Resize(container_width_, INSPECTOR_HEIGHT);
+    content_height -= INSPECTOR_HEIGHT;
+  }
+  
+  if (content_height < 1)
+    content_height = 1;
+
+  overlay_->Resize(container_width_, content_height);
+
+  if (inspector_overlay_ && !inspector_overlay_->is_hidden())
+    inspector_overlay_->MoveTo(0, overlay_->y() + overlay_->height());
 }
 
 void Tab::OnChangeTitle(View* caller, const String& title) {
@@ -43,9 +88,6 @@ void Tab::OnAddConsoleMessage(View* caller,
   uint32_t line_number,
   uint32_t column_number,
   const String& source_id) {
-#if _WIN32
-  OutputDebugStringW(message.utf16().data());
-#endif
 }
 
 void Tab::OnBeginLoading(View* caller) {

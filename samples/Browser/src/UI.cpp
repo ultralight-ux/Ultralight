@@ -23,10 +23,14 @@ void UI::OnClose() {
 
 void UI::OnResize(uint32_t width, uint32_t height) {
   RefPtr<Window> window = App::instance()->window();
+
   int tab_height = window->height() - UI_HEIGHT;
+
   if (tab_height < 1)
     tab_height = 1;
+
   overlay_->Resize(window->width(), UI_HEIGHT);
+
   for (auto& tab : tabs_) {
     if (tab.second)
       tab.second->Resize(window->width(), (uint32_t)tab_height);
@@ -50,6 +54,7 @@ void UI::OnDOMReady(ultralight::View* caller) {
   global["OnForward"] = BindJSCallback(&UI::OnForward);
   global["OnRefresh"] = BindJSCallback(&UI::OnRefresh);
   global["OnStop"] = BindJSCallback(&UI::OnStop);
+  global["OnToggleTools"] = BindJSCallback(&UI::OnToggleTools);
   global["OnRequestNewTab"] = BindJSCallback(&UI::OnRequestNewTab);
   global["OnRequestTabClose"] = BindJSCallback(&UI::OnRequestTabClose);
   global["OnActiveTabChange"] = BindJSCallback(&UI::OnActiveTabChange);
@@ -76,6 +81,11 @@ void UI::OnRefresh(const JSObject& obj, const JSArgs& args) {
 void UI::OnStop(const JSObject& obj, const JSArgs& args) {
   if (active_tab())
     active_tab()->view()->Stop();
+}
+
+void UI::OnToggleTools(const JSObject& obj, const JSArgs& args) {
+  if (active_tab())
+    active_tab()->ToggleInspector();
 }
 
 void UI::OnRequestNewTab(const JSObject& obj, const JSArgs& args) {
@@ -116,8 +126,7 @@ void UI::OnActiveTabChange(const JSObject& obj, const JSArgs& args) {
     if (!tab)
       return;
       
-    tabs_[active_tab_id_]->overlay()->Hide();
-    tabs_[active_tab_id_]->overlay()->Unfocus();
+    tabs_[active_tab_id_]->Hide();
 
     if (tabs_[active_tab_id_]->ready_to_close()) {
       tabs_[active_tab_id_].reset();
@@ -125,8 +134,7 @@ void UI::OnActiveTabChange(const JSObject& obj, const JSArgs& args) {
     }
 
     active_tab_id_ = id;
-    tabs_[active_tab_id_]->overlay()->Show();
-    tabs_[active_tab_id_]->overlay()->Focus();
+    tabs_[active_tab_id_]->Show();
       
     auto tab_view = tabs_[active_tab_id_]->view();
     SetLoading(tab_view->is_loading());

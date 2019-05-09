@@ -27,7 +27,6 @@ endif()
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>)  
 
-
 if (NOT APPLE)
     # Copy assets to target directory
     add_custom_command(TARGET ${APP_NAME} POST_BUILD
@@ -37,3 +36,7 @@ else()
     add_custom_command(TARGET ${APP_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources")
 endif ()
+
+# Copy inspector to assets directory
+add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_INSPECTOR_DIR}" "$<TARGET_FILE_DIR:${APP_NAME}>/assets/inspector")

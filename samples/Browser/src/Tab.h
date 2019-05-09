@@ -18,8 +18,12 @@ public:
   bool ready_to_close() { return ready_to_close_; }
                 
   Ref<View> view() { return overlay_->view(); }
-                
-  Ref<Overlay> overlay() { return *overlay_.get(); }
+
+  void Show();
+
+  void Hide();
+
+  void ToggleInspector();
                 
   void Resize(uint32_t width, uint32_t height);
 
@@ -41,6 +45,8 @@ public:
 protected:
   UI* ui_;
   RefPtr<Overlay> overlay_;
+  RefPtr<Overlay> inspector_overlay_;
   uint64_t id_;
   bool ready_to_close_ = false;
+  uint32_t container_width_, container_height_;
 };

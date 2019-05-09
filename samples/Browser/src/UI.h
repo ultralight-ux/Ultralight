@@ -9,6 +9,8 @@ using ultralight::JSArgs;
 using ultralight::JSFunction;
 using namespace ultralight;
 
+class Console;
+
 /**
 * Browser UI implementation. Renders the toolbar/addressbar/tabs in top pane.
 */
@@ -30,6 +32,7 @@ class UI : public WindowListener,
   void OnForward(const JSObject& obj, const JSArgs& args);
   void OnRefresh(const JSObject& obj, const JSArgs& args);
   void OnStop(const JSObject& obj, const JSArgs& args);
+  void OnToggleTools(const JSObject& obj, const JSArgs& args);
   void OnRequestNewTab(const JSObject& obj, const JSArgs& args);
   void OnRequestTabClose(const JSObject& obj, const JSArgs& args);
   void OnActiveTabChange(const JSObject& obj, const JSArgs& args);
