@@ -17,7 +17,7 @@ pipeline {
                # Build Debug
                mkdir -p build_dbg
                cd build_dbg
-               cmake .. -G "Ninja" -DGET_DBG_DEPS=1
+               cmake ../packager -G "Ninja" -DGET_DBG_DEPS=1
                ninja
                cd ..
             '''
@@ -42,7 +42,7 @@ pipeline {
                # Build Release
                mkdir -p build
                cd build
-               cmake .. -G "Ninja"
+               cmake ../packager -G "Ninja"
                ninja
                cd ..
             '''
@@ -69,7 +69,7 @@ pipeline {
                rem Build Debug
                if not exist build_dbg mkdir build_dbg
                cd build_dbg
-               cmake .. -G "Ninja" -DGET_DBG_DEPS=1
+               cmake ../packager -G "Ninja" -DGET_DBG_DEPS=1
                ninja
             '''
           }
@@ -95,7 +95,7 @@ pipeline {
                rem Build Release
                if not exist build mkdir build
                cd build
-               cmake .. -G "Ninja"
+               cmake ../packager -G "Ninja"
                ninja
             '''
           }
@@ -121,7 +121,7 @@ pipeline {
                rem Build Debug
                if not exist build_dbg mkdir build_dbg
                cd build_dbg
-               cmake .. -G "Ninja" -DGET_DBG_DEPS=1
+               cmake ../packager -G "Ninja" -DGET_DBG_DEPS=1
                ninja
             '''
           }
@@ -147,7 +147,7 @@ pipeline {
                rem Build Release
                if not exist build mkdir build
                cd build
-               cmake .. -G "Ninja"
+               cmake ../packager -G "Ninja"
                ninja
             '''
           }
@@ -168,7 +168,7 @@ pipeline {
                # Build Debug
                mkdir -p build_dbg
                cd build_dbg
-               cmake .. -G "Ninja" -DGET_DBG_DEPS=1
+               cmake ../packager -G "Ninja" -DGET_DBG_DEPS=1
                ninja
                cd ..
             '''
@@ -190,7 +190,7 @@ pipeline {
                # Build Release
                mkdir -p build
                cd build
-               cmake .. -G "Ninja"
+               cmake ../packager -G "Ninja"
                ninja
                cd ..
             '''
