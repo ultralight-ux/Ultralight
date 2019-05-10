@@ -67,6 +67,16 @@ execute_process(
   OUTPUT_VARIABLE GIT_CHERRY
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
+# Get formatted log
+execute_process(
+  COMMAND git log --pretty=oneline --abbrev-commit
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_LOG
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+file(WRITE "${INSTALL_DIR}/LOG.txt" ${GIT_LOG})
     
 if (PORT MATCHES "UltralightLinux")
     set(PLATFORM "linux")
@@ -77,16 +87,17 @@ elseif (PORT MATCHES "UltralightWin")
 endif ()
 
 set(PKG_FILENAME "ultralight-sdk-${GIT_COMMIT_HASH}-${PLATFORM}-${ARCHITECTURE}.7z")
+set(LATEST_PKG_FILENAME "ultralight-sdk-latest-${PLATFORM}-${ARCHITECTURE}.7z")
 
-if (NOT GIT_STATUS STREQUAL "")
+#if (NOT GIT_STATUS STREQUAL "")
     add_custom_command(TARGET create_sdk POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E echo "NOTE: No release archive created, working directory not clean."
     )
-elseif (NOT GIT_CHERRY STREQUAL "")
+#elseif (NOT GIT_CHERRY STREQUAL "")
     add_custom_command(TARGET create_sdk POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E echo "NOTE: No release archive created, branch needs to be pushed to remote repository."
     )
-else ()
+#else ()
     add_custom_command(TARGET create_sdk POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E tar "cf" ${PROJECT_BINARY_DIR}/${PKG_FILENAME} --format=7zip -- .
         WORKING_DIRECTORY ${INSTALL_DIR}
@@ -94,4 +105,7 @@ else ()
     add_custom_command(TARGET create_sdk POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E echo "Created release archive: ${PROJECT_BINARY_DIR}/${PKG_FILENAME}"
     )
-endif ()
+    add_custom_command(TARGET create_sdk POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${PKG_FILENAME} ${PROJECT_BINARY_DIR}/latest/${LATEST_PKG_FILENAME}
+    )
+#endif ()
