@@ -223,11 +223,11 @@ def deploy() {
   withAWS(endpointUrl:'https://sfo2.digitaloceanspaces.com', credentials:'jenkins-access') {
     if (env.BRANCH_NAME == 'master') {
       s3Upload(bucket: 'ultralight-sdk', workingDir:'build', includePathPattern:'*.7z', acl:'PublicRead');
-      s3Upload(bucket: 'ultralight-sdk', workingDir:'build_dbg/latest', includePathPattern:'*.7z', acl:'PublicRead', cacheControl:'public,max-age=60');
+      s3Upload(bucket: 'ultralight-sdk', workingDir:'build/latest', includePathPattern:'*.7z', acl:'PublicRead', cacheControl:'public,max-age=60');
 
     } else if (env.BRANCH_NAME == 'dev') {
       s3Upload(bucket: 'ultralight-sdk-dev', workingDir:'build', includePathPattern:'*.7z', acl:'PublicRead');
-      s3Upload(bucket: 'ultralight-sdk-dev', workingDir:'build_dbg/latest', includePathPattern:'*.7z', acl:'PublicRead', cacheControl:'public,max-age=60');
+      s3Upload(bucket: 'ultralight-sdk-dev', workingDir:'build/latest', includePathPattern:'*.7z', acl:'PublicRead', cacheControl:'public,max-age=60');
     }
   }
 }

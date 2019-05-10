@@ -20,6 +20,33 @@ On top of Ultralight, we've built an additional layer called AppCore that handle
 
 AppCore is intended to be used by those intending to build a standalone HTML-based desktop app and will eventually offer an API similar to Electron.
 
+## Getting the Latest SDK
+
+You can get the latest SDK for each platform via the following links:
+
+ * [Windows | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
+ * [Windows | x86 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x86.7z)
+ * [Linux | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
+ * [macOS | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
+
+Debug packages are also available below:
+
+ * [Windows | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
+ * [Windows | x86 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x86.7z)
+ * [Linux | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
+ * [macOS | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
+
+ > *__Note__: Full debug symbols are only provided for WebCore and AppCore modules.*
+
+## Getting Pre-Built Binaries for a Specific Commit
+
+Pre-built binares are uploaded to the following S3 buckets every commit:
+
+__Release Bins__: <https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/>
+__Debug Bins__: <https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/>
+
+Click any of the links for an XML listing of available files.
+
 ## Useful Links
 
 | Link                   | URL                                 |
