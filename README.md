@@ -42,8 +42,8 @@ Debug packages are also available below:
 
 Pre-built binares are uploaded to the following S3 buckets every commit:
 
-__Release Bins__: <https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/>
-__Debug Bins__: <https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/>
+ * __Release Bins__: <https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/>
+ * __Debug Bins__: <https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/>
 
 Click any of the links for an XML listing of available files.
 
@@ -138,6 +138,9 @@ On __macOS__ and __Linux__ the projects will be built to:
 ```
 /build/samples/Browser/
 ```
+
+> *__Note__: If you get `error while loading shared libraries...` when running a sample on Ubuntu, you may need to call `export LD_LIBRARY_PATH=.` to make LD search the current working directory for shared libs.*
+
 
 On __Windows__ the projects will be built to:
 
