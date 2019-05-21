@@ -15,7 +15,7 @@ elseif (PORT MATCHES "UltralightWin")
 endif ()
 
 set(ULTRALIGHTCORE_REV "25f0a75")
-set(WEBCORE_REV "4d44ec1")
+set(WEBCORE_REV "ac8a715")
 set(ULTRALIGHT_REV "ab1d8fe")
 set(APPCORE_REV "56b719a")
 
