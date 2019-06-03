@@ -28,7 +28,7 @@ set(ULTRALIGHT_INCLUDE_DIR "${SDK_ROOT}/include")
 set(ULTRALIGHT_BINARY_DIR "${SDK_ROOT}/bin")
 set(ULTRALIGHT_INSPECTOR_DIR "${SDK_ROOT}/inspector")
 
-if (PORT MATCHES "UltralightWin")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(ULTRALIGHT_LIBRARY_DIR "${SDK_ROOT}/lib")
 else ()
     set(ULTRALIGHT_LIBRARY_DIR "${SDK_ROOT}/bin")
