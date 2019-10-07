@@ -20,6 +20,12 @@ On top of Ultralight, we've built an additional layer called AppCore that handle
 
 AppCore is intended to be used by those intending to build a standalone HTML-based desktop app and will eventually offer an API similar to Electron.
 
+## Licensing
+
+Ultralight is _free_ for non-commercial use, and free for commercial use by small indies (<$100K annual revenue). For info regarding pricing/terms for larger commercial projects please email adam@ultralig.ht.
+
+This project also uses LGPL code (the AppCore and WebCore modules)-- source is provided in adjacent repositories. You can use these modules in your code without being forced to release your code under LGPL as long as you A) link dynamically and B) release the source to any modifications you make.
+
 ## Getting the Latest SDK
 
 You can get the latest SDK for each platform via the following links:
@@ -237,7 +243,7 @@ If you want to use the optional AppCore API (cross-platform windowing/drawing la
 Ultralight also exposes the full __JavaScriptCore__ API so that users can make native calls to/from the JavaScript VM. To include these headers simply add:
 
 ```cpp
-#include <JavaScriptCore/JavaScriptCore.h>
+#include <JavaScriptCore/JavaScript.h>
 ```
 
 ## Platform Handlers
