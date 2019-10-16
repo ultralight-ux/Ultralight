@@ -25,18 +25,21 @@ endif()
 
 # Copy all binaries to target directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>)  
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>) 
 
 if (NOT APPLE)
-    # Copy assets to target directory
-    add_custom_command(TARGET ${APP_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:${APP_NAME}>/assets")
-else()
-    # Copy assets to target directory
-    add_custom_command(TARGET ${APP_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources")
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
+else ()
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources") 
 endif ()
 
+# Copy assets to assets directory
+add_custom_command(TARGET ${APP_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "${ASSETS_PATH}")
+    
 # Copy inspector to assets directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_INSPECTOR_DIR}" "$<TARGET_FILE_DIR:${APP_NAME}>/assets/inspector")
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_INSPECTOR_DIR}" "${ASSETS_PATH}/inspector")
+
+
+
