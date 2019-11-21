@@ -98,7 +98,7 @@ const char* htmlString() {
       background: linear-gradient(-45deg, #e0e3ed, #f7f9fc);
       width: 900px;
       height: 600px;
-      font-family: Arial, -apple-system, 'Segoe UI', Ubuntu, 'Open Sans', Arial, sans-serif;
+      font-family: -apple-system, 'Segoe UI', Ubuntu, 'Open Sans', Arial, sans-serif;
     }
     h2, h3 {
       margin: 0;
