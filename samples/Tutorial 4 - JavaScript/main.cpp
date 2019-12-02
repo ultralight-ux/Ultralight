@@ -142,7 +142,7 @@ const char* htmlString() {
       body { 
         font-family: -apple-system, 'Segoe UI', Ubuntu, Arial, sans-serif; 
         text-align: center;
-        background-color: #40434d;
+        background: linear-gradient(#FFF, #DDD);
         padding: 2em;
       }
       body.rainbow {
