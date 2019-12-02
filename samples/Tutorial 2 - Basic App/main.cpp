@@ -30,7 +30,24 @@ int main() {
   /// The App class is responsible for the lifetime of the application
   /// and is required to create any windows.
   ///
-  Ref<App> app = App::Create();
+
+  ///
+  /// Tell AppCore that we want to use /data/ as our base file system path.
+  /// This relative path is resolved against the executable's current
+  /// working directory.
+  ///
+  /// For example, if we are on Windows, and running our exe from:
+  ///   C:\dev\my_program\
+  ///
+  /// This path will resolve to:
+  ///   C:\dev\my_program\frontend\
+  ///
+  /// All file:\\\ URLs will then resolve to the above path, for example:
+  ///   file:\\\index.html --> C:\dev\my_program\frontend\index.html
+  ///
+  Settings settings;
+  settings.file_system_path = "./frontend/";
+  Ref<App> app = App::Create(settings);
   
   ///
   /// Create our Window.
@@ -40,7 +57,8 @@ int main() {
   /// The window's size (400 by 400) is in virtual device coordinates, the
   /// actual size in pixels is automatically determined by the monitor's DPI.
   ///
-  Ref<Window> window = Window::Create(app->main_monitor(), 900, 600, false, kWindowFlags_Titled);
+  Ref<Window> window = Window::Create(app->main_monitor(), 900, 600, false,
+    kWindowFlags_Titled);
 
   ///
   /// Set the title of our window.
@@ -50,7 +68,7 @@ int main() {
   ///
   /// Tell our app to use 'window' as our main window.
   ///
-  /// This call is required before calling App::Run.
+  /// This call is required before creating any overlays or calling App::Run
   ///
   /// **Note**:
   ///   As of v1.1, AppCore only supports one window per application which is
@@ -69,7 +87,8 @@ int main() {
   /// painting for each active overlay. Destroying the overlay will remove
   /// it from the window.
   ///
-  Ref<Overlay> overlay = Overlay::Create(window, window->width(), window->height(), 0, 0);
+  Ref<Overlay> overlay = Overlay::Create(window, window->width(),
+    window->height(), 0, 0);
 
   ///
   /// Load a string of HTML into our overlay's View
@@ -98,7 +117,7 @@ const char* htmlString() {
       background: linear-gradient(-45deg, #e0e3ed, #f7f9fc);
       width: 900px;
       height: 600px;
-      font-family: -apple-system, 'Segoe UI', Ubuntu, 'Open Sans', Arial, sans-serif;
+      font-family: -apple-system, 'Segoe UI', Ubuntu, Arial, sans-serif;
     }
     h2, h3 {
       margin: 0;
@@ -150,10 +169,17 @@ const char* htmlString() {
       width: 18;
       margin-bottom: -5px; 
       margin-right: 1em;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='-2 -2 27 27'><path stroke='%23dbe2e7' stroke-width='2' fill='white' d='M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12z'/></svg>");
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns=\
+'http://www.w3.org/2000/svg' width='18' height='18' viewBox='-2 -2 27 27'>\
+<path stroke='%23dbe2e7' stroke-width='2' fill='white' d='M12 0c-6.627 0-12 \
+5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12z'/></svg>");
     }
     li.checked:before {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'><path fill='%2334d7d6' d='M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.25 17.292l-4.5-4.364 1.857-1.858 2.643 2.506 5.643-5.784 1.857 1.857-7.5 7.643z'/></svg>");
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns=\
+'http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'><path \
+fill='%2334d7d6' d='M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 \
+12-12-5.373-12-12-12zm-1.25 17.292l-4.5-4.364 1.857-1.858 2.643 2.506 \
+5.643-5.784 1.857 1.857-7.5 7.643z'/></svg>");
     }
     #rightPane h5 {
       border-bottom: 1px solid #eceef0;

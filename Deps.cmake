@@ -14,10 +14,10 @@ elseif (PORT MATCHES "UltralightWin")
     set(PLATFORM "win")
 endif ()
 
-set(ULTRALIGHTCORE_REV "711c967")
-set(WEBCORE_REV "1137a3c")
-set(ULTRALIGHT_REV "6cc15db")
-set(APPCORE_REV "a26d29e")
+set(ULTRALIGHTCORE_REV "3f9f002")
+set(WEBCORE_REV "781bfa2")
+set(ULTRALIGHT_REV "7a04408")
+set(APPCORE_REV "47dd949")
 
 set(ULTRALIGHTCORE_DIR "${CMAKE_CURRENT_BINARY_DIR}/deps/UltralightCore/")
 set(WEBCORE_DIR "${CMAKE_CURRENT_BINARY_DIR}/deps/WebCore/")
@@ -36,38 +36,45 @@ endif ()
 
 set(S3_DOMAIN ".sfo2.cdn.digitaloceanspaces.com")
 
-ExternalProject_Add(UltralightCoreBin
-  URL https://${ULTRALIGHTCORE_BUCKET}${S3_DOMAIN}/ultralightcore-bin-${ULTRALIGHTCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
-  SOURCE_DIR "${ULTRALIGHTCORE_DIR}"
-  BUILD_IN_SOURCE 1
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-)
+if(${USE_LOCAL_DEPS})
+    add_custom_target(UltralightCoreBin)
+    add_custom_target(WebCoreBin)
+    add_custom_target(UltralightBin)
+    add_custom_target(AppCoreBin)
+else()
+    ExternalProject_Add(UltralightCoreBin
+      URL https://${ULTRALIGHTCORE_BUCKET}${S3_DOMAIN}/ultralightcore-bin-${ULTRALIGHTCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
+      SOURCE_DIR "${ULTRALIGHTCORE_DIR}"
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
 
-ExternalProject_Add(WebCoreBin
-  URL https://${WEBCORE_BUCKET}${S3_DOMAIN}/webcore-bin-${WEBCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
-  SOURCE_DIR "${WEBCORE_DIR}"
-  BUILD_IN_SOURCE 1
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-)
+    ExternalProject_Add(WebCoreBin
+      URL https://${WEBCORE_BUCKET}${S3_DOMAIN}/webcore-bin-${WEBCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
+      SOURCE_DIR "${WEBCORE_DIR}"
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
 
-ExternalProject_Add(UltralightBin
-  URL https://${ULTRALIGHT_BUCKET}${S3_DOMAIN}/ultralight-bin-${ULTRALIGHT_REV}-${PLATFORM}-${ARCHITECTURE}.7z
-  SOURCE_DIR "${ULTRALIGHT_DIR}"
-  BUILD_IN_SOURCE 1
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-)
+    ExternalProject_Add(UltralightBin
+      URL https://${ULTRALIGHT_BUCKET}${S3_DOMAIN}/ultralight-bin-${ULTRALIGHT_REV}-${PLATFORM}-${ARCHITECTURE}.7z
+      SOURCE_DIR "${ULTRALIGHT_DIR}"
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
 
-ExternalProject_Add(AppCoreBin
-  URL https://${APPCORE_BUCKET}${S3_DOMAIN}/appcore-bin-${APPCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
-  SOURCE_DIR "${APPCORE_DIR}"
-  BUILD_IN_SOURCE 1
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-)
+    ExternalProject_Add(AppCoreBin
+      URL https://${APPCORE_BUCKET}${S3_DOMAIN}/appcore-bin-${APPCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
+      SOURCE_DIR "${APPCORE_DIR}"
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+endif()

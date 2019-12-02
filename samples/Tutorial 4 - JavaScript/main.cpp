@@ -5,37 +5,47 @@
 
 using namespace ultralight;
 
+const char* htmlString();
+
+///
+///  Welcome to Tutorial 4!
+///
+///  In this tutorial we'll show how to integrate C++ code with JavaScript.
+///
+///  We will introduce the DOMReady event and use it to bind a C++ callback to
+///  a JavaScript function on our page. Later, when that callback is triggered,
+///  we will execute some JavaScript to update a hidden message on the page.
+///
+///  __JavaScriptCore and AppCore__
+///
+///  Ultralight integrates the full JavaScriptCore engine (the same JS engine
+///  in Safari on macOS and iOS). The SDK includes full C API bindings to
+///  JavaScriptCore which gives you a great deal of flexibility but can be a
+///  little daunting for first-time users.
+/// 
+///  To help simplify things, AppCore provides a simple C++ wrapper over
+///  JavaScriptCore (@see JSHelpers.h). We'll be using this wrapper for the
+///  sake of convenience in this tutorial.
+///
 class MyApp : public LoadListener {
   RefPtr<Overlay> overlay_;
 public:
   MyApp(Ref<Window> win) {
     ///
-    /// Create our Overlay, use the same dimensions as our Window.
+    /// Create an Overlay using the same dimensions as our Window.
     ///
     overlay_ = Overlay::Create(win, win->width(), win->height(), 0, 0);
 
     ///
     /// Register our MyApp instance as a load listener so we can handle the
-    /// page's DOMReady event below.
+    /// View's OnDOMReady event below.
     ///
     overlay_->view()->set_load_listener(this);
 
     ///
     /// Load a string of HTML (we're using a C++11 Raw String Literal)
     ///
-    overlay_->view()->LoadHTML(R"(
-      <html>
-        <head>
-          <style type="text/css">
-            body { font-family: Arial; text-align: center; }
-          </style>
-        </head>
-        <body>
-          <button onclick="GetMessage();">Get the Secret Message!</button>
-          <div id="message"></div>
-        </body>
-      </html>
-    )");
+    overlay_->view()->LoadHTML(htmlString());
   }
 
   virtual ~MyApp() {}
@@ -45,11 +55,11 @@ public:
   /// JavaScript by calling GetMessage(). We bind the callback within
   /// the DOMReady callback defined below.
   ///
-  void GetMessage(const JSObject& thisObject, const JSArgs& args) {
+  JSValue GetMessage(const JSObject& thisObject, const JSArgs& args) {
     ///
-    /// We display the secret message by executing a string of JavaScript.
+    /// Return our message to JavaScript as a JSValue.
     ///
-    JSEval("document.getElementById('message').innerHTML='Ultralight rocks!';");
+    return JSValue("Hello from C++!<br/>Ultralight rocks!");
   }
 
   ///
@@ -70,9 +80,21 @@ public:
     JSObject global = JSGlobalObject();
 
     ///
-    /// Bind MyApp::GetMessage to the JavaScript function named "GetMessage"
+    /// Bind MyApp::GetMessage to the JavaScript function named "GetMessage".
     ///
-    global["GetMessage"] = BindJSCallback(&MyApp::GetMessage);
+    /// You can get/set properties of JSObjects by using the [] operator with
+    /// the following types as potential property values:
+    ///  - JSValue
+    ///      Represents a JavaScript value, eg String, Object, Function, etc.
+    ///  - JSCallback 
+    ///      Typedef of std::function<void(const JSObject&, const JSArgs&)>)
+    ///  - JSCallbackWithRetval 
+    ///      Typedef of std::function<JSValue(const JSObject&, const JSArgs&)>)
+    ///
+    /// We use the BindJSCallbackWithRetval macro to bind our C++ class member
+    /// function to our JavaScript callback.
+    ///
+    global["GetMessage"] = BindJSCallbackWithRetval(&MyApp::GetMessage);
   }
 };
 
@@ -110,4 +132,54 @@ int main() {
   app->Run();
 
   return 0;
+}
+
+const char* htmlString() {
+  return R"(
+<html>
+  <head>
+    <style type="text/css">
+      body { 
+        font-family: -apple-system, 'Segoe UI', Ubuntu, Arial, sans-serif; 
+        text-align: center;
+        background-color: #40434d;
+        padding: 2em;
+      }
+      body.rainbow {
+        background: linear-gradient(90deg, #ff2363, #fff175, #68ff9d, 
+                                           #45dce0, #6c6eff, #9e23ff, #ff3091);
+        background-size: 1000% 1000%;
+        animation: ScrollGradient 10s ease infinite;
+      }
+      @keyframes ScrollGradient {
+        0%   { background-position:0% 50%; }
+        50%  { background-position:100% 50%; }
+        100% { background-position:0% 50%; }
+      }
+      #message {
+        padding-top: 2em;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+      }
+    </style>
+    <script type="text/javascript">
+    function HandleButton(evt) {
+      // Call our C++ callback 'GetMessage'
+      var message = GetMessage();
+      
+      // Display the result in our 'message' div element and apply the
+      // rainbow effect to our document's body.
+      document.getElementById('message').innerHTML = message;
+      document.body.classList.add('rainbow');
+    }
+    </script>
+  </head>
+  <body>
+    <button onclick="HandleButton(event);">Get the Secret Message!</button>
+    <div id="message"></div>
+  </body>
+</html>
+    )";
 }

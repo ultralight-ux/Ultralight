@@ -1,17 +1,9 @@
-set(APP_NAME Browser)
+set(APP_NAME Tutorial5)
 include_directories("${ULTRALIGHT_INCLUDE_DIR}")
 link_directories("${ULTRALIGHT_LIBRARY_DIR}")
 link_libraries(UltralightCore AppCore Ultralight WebCore)
 
-set(SOURCES "src/Browser.h"
-            "src/Browser.cpp"
-            "src/Tab.h"
-            "src/Tab.cpp"
-            "src/UI.h"
-            "src/UI.cpp"
-            "src/main.cpp")
-
-add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
+add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE "main.cpp")
 
 if (APPLE)
   # Enable High-DPI on macOS through our custom Info.plist template
@@ -25,7 +17,7 @@ endif()
 
 # Copy all binaries to target directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>) 
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>)  
 
 if (APPLE)
   set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources") 
@@ -33,13 +25,7 @@ else ()
   set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
 endif ()
 
-# Copy assets to assets directory
+# Copy assets to assets path
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "${ASSETS_PATH}")
-    
-# Copy inspector to assets directory
-add_custom_command(TARGET ${APP_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_INSPECTOR_DIR}" "${ASSETS_PATH}/inspector")
-
-
 

@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        background: url('background.jpg');
+        background-size: 450px 700px;
+        color: white;
+        font-family: -apple-system, 'Segoe UI Light', Ubuntu, Arial, sans-serif;
+        font-weight: 200;
+        padding-top: 16px;
+        overflow: hidden;
+      }
+      div {
+        text-align: center;
+      }
+      #time { font-size: 78px; }
+      #date { font-size: 22px; }
+      #bg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        /* Royalty Free Photo from: https://unsplash.com/photos/DYGNNwkfx_Y */
+        background: url('background.jpg') no-repeat center center;
+        background-size: cover;
+        transform: scale(1.1);
+      }
+    </style>
+    <script type="text/javascript">
+    function updateTime() {
+      const dayNames = ["Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday"]
+      const monthNames = ["January",
+                          "February",
+                          "March",
+                          "April",
+                          "May",
+                          "June",
+                          "July",
+                          "August",
+                          "September",
+                          "October",
+                          "November",
+                          "December"];
+      var date = new Date();
+      var h = (date.getHours() + 24) % 12 || 12;
+      var m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      var timeStr = h + ":" + m;
+      var dateStr = dayNames[date.getDay()] +  ", " + 
+        monthNames[date.getMonth()] + " " + date.getDate();
+      document.getElementById('time').innerText = timeStr;
+      document.getElementById('date').innerText = dateStr;
+      var t = setTimeout(updateTime, 500);
+    }
+    </script>
+    <script>
+    var lFollowX = 0,
+        lFollowY = 0,
+        x = 0,
+        y = 0,
+        range = 500,
+        friction = 1 / 10;
+
+    function moveBackground() {
+      x += (lFollowX - x) * friction;
+      y += (lFollowY - y) * friction;
+      translate = 'translate(' + x + 'px, ' + y + 'px) scale(1.1)';
+      document.getElementById('bg').style.transform = translate;
+      window.requestAnimationFrame(moveBackground);
+    }
+
+    function handleMouseMove(e) {
+      var lMouseX = Math.max(-range, 
+        Math.min(range, window.innerWidth / 2 - e.clientX));
+      var lMouseY = Math.max(-range,
+        Math.min(range, window.innerHeight / 2 - e.clientY));
+      lFollowX = (20 * lMouseX) / range;
+      lFollowY = (20 * lMouseY) / range;
+    }
+
+    function load() {
+      updateTime();
+      window.onmousemove = handleMouseMove;
+      moveBackground();
+    }
+    </script>
+  </head>
+  <body onload="load();">
+    <div id="bg"></div>
+    <div id="time"></div>
+    <div id="date"></div>
+  </body>
+</html>
