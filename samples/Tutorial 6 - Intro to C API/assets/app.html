@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        background: linear-gradient(0deg, #6a11ea, #7270ed);
+        color: #e8e2fd;
+        font-family: -apple-system, 'Segoe UI Light', Ubuntu, Arial, sans-serif;
+        font-weight: 200;
+        padding: 0;
+        overflow: hidden;
+      }
+      #msg, #btn {
+        text-align: center;
+        font-size: 54px;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+        width: 85%;
+      }
+      button {
+        background: linear-gradient(0deg, #6a11ea, #7270ed);
+        color: #e8e2fd;
+        border-radius: 60px;
+        border: none;
+        font-size: 48px;
+        padding: 0.3em;
+        height: 2em;
+        box-shadow: 6px 6px #4814b5;
+        border: 1px solid #4814b5;
+        font-family: -apple-system, 'Segoe UI Light', Ubuntu, Arial, sans-serif;
+      }
+      button:active {
+        box-shadow: none;
+        margin-left: 6px;
+        margin-top: 6px;
+        background: linear-gradient(0deg, #7270ed, #6a11ea);
+      }
+      #msg {
+        visibility: hidden;
+        opacity: 0;
+        top: 10%;
+      }
+      .transition #btn {
+        visibility: hidden;
+        opacity: 0;
+        top: 90%;
+        transition: visibility 0s 0.3s, opacity 0.3s linear, top 0.3s linear;
+      }
+      .transition #msg {
+        visibility: visible;
+        opacity: 1;
+        top: 50%;
+        transition: opacity 0.3s linear, top 0.3s linear;
+        transition-delay: 0.1s;
+      }
+    </style>
+    <script type="text/javascript">
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function HandleClick() {
+      document.body.classList.add('transition');
+      $('msg').innerHTML = GetMessage();
+    }
+    </script>
+  </head>
+  <body>
+    <div id="msg"></div>
+    <button id="btn" onclick="HandleClick();">Click Me!</button>
+  </body>
+</html>

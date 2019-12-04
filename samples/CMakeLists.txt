@@ -40,6 +40,7 @@ add_subdirectory("Tutorial 2 - Basic App")
 add_subdirectory("Tutorial 3 - Resizable App")
 add_subdirectory("Tutorial 4 - JavaScript")
 add_subdirectory("Tutorial 5 - File Loading")
+add_subdirectory("Tutorial 6 - Intro to C API")
 
 if (${IN_SOURCE_BUILD})
     add_custom_target(
@@ -77,4 +78,5 @@ if (${IN_SOURCE_BUILD})
     add_dependencies(Tutorial3 CopySDK)
     add_dependencies(Tutorial4 CopySDK)
     add_dependencies(Tutorial5 CopySDK)
+    add_dependencies(Tutorial6 CopySDK)
 endif ()

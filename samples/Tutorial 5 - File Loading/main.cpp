@@ -36,7 +36,7 @@ using namespace ultralight;
 ///
 ///  See <Ultralight/platform/FileSystem.h> for more information.
 ///
-class MyApp : public LoadListener {
+class MyApp {
   RefPtr<Overlay> overlay_;
 public:
   MyApp(Ref<Window> win) {
