@@ -23,7 +23,7 @@
   padding: 5px 10px;
   margin-top: 9px;
   margin-right: 3px;
-  border: 0.8px solid rgba(0, 0, 0, 0.2);
+  border: 0.8px solid rgb(200, 200, 200);
   border-radius: 8px;
   font-size: 12px;
   z-index: 1000000;
@@ -98,7 +98,7 @@
 .chrome-tabs .chrome-tab.chrome-tab-current .chrome-tab-background {
   background: linear-gradient(0deg, rgba(236, 236, 236, 1.0), rgb(245, 245, 245));
   /*box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4); */
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 0.7px solid rgb(200, 200, 200);
   border-bottom: none;
 }
 .chrome-tabs .chrome-tab.chrome-tab-just-added {

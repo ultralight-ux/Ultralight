@@ -4,6 +4,7 @@ body {
      padding: 0;
      font-family: "Segoe UI", -apple-system, Ubuntu, Arial, sans-serif;
      font-size: 14px;
+     background: white;
 }
 #bar {
      background: rgba(236, 236, 236, 1.0);
