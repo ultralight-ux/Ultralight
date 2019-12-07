@@ -2,7 +2,7 @@
 
 static UI* g_ui = 0;
 
-#define UI_HEIGHT 79
+#define UI_HEIGHT 80
 
 UI::UI(Ref<Window> window) : window_(window) {
   uint32_t window_width = App::instance()->window()->width();
@@ -164,11 +164,11 @@ void UI::CreateNewTab() {
   tabs_[id].reset(new Tab(this, id, window->width(), (uint32_t)tab_height, 0, UI_HEIGHT));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
-  addTab({ id, "New Tab", "" });
+  addTab({ id, "New Tab", "", tabs_[id]->view()->is_loading() });
 }
 
 void UI::UpdateTabTitle(uint64_t id, const ultralight::String& title) {
-  updateTab({ id, title, "" });
+  updateTab({ id, title, "", tabs_[id]->view()->is_loading() });
 }
 
 void UI::UpdateTabURL(uint64_t id, const ultralight::String& url) {
@@ -177,7 +177,12 @@ void UI::UpdateTabURL(uint64_t id, const ultralight::String& url) {
 }
 
 void UI::UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, bool can_go_forward) {
-  if (id == active_tab_id_ && !tabs_.empty()) {
+  if (tabs_.empty())
+    return;
+
+  updateTab({ id, tabs_[id]->view()->title(), "", tabs_[id]->view()->is_loading() });
+
+  if (id == active_tab_id_) {
     SetLoading(is_loading);
     SetCanGoBack(can_go_back);
     SetCanGoForward(can_go_forward);

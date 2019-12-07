@@ -9,11 +9,8 @@
 <body>
     <button id="chrome-tabs-add-tab">+ New Tab</button>
     <div class="chrome-tabs" data-chrome-tabs-instance-id="0">
-        <div class="chrome-tabs-content">
-		  
-        </div>
-		
-        <div class="chrome-tabs-bottom-bar" style="z-index: 3;"></div>
+			<div class="chrome-tabs-content"></div>
+			<div class="chrome-tabs-bottom-bar" style="z-index: 3;"></div>
     </div>
 
     <svg style="display: none;">
@@ -41,54 +38,55 @@
 	  </span>
       <input onfocus="select_next_mouseup = true;" onmouseup="if (select_next_mouseup) this.select(); select_next_mouseup = false;" type="text" id="address"></input>
       <span id="toggle-tools" class="icon">
-	    <svg viewBox="0 0 24 24" width="20" height="20"><use xlink:href="#svg_tools"/></svg>
+	    <svg viewBox="0 0 24 24" width="18" height="18"><use xlink:href="#svg_tools"/></svg>
 	  </span>
     </div>
 	
 	<script src="draggabilly.pkgd.min.js"></script>
 	<script src="chrome-tabs.js"></script>
 	<script>
-      var el = document.querySelector('.chrome-tabs')
-      var chromeTabs = new ChromeTabs()
-	  var select_next_mouseup = false;
+		var el = document.querySelector('.chrome-tabs')
+		var chromeTabs = new ChromeTabs()
+		var select_next_mouseup = false;
+		var defaultFavicon = "earth.svg";
 
-      chromeTabs.init(el, {
-        tabOverlapDistance: 14,
-        minWidth: 45,
-        maxWidth: 243
-      })
+		chromeTabs.init(el, {
+			tabOverlapDistance: 6,
+			minWidth: 45,
+			maxWidth: 243
+		})
 	  
-      function addTab(id, title, faviconUrl) {
-	    chromeTabs.addTab({id: id, title: title, favicon: faviconUrl});
+		function addTab(id, title, faviconUrl, isLoading) {
+	    chromeTabs.addTab({id: id, title: title, favicon: defaultFavicon, loading: isLoading });
 	  }
 	  
-      function updateTab(id, title, faviconUrl) {
+		function updateTab(id, title, faviconUrl, isLoading) {
 	    const tab = document.querySelector("[data-tab-id='" + id + "']");
-		if (tab)
-		  chromeTabs.updateTab(tab, {title: title, favicon: faviconUrl});
+			if (tab)
+				chromeTabs.updateTab(tab, {title: title, favicon: defaultFavicon, loading: isLoading});
 	  }
 	  
 	  function closeTab(id) {
-        const tab = document.querySelector("[data-tab-id='" + id + "']");
-        if (tab)
-		  chromeTabs.removeTab(tab);
+			const tab = document.querySelector("[data-tab-id='" + id + "']");
+			if (tab)
+		  	chromeTabs.removeTab(tab);
 	  }
 	  
 	  function bindCallbacks() {
 	    el.addEventListener('requestNewTab', ({ detail }) => OnRequestNewTab())
-        el.addEventListener('requestTabClose', ({ detail }) => OnRequestTabClose(detail.tabEl.getAttribute('data-tab-id')))
+      el.addEventListener('requestTabClose', ({ detail }) => OnRequestTabClose(detail.tabEl.getAttribute('data-tab-id')))
 	    el.addEventListener('activeTabChange', ({ detail }) => OnActiveTabChange(detail.tabEl.getAttribute('data-tab-id')))
-		document.querySelector('#back').addEventListener('click', event => OnBack())
-		document.querySelector('#forward').addEventListener('click', event => OnForward())
-		document.querySelector('#refresh').addEventListener('click', event => OnRefresh())
-		document.querySelector('#stop').addEventListener('click', event => OnStop())
-        document.querySelector('#toggle-tools').addEventListener('click', event => OnToggleTools())
-		var address = document.querySelector('#address');
-		address.onkeypress = function(e) { if ( e.which == '13' ) { address.blur(); OnRequestChangeURL(address.value); return false; }}
+			document.querySelector('#back').addEventListener('click', event => OnBack())
+			document.querySelector('#forward').addEventListener('click', event => OnForward())
+			document.querySelector('#refresh').addEventListener('click', event => OnRefresh())
+			document.querySelector('#stop').addEventListener('click', event => OnStop())
+			document.querySelector('#toggle-tools').addEventListener('click', event => OnToggleTools())
+			var address = document.querySelector('#address');
+			address.onkeypress = function(e) { if ( e.which == '13' ) { address.blur(); OnRequestChangeURL(address.value); return false; }}
 	  }
 	  
 	  bindCallbacks();
-    </script>
+	</script>
 </body>
 
 </html>

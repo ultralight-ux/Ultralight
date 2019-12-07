@@ -2,35 +2,41 @@
 body {
      margin: 0;
      padding: 0;
-     font-family: "Segoe UI", -apple-system, sans-serif;
+     font-family: "Segoe UI", -apple-system, Ubuntu, Arial, sans-serif;
      font-size: 14px;
 }
 #bar {
-     background: linear-gradient(rgba(236, 236, 236, 1.0), rgba(228, 228, 228, 1.0));
-     height: 36px;
-     padding: 5px 9px;
-     border-bottom: 0.8px solid rgba(150, 150, 150, 1.0);
+     background: rgba(236, 236, 236, 1.0);
+     height: 32px;
+     padding: 4px 9px;
+     border-bottom: 0.8px solid rgb(200, 200, 200);
 	 cursor: default;
      display: flex;
 }
 #address {
-     border-radius: 3px;
-     border: 1px solid rgba(150, 150, 150, 1.0);
-     height: 30px;
+     border-radius: 24px;
+     border: none;
+     height: 32px;
      flex: 1;
-     background-color: white;
+     font-size: 14px;
+     color: #667;
+     background-color: #FAFAFA;
      display: inline-block;
-     padding-left: 8px;
-	 margin-top: 1px;
+     padding: 2px 16px 2px 16px;
+	 margin-top: 0px;
      margin-left:9px;
 	 user-select: auto !important;
 	 -webkit-user-select: text !important;
+}
+#address:focus {
+     background-color: #FFFFFF;
+     color: #223;
 }
 .icon {
      cursor: default;
      fill: rgba(90, 90, 90, 1.0);
      vertical-align: top;
-     margin-top: 3px;
+     margin-top: 4px;
      margin-left:9px;
      padding: 2px;
      height: 22px;
