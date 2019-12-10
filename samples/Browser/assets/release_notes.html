@@ -3,7 +3,7 @@
 <title>Release Notes</title>
 <style type="text/css">
 body {
-  background-color: #6d59fb;
+  background: #CCC;
   margin: 0;
   line-height: 1.4;
 }
@@ -22,21 +22,23 @@ code {
   padding: 2px;
 }
 #content {
-  width: 500px;
+  width: 700px;
   margin: 45px auto;
   background-color: white;
   font-family: Segoe UI, -apple-system, sans-serif;
   padding: 40px 60px;
   color: #333;
-  box-shadow: 15px 25px #4937d5;
+  border-radius:20px;
+  box-shadow: 20px 25px 15px -10px#BBB;
 }
 h3 {
-  border-bottom: 6px solid #EEE;
+  border-bottom: 3px solid #EEE;
+  margin-top: 1.5em;
 }
 
 h4, dt {
   margin:0;
-  margin-top: 0.5em;
+  margin-top: 1em;
   padding:6px;
   font-weight: bold;
 }
@@ -45,19 +47,87 @@ p {
   margin: 0.5em 0;
   margin-bottom: 1.5em;
  }
+ ul {
+  padding: 0;
+  margin: 0;
+ }
 </style>
 </head>
 <body>
 <div id="content">
 
-<h2>Welcome to Ultralight 1.1.0!</h2>
+<h2>Ultralight v1.1.0 Release Notes</h2>
 
-<p>Come by our Slack channel to get help or share feedback.</p>
-
+<h3>Changelog</h3>
+This release brings many important stability, rendering, performance, and memory usage improvements to the library. Notable improvements include:
 <dl>
-  <dt>Slack Channel</dt><dd><a href="https://chat.ultralig.ht">https://chat.ultralig.ht</a></dd>
-  <dt>Issue Tracker</dt><dd><a href="https://github.com/ultralight-ux/ultralight/issues">https://github.com/ultralight-ux/ultralight/issues</a></dd>
+  <dt>Rendering</dt>
+  <dd>
+    <ul>
+    <li>Added CSS 3D / perspective transforms</li>
+    <li>Accelerated CSS transforms / transitions via new compositor</li>
+    <li>Improved Font Hinting and CJK Font support</li>
+    <li>Fixed many CSS / painting glitches (backgrounds, clips, transitions, etc.)</li>
+    <li>Made rendering pipeline sRGB-aware and gamma-correct</li>
+    <li>Improved scrollbar theming and sub-frame scrolling</li>
+    <li>Added support for checkbox, text input, radio buttons</li>
+    <li>Added support for radial gradients</li>
+    <li>Improved SVG Path stroke/fill rendering</li>
+    <li>Accelerated path rendering via MSAA</li>
+    <li>Enabled primitive Canvas API support (filled/stroked paths only)</li>
+    <li>Improved image scaling and memory usage for very large images</li>
+    </ul>
+  </dd>
+  <dt>JavaScript</dt>
+  <dd>
+    <ul>
+    <li>Fixed GC crash in pages with heavy JavaScript</li>
+    <li>Enabled DFG JIT for faster performance with long-running scripts</li>
+    <li>Enabled ES6 Module support</li>
+    <li>Enabled bmalloc slab allocator on all platforms</li>
+    <li>Reduced initial memory usage and heap scaling</li>
+    </ul>
+  </dd>
+  <dt>Platform / Drivers</dt>
+  <dd>
+    <ul>
+    <li>Added DirectX 12 driver support (experimental in AppCore repo)</li>
+    <li>Fixed rendering glitches on macOS/Metal</li>
+    <li>Added triple-buffering to macOS/Metal driver, improved performance</li>
+    <li>Accelerated View/Window resizing</li>
+    <li>Improve rendering with fractional DPI scales</li>
+    <li>Improved tab key handling (tab navigation works correctly now)
+    <li>Enabled CPU-only WARP fallback in Windows/D3D11 driver</li>
+    <li>Fixed crash during App destruction on Linux</li>
+    <li>Added native Linux font loader (uses FontConfig)</li>
+    <li>Made it easier to bundle shared libs on Linux by having the rpath search the executable path first</li>
+    <li>Fixed crash when creating an App on Windows 7 platform</li>
+    <li>Fixed issues with tracking mouse during drag operation</li>
+    </ul>
+  </dd>
+  <dt>Debugging / Profiling</dt>
+  <dd>
+    <ul>
+    <li>Added Web Inspector (useful for debugging JS / CSS locally)</li>
+    <li>Added Config option to force repaints (for debugging GPUDriver)</li>
+    <li>Debug symbols are now available for the WebCore and AppCore modules for every build/commit as part of our continuous delivery system.</li>
+    </ul>
+  </dd>
+</dt>
 </dl>
+
+<h3>Useful Links</h3>
+<dl>
+  <dt>Join our Slack Channel</dt><dd><a href="https://chat.ultralig.ht">chat.ultralig.ht</a></dd>
+  <dt>Website</dt>
+  <dd><a href="https://ultralig.ht">ultralig.ht</a></dd>
+  <dt>Issue Tracker</dt><dd><a href="https://github.com/ultralight-ux/ultralight/issues">github.com/ultralight-ux/ultralight/issues</a></dd>
+  <dt>Quick Start / Tutorials</dt>
+  <dd><a href="https://docs.ultralig.ht">docs.ultralig.ht</a></dd>
+  <dt>API Headers</dt>
+  <dd><a href="https://github.com/ultralight-ux/Ultralight-API/">github.com/ultralight-ux/Ultralight-API</a></dd>
+</dl>
+
 <br/>
 
  <p style="text-align: right;">- Ultralight Team</p>
