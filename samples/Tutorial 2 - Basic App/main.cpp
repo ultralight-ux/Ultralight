@@ -30,24 +30,7 @@ int main() {
   /// The App class is responsible for the lifetime of the application
   /// and is required to create any windows.
   ///
-
-  ///
-  /// Tell AppCore that we want to use /data/ as our base file system path.
-  /// This relative path is resolved against the executable's current
-  /// working directory.
-  ///
-  /// For example, if we are on Windows, and running our exe from:
-  ///   C:\dev\my_program\
-  ///
-  /// This path will resolve to:
-  ///   C:\dev\my_program\frontend\
-  ///
-  /// All file:\\\ URLs will then resolve to the above path, for example:
-  ///   file:\\\index.html --> C:\dev\my_program\frontend\index.html
-  ///
-  Settings settings;
-  settings.file_system_path = "./frontend/";
-  Ref<App> app = App::Create(settings);
+  Ref<App> app = App::Create();
   
   ///
   /// Create our Window.
