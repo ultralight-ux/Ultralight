@@ -86,6 +86,16 @@ elseif (PORT MATCHES "UltralightWin")
     set(PLATFORM "win")
 endif ()
 
+if (PORT MATCHES "UltralightMac")
+    if(${GET_DBG_DEPS})
+    else ()
+        # Strip shared libraries in release build
+        add_custom_command(TARGET create_sdk POST_BUILD
+            COMMAND strip -S -x ${INSTALL_DIR}/bin/*.dylib
+        )
+    endif ()
+endif ()
+
 set(PKG_FILENAME "ultralight-sdk-${GIT_COMMIT_HASH}-${PLATFORM}-${ARCHITECTURE}.7z")
 set(LATEST_PKG_FILENAME "ultralight-sdk-latest-${PLATFORM}-${ARCHITECTURE}.7z")
 
