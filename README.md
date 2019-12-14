@@ -1,7 +1,7 @@
 <img src="logo.png" width="600">
 <a href='https://ci.ultralig.ht/job/Ultralight/job/master/'><img src='https://ci.ultralig.ht/buildStatus/icon?job=Ultralight%2Fmaster'></a>
 
-[Website](https://ultralig.ht) | [Join our Slack!](https://chat.ultralig.ht) | [Browse API](ttps://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
+[Website](https://ultralig.ht) | [Join our Slack!](https://chat.ultralig.ht) | [Browse API](https://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
 
 # About
 
