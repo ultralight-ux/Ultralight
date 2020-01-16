@@ -60,7 +60,7 @@ Ultralight is designed to integrate well into existing game engines. In this cas
 
 ## Free License
 
-Ultralight is __free__ for non-commercial use and __free__ for commercial use by companies with less than $100K gross annual revenue. For more info see [LICENSE.txt](LICENSE/LICENSE.txt)
+Ultralight is __free__ for non-commercial use and __free__ for commercial use by companies with less than $100K gross annual revenue. For more info see [LICENSE.txt](license/LICENSE.txt)
 
 ## Commercial Licensing and Support 
 
