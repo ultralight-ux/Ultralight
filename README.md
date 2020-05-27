@@ -71,14 +71,12 @@ We offer commercial licensing, priority support, and source code. To learn more,
 You can get the latest SDK for each platform via the following links:
 
  * [Windows | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
- * [Windows | x86 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x86.7z)
  * [Linux | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
  * [macOS | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
 
 Debug packages are also available below:
 
  * [Windows | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
- * [Windows | x86 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x86.7z)
  * [Linux | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
  * [macOS | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
 

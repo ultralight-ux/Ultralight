@@ -56,13 +56,13 @@ pipeline {
         stage('Build Windows x64 Debug') {
           agent {
             node {
-              label 'win_x64_dbg'
+              label 'win_x64'
             }
           }
           steps {
             bat '''
                rem Setup environment
-               call "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat" amd64
+               call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" amd64
                set CC=cl.exe
                set CXX=cl.exe
               
@@ -89,58 +89,6 @@ pipeline {
             bat '''
                rem Setup environment
                call "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat" amd64
-               set CC=cl.exe
-               set CXX=cl.exe
-
-               rem Build Release
-               if not exist build mkdir build
-               cd build
-               cmake ../packager -G "Ninja"
-               ninja
-            '''
-          }
-          post {
-            success {
-              deploy();
-            }
-          }
-        }
-        stage('Build Windows x86 Debug') {
-          agent {
-            node {
-              label 'win_x86_dbg'
-            }
-          }
-          steps {
-            bat '''
-               rem Setup environment
-               call "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat" amd64_x86
-               set CC=cl.exe
-               set CXX=cl.exe
-              
-               rem Build Debug
-               if not exist build_dbg mkdir build_dbg
-               cd build_dbg
-               cmake ../packager -G "Ninja" -DGET_DBG_DEPS=1
-               ninja
-            '''
-          }
-          post {
-            success {
-              deployDebug();
-            }
-          }
-        }
-        stage('Build Windows x86') {
-          agent {
-            node {
-              label 'win_x86'
-            }
-          }
-          steps {
-            bat '''
-               rem Setup environment
-               call "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat" amd64_x86
                set CC=cl.exe
                set CXX=cl.exe
 
