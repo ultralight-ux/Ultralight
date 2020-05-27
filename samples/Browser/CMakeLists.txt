@@ -28,7 +28,7 @@ add_custom_command(TARGET ${APP_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>) 
 
 if (APPLE)
-  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources") 
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/assets") 
 else ()
   set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
 endif ()
@@ -41,5 +41,10 @@ add_custom_command(TARGET ${APP_NAME} POST_BUILD
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_INSPECTOR_DIR}" "${ASSETS_PATH}/inspector")
 
+if (APPLE)
+  # Copy resources to resources directory
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/bin/resources/" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/resources")
+endif ()
 
 

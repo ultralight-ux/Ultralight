@@ -34,6 +34,18 @@ else ()
     set(ULTRALIGHT_LIBRARY_DIR "${SDK_ROOT}/bin")
 endif ()
 
+if (PORT MATCHES "UltralightMac")
+    SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+    SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    SET(CMAKE_INSTALL_RPATH "@executable_path/")
+endif ()
+
+if (PORT MATCHES "UltralightLinux")
+    SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+    SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    SET(CMAKE_INSTALL_RPATH "$\{ORIGIN\}")
+endif ()
+
 add_subdirectory("Browser")
 add_subdirectory("Tutorial 1 - Render to PNG")
 add_subdirectory("Tutorial 2 - Basic App")
@@ -69,6 +81,18 @@ if (${IN_SOURCE_BUILD})
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/lib/" "${SDK_ROOT}/lib"
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_DIR}/lib/" "${SDK_ROOT}/lib"
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${APPCORE_DIR}/lib/" "${SDK_ROOT}/lib"
+        )
+    endif ()
+
+    if (PORT MATCHES "UltralightLinux")
+        add_custom_command(TARGET CopySDK POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/lib/" "${SDK_ROOT}/bin"
+        )
+    endif ()
+
+    if (PORT MATCHES "UltralightMac")
+        add_custom_command(TARGET CopySDK POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/lib/" "${SDK_ROOT}/bin"
         )
     endif ()
 
