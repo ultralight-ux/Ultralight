@@ -88,7 +88,7 @@ pipeline {
           steps {
             bat '''
                rem Setup environment
-               call "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat" amd64
+               call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" amd64
                set CC=cl.exe
                set CXX=cl.exe
 
