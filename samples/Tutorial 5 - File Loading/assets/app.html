@@ -1,6 +1,7 @@
 <html>
   <head>
     <style type="text/css">
+      * { -webkit-user-select: none; }
       body {
         background: url('background.jpg');
         background-size: 450px 700px;
@@ -67,7 +68,7 @@
         x = 0,
         y = 0,
         range = 500,
-        friction = 1 / 10;
+        friction = 1 / 6;
 
     function moveBackground() {
       x += (lFollowX - x) * friction;

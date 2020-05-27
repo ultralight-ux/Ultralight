@@ -40,7 +40,8 @@ const char* htmlString_RightPane();
 /// and re-calculate layout of our overlays in the OnResize callback.
 ///
 
-class MyApp : public WindowListener {
+class MyApp : public WindowListener,
+              public ViewListener {
   RefPtr<App> app_;
   RefPtr<Window> window_;
   RefPtr<Overlay> left_pane_;
@@ -96,6 +97,13 @@ public:
     /// Window's OnResize event below.
     ///
     window_->set_listener(this);
+
+    ///
+    /// Register our MyApp instance as a ViewListener so we can handle the
+    /// Views' OnChangeCursor event below.
+    ///
+    left_pane_->view()->set_view_listener(this);
+    right_pane_->view()->set_view_listener(this);
   }
 
   virtual ~MyApp() {}
@@ -123,6 +131,14 @@ public:
     right_pane_->MoveTo(LEFT_PANE_WIDTH, 0);
   }
 
+  ///
+  /// Inherited from ViewListener, called when the Cursor changes.
+  ///
+  virtual void OnChangeCursor(ultralight::View* caller,
+    Cursor cursor) {
+    window_->SetCursor(cursor);
+  }
+
   void Run() {
     app_->Run();
   }
@@ -140,6 +156,7 @@ const char* htmlString_LeftPane() {
 <html>
   <head>
     <style type="text/css">
+    * { -webkit-user-select: none; }
     body { 
       background: white;
       color: #7e7f8e;
@@ -277,6 +294,7 @@ const char* htmlString_RightPane() {
 <html>
   <head>
     <style type="text/css">
+    * { -webkit-user-select: none; }
     body { 
       background: #f3f5f7;
       color: #878a8d;

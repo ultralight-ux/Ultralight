@@ -1,3 +1,9 @@
+///
+/// This tutorial is temporary disabled as the bitmap() API is re-worked for 1.2
+///
+#define ENABLE_TUTORIAL_1 0
+
+#if ENABLE_TUTORIAL_1
 #include <Ultralight/Ultralight.h>
 #include <iostream>
 #include <string>
@@ -84,7 +90,7 @@ public:
     ///   running on the page but our renderer is using 2x DPI scale in our
     ///   config so the output bitmap will actually be 800 by 800 pixels.
     ///
-    view_ = renderer_->CreateView(400, 400, false);
+    view_ = renderer_->CreateView(400, 400, false, nullptr);
 
     ///
     /// Register our MyApp instance as a load listener so we can handle the
@@ -214,3 +220,8 @@ const char* htmlString() {
     </html>
     )";
 }
+#else
+int main() {
+  return 0;
+}
+#endif

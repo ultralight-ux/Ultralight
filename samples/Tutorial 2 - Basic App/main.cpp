@@ -91,7 +91,7 @@ const char* htmlString() {
 <html>
   <head>
     <style type="text/css">
-    * { user-select: none; }
+    * { -webkit-user-select: none; }
     body { 
       overflow: hidden;
       margin: 0;
@@ -141,6 +141,7 @@ const char* htmlString() {
       border-radius: 20px;
       margin: 0;
       padding-left: 1em;
+      cursor: pointer;
     }
     #rightPane li:hover {
       background-color: #f4f6fb;

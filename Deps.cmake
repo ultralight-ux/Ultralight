@@ -1,10 +1,6 @@
 include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
 
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(ARCHITECTURE "x64")
-else ()
-    set(ARCHITECTURE "x86")
-endif ()
+set(ARCHITECTURE "x64")
 
 if (PORT MATCHES "UltralightLinux")
     set(PLATFORM "linux")
@@ -14,10 +10,10 @@ elseif (PORT MATCHES "UltralightWin")
     set(PLATFORM "win")
 endif ()
 
-set(ULTRALIGHTCORE_REV "14ee508")
-set(WEBCORE_REV "fdfb466")
-set(ULTRALIGHT_REV "707f2da")
-set(APPCORE_REV "47dd75f")
+set(ULTRALIGHTCORE_REV "eb0f3cac")
+set(WEBCORE_REV "c59208fb")
+set(ULTRALIGHT_REV "bd3a9318")
+set(APPCORE_REV "1bbcffb")
 
 set(ULTRALIGHTCORE_DIR "${CMAKE_CURRENT_BINARY_DIR}/deps/UltralightCore/")
 set(WEBCORE_DIR "${CMAKE_CURRENT_BINARY_DIR}/deps/WebCore/")

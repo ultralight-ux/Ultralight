@@ -139,6 +139,7 @@ const char* htmlString() {
 <html>
   <head>
     <style type="text/css">
+      * { -webkit-user-select: none; }
       body { 
         font-family: -apple-system, 'Segoe UI', Ubuntu, Arial, sans-serif; 
         text-align: center;

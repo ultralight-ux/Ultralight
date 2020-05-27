@@ -15,7 +15,8 @@ class Console;
 * Browser UI implementation. Renders the toolbar/addressbar/tabs in top pane.
 */
 class UI : public WindowListener,
-           public LoadListener {
+           public LoadListener,
+           public ViewListener {
  public:
   UI(Ref<Window> window);
   ~UI();
@@ -26,6 +27,9 @@ class UI : public WindowListener,
 
   // Inherited from LoadListener
   virtual void OnDOMReady(View* caller) override;
+
+  // Inherited from ViewListener
+  virtual void OnChangeCursor(ultralight::View* caller, Cursor cursor) override { SetCursor(cursor); }
 
   // Called by UI JavaScript
   void OnBack(const JSObject& obj, const JSArgs& args);

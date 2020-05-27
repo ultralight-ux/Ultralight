@@ -6,15 +6,18 @@ static UI* g_ui = 0;
 
 UI::UI(Ref<Window> window) : window_(window) {
   uint32_t window_width = App::instance()->window()->width();
-  overlay_ = Overlay::Create(window_, window_width, UI_HEIGHT, 0, 0);
+  ui_height_ = (uint32_t)std::round(UI_HEIGHT * window_->scale());
+  overlay_ = Overlay::Create(window_, window_width, ui_height_, 0, 0);
   g_ui = this;
 
   view()->set_load_listener(this);
+  view()->set_view_listener(this);
   view()->LoadURL("file:///ui.html");
 }
 
 UI::~UI() {
   view()->set_load_listener(nullptr);
+  view()->set_view_listener(nullptr);
   g_ui = nullptr;
 }
 
@@ -24,12 +27,12 @@ void UI::OnClose() {
 void UI::OnResize(uint32_t width, uint32_t height) {
   RefPtr<Window> window = App::instance()->window();
 
-  int tab_height = window->height() - UI_HEIGHT;
+  int tab_height = window->height() - ui_height_;
 
   if (tab_height < 1)
     tab_height = 1;
 
-  overlay_->Resize(window->width(), UI_HEIGHT);
+  overlay_->Resize(window->width(), ui_height_);
 
   for (auto& tab : tabs_) {
     if (tab.second)
@@ -158,10 +161,10 @@ void UI::OnRequestChangeURL(const JSObject& obj, const JSArgs& args) {
 void UI::CreateNewTab() {
   uint64_t id = tab_id_counter_++;
   RefPtr<Window> window = App::instance()->window();
-  int tab_height = window->height() - UI_HEIGHT;
+  int tab_height = window->height() - ui_height_;
   if (tab_height < 1)
     tab_height = 1;
-  tabs_[id].reset(new Tab(this, id, window->width(), (uint32_t)tab_height, 0, UI_HEIGHT));
+  tabs_[id].reset(new Tab(this, id, window->width(), (uint32_t)tab_height, 0, ui_height_));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
   addTab({ id, "New Tab", "", tabs_[id]->view()->is_loading() });

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#define INSPECTOR_HEIGHT 300
+#define INSPECTOR_HEIGHT 400
 
 Tab::Tab(UI* ui, uint64_t id, uint32_t width, uint32_t height, int x, int y) 
   : ui_(ui), id_(id), container_width_(width), container_height_(height) {
@@ -53,8 +53,9 @@ void Tab::Resize(uint32_t width, uint32_t height) {
 
   uint32_t content_height = container_height_;
   if (inspector_overlay_ && !inspector_overlay_->is_hidden()) {
-    inspector_overlay_->Resize(container_width_, INSPECTOR_HEIGHT);
-    content_height -= INSPECTOR_HEIGHT;
+    uint32_t inspector_height_px = (uint32_t)std::round(INSPECTOR_HEIGHT * ui_->window_->scale());
+    inspector_overlay_->Resize(container_width_, inspector_height_px);
+    content_height -= inspector_height_px;
   }
   
   if (content_height < 1)
