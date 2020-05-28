@@ -1,6 +1,6 @@
 project(Samples C CXX)
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.3.2)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -81,18 +81,6 @@ if (${IN_SOURCE_BUILD})
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/lib/" "${SDK_ROOT}/lib"
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_DIR}/lib/" "${SDK_ROOT}/lib"
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${APPCORE_DIR}/lib/" "${SDK_ROOT}/lib"
-        )
-    endif ()
-
-    if (PORT MATCHES "UltralightLinux")
-        add_custom_command(TARGET CopySDK POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/lib/" "${SDK_ROOT}/bin"
-        )
-    endif ()
-
-    if (PORT MATCHES "UltralightMac")
-        add_custom_command(TARGET CopySDK POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/lib/" "${SDK_ROOT}/bin"
         )
     endif ()
 
