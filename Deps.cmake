@@ -7,7 +7,11 @@ if (PORT MATCHES "UltralightLinux")
 elseif (PORT MATCHES "UltralightMac")
     set(PLATFORM "mac")
 elseif (PORT MATCHES "UltralightWin")
-    set(PLATFORM "win")
+    if (CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+        set(PLATFORM "win-uwp")
+    else ()
+        set(PLATFORM "win")
+    endif ()
 endif ()
 
 set(ULTRALIGHTCORE_REV "50f489d8")
@@ -65,12 +69,16 @@ else()
       INSTALL_COMMAND ""
     )
 
-    ExternalProject_Add(AppCoreBin
-      URL https://${APPCORE_BUCKET}${S3_DOMAIN}/appcore-bin-${APPCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
-      SOURCE_DIR "${APPCORE_DIR}"
-      BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
+    if (PLATFORM MATCHES "win-uwp")
+      add_custom_target(AppCoreBin)
+    else ()
+      ExternalProject_Add(AppCoreBin
+        URL https://${APPCORE_BUCKET}${S3_DOMAIN}/appcore-bin-${APPCORE_REV}-${PLATFORM}-${ARCHITECTURE}.7z
+        SOURCE_DIR "${APPCORE_DIR}"
+        BUILD_IN_SOURCE 1
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+      )
+    endif ()
 endif()

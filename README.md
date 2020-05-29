@@ -3,6 +3,8 @@
 
 [Website](https://ultralig.ht) | [Join our Slack!](https://chat.ultralig.ht) | [Browse API](https://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
 
+> :warning: **This is a preview for v1.2!**: Please bear with us as we update documentation and samples for the new release. A porting guide will be up soon. Visit our Slack for more info.
+
 # About
 
 Ultralight is a lightweight, cross-platform, pure-GPU, HTML rendering engine for desktop apps and games. It supports most modern HTML5 and JavaScript features while still remaining small in binary size and memory usage.
@@ -70,24 +72,16 @@ We offer commercial licensing, priority support, and source code. To learn more,
 
 You can get the latest SDK for each platform via the following links:
 
- * [Windows | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
- * [Linux | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
- * [macOS | x64 | Release](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
-
-Debug packages are also available below:
-
- * [Windows | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
- * [Linux | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
- * [macOS | x64 | Debug](https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
-
- > *__Note__: Full debug symbols are only provided for WebCore and AppCore modules.*
+ * [Windows       | x64](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-x64.7z)
+ * [Windows (UWP) | x64](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-win-uwp-x64.7z)
+ * [Linux         | x64](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-linux-x64.7z)
+ * [macOS         | x64](https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/ultralight-sdk-latest-mac-x64.7z)
 
 ### Getting Pre-Built Binaries for a Specific Commit
 
 Pre-built binares are uploaded to the following S3 buckets every commit:
 
- * __Release Bins__: <https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/>
- * __Debug Bins__: <https://ultralight-sdk-dbg.sfo2.cdn.digitaloceanspaces.com/>
+ * __Archived Binaries__: <https://ultralight-sdk.sfo2.cdn.digitaloceanspaces.com/>
 
 Click any of the links for an XML listing of available files.
 
