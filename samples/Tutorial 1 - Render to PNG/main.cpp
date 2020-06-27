@@ -1,4 +1,5 @@
 #include <Ultralight/Ultralight.h>
+#include <Ultralight/platform/Logger.h>
 #include <AppCore/Platform.h>
 #include <iostream>
 #include <string>
@@ -16,13 +17,14 @@ const char* htmlString();
 ///  In this tutorial we'll load a string of HTML and render it to a PNG.
 ///  
 ///  Since we're rendering offscreen and don't need to create any windows or
-///  handle any user input, we won't be using AppCore and will instead be using
+///  handle any user input, we won't be using App::Create() and will instead be using
 ///  the Ultralight API directly with our own custom main loop.
 ///
 ///  Our main loop waits for the page to finish loading by subscribing to the
 ///  LoadListener interface then writes the rendering surface to a PNG on disk.
 ///
-class MyApp : public LoadListener {
+class MyApp : public LoadListener,
+              public Logger {
   RefPtr<Renderer> renderer_;
   RefPtr<View> view_;
   bool done_ = false;
@@ -37,9 +39,17 @@ public:
     Config config;
     config.device_scale = 2.0;
     config.font_family_standard = "Arial";
+
+    ///
+    /// We need to tell config where our resources are so it can load our
+    /// bundled certificate chain and make HTTPS requests.
+    ///
+    config.resource_path = "./resources/";
     
+    ///
     /// Make sure the GPU renderer is disabled so we can render to an offscreen
     /// pixel buffer surface.
+    ///
     config.use_gpu_renderer = false;
 
     ///
@@ -55,7 +65,23 @@ public:
     ///
     /// Use AppCore's font loader singleton to load fonts from the OS.
     ///
+    /// You could replace this with your own to provide your own fonts.
+    ///
     Platform::instance().set_font_loader(GetPlatformFontLoader());
+
+    ///
+    /// Use AppCore's file system singleton to load file:/// URLs from the OS.
+    ///
+    /// You could replace this with your own to provide your own file loader
+    /// (useful if you need to bundle encrypted / compressed HTML assets).
+    ///
+    Platform::instance().set_file_system(GetPlatformFileSystem("."));
+
+    ///
+    /// Register our MyApp instance as a logger so we can handle the
+    /// library's LogMessage() event below in case we encounter an error.
+    ///
+    Platform::instance().set_logger(this);
 
     ///
     /// Create our Renderer (you should only create this once per application).
@@ -72,7 +98,7 @@ public:
     ///
     /// Views are sized containers for loading and displaying web content.
     ///
-    view_ = renderer_->CreateView(800, 800, false, nullptr);
+    view_ = renderer_->CreateView(1600, 1600, false, nullptr);
 
     ///
     /// Register our MyApp instance as a load listener so we can handle the
@@ -88,6 +114,10 @@ public:
     ///   This operation may not complete immediately-- we will call
     ///   Renderer::Update continuously and wait for the OnFinishLoading event
     ///   before rendering our View.
+    ///
+    /// Views can also load remote URLs, try replacing the code below with:
+    ///
+    ///    view_->LoadURL("https://en.wikipedia.org");
     ///
     view_->LoadHTML(htmlString());
   }
@@ -153,6 +183,14 @@ public:
     ///
     done_ = true;
   }
+
+  ///
+  /// Inherited from Logger, this event is called when the library wants to
+  /// print a message to the log.
+  ///
+  virtual void LogMessage(LogLevel log_level, const String16& message) {
+    std::cout << String(message).utf8().data() << std::endl << std::endl;
+  }
 };
 
 int main() {
@@ -174,12 +212,14 @@ const char* htmlString() {
             color: black;
             font-family: Arial;
             background: linear-gradient(-45deg, #acb4ff, #f5d4e2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
           div {
             width: 350px;
             height: 350px;
             text-align: center;
-            margin: 25px;
             border-radius: 25px;
             background: linear-gradient(-45deg, #e5eaf9, #f9eaf6);
             box-shadow: 0 7px 18px -6px #8f8ae1;
