@@ -1,13 +1,10 @@
-///
-/// This tutorial is temporary disabled as the bitmap() API is re-worked for 1.2
-///
-#define ENABLE_TUTORIAL_1 0
-
-#if ENABLE_TUTORIAL_1
 #include <Ultralight/Ultralight.h>
+#include <AppCore/Platform.h>
 #include <iostream>
 #include <string>
 #include <memory>
+#include <thread>
+#include <chrono>
 
 using namespace ultralight;
 
@@ -26,17 +23,6 @@ const char* htmlString();
 ///  LoadListener interface, then calls Render() once and writes the result to
 ///  a PNG on disk.
 ///
-///  Underneath the hood, Ultralight renders everything via the GPUDriver
-///  interface. If you don't provide a GPUDriver interface to the Platform
-///  singleton, a default offscreen OpenGL implementation is used which we'll
-///  be taking advantage of in this tutorial.
-///
-///  **Note**:
-///    If you are integrating Ultralight into a game that has an existing GPU
-///    context, it's recommended to provide your own GPUDriver implementation
-///    so that Ultralight can render directly to it instead. See the AppCore
-///    repo on GitHub for stock implementations for D3D, OpenGL, and Metal.
-///
 class MyApp : public LoadListener {
   RefPtr<Renderer> renderer_;
   RefPtr<View> view_;
@@ -50,8 +36,12 @@ public:
     /// Our config uses 2x DPI scale and "Arial" as the default font.
     ///
     Config config;
-    config.device_scale_hint = 2.0;
+    config.device_scale = 2.0;
     config.font_family_standard = "Arial";
+    
+    /// Make sure the GPU renderer is disabled so we can render to an offscreen
+    /// pixel buffer surface.
+    config.use_gpu_renderer = false;
 
     ///
     /// Pass our configuration to the Platform singleton so that the library
@@ -68,6 +58,11 @@ public:
     /// we aren't using any in this tutorial.
     ///
     Platform::instance().set_config(config);
+    
+    ///
+    /// We will use AppCore's font loader singleton to load fonts from the OS.
+    ///
+    Platform::instance().set_font_loader(GetPlatformFontLoader());
 
     ///
     /// Create our Renderer (you should only create this once per application).
@@ -84,13 +79,7 @@ public:
     ///
     /// Views are sized containers for loading and displaying web content.
     ///
-    /// **Note**:
-    ///   Note that width and height are in virtual page coordinates--
-    ///   the window will be 400 by 400 pixels according to CSS/JavaScript
-    ///   running on the page but our renderer is using 2x DPI scale in our
-    ///   config so the output bitmap will actually be 800 by 800 pixels.
-    ///
-    view_ = renderer_->CreateView(400, 400, false, nullptr);
+    view_ = renderer_->CreateView(800, 800, false, nullptr);
 
     ///
     /// Register our MyApp instance as a load listener so we can handle the
@@ -124,8 +113,37 @@ public:
     ///   Calling Renderer::Update handles any pending network requests,
     ///   resource loads, and JavaScript timers.
     ///
-    while (!done_)
+    while (!done_) {
+      std::this_thread::sleep_for (std::chrono::milliseconds(10));
       renderer_->Update();
+      renderer_->Render();
+    }
+
+    ///
+    /// Get our View's rendering surface and cast it to BitmapSurface.
+    ///
+    /// BitmapSurface is the default Surface implementation, you can provide
+    /// your own via Platform::set_surface_factory.
+    ///
+    BitmapSurface* bitmap_surface = (BitmapSurface*)view_->surface();
+    
+    ///
+    /// Get the underlying bitmap.
+    ///
+    RefPtr<Bitmap> bitmap = bitmap_surface->bitmap();
+    
+    ///
+    /// The renderer uses a BGRA pixel format but PNG expects RGBA format,
+    /// let's convert the format by swapping Red and Blue channels.
+    ///
+    bitmap->SwapRedBlueChannels();
+    
+    ///
+    /// Write our bitmap to a PNG in the current working directory.
+    ///
+    bitmap->WritePNG("result.png");
+    
+    std::cout << "Saved a render of our page to result.png." << std::endl;
 
     std::cout << "Finished." << std::endl;
   }
@@ -136,33 +154,6 @@ public:
   ///
   virtual void OnFinishLoading(ultralight::View* caller) {
     std::cout << "Our page has loaded! Rendering it now..." << std::endl;
-
-    ///
-    /// Render all Views that need painting.
-    /// 
-    /// If you supplied your own GPUDriver, this function only renders each
-    /// View to a GPU command list for drawing in your own engine.
-    ///
-    /// We are using the default offscreen OpenGL driver which automatically
-    /// does this for us and blits the FBO to a bitmap (View::bitmap()).
-    ///
-    renderer_->Render();
-    
-    ///
-    /// Get our View's bitmap and write it to a PNG in the current working
-    /// directory.
-    ///
-    /// **Note**:
-    ///   Views are re-rendered as needed in the offscreen driver. You can
-    ///   check if a View's bitmap has changed since the last Render call
-    ///   via View::is_bitmap_dirty().
-    ///
-    ///   Calling View::bitmap() to retrieve the bitmap afterwards will clear
-    ///   the dirty state.
-    ///
-    view_->bitmap()->WritePNG("result.png");
-
-    std::cout << "Saved a render of our page to result.png." << std::endl;
 
     ///
     /// Set our done flag to true to exit the Run loop.
@@ -220,8 +211,3 @@ const char* htmlString() {
     </html>
     )";
 }
-#else
-int main() {
-  return 0;
-}
-#endif
