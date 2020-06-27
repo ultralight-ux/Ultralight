@@ -20,8 +20,7 @@ const char* htmlString();
 ///  the Ultralight API directly with our own custom main loop.
 ///
 ///  Our main loop waits for the page to finish loading by subscribing to the
-///  LoadListener interface, then calls Render() once and writes the result to
-///  a PNG on disk.
+///  LoadListener interface then writes the rendering surface to a PNG on disk.
 ///
 class MyApp : public LoadListener {
   RefPtr<Renderer> renderer_;
@@ -51,16 +50,10 @@ public:
     /// properties and handlers such as file system access, font loaders, and
     /// the gpu driver.
     ///
-    /// If you don't use the AppCore module (like we're doing now), Ultralight
-    /// provides a default offscreen OpenGL GPU driver and default font loader.
-    ///
-    /// We don't define a FileSystem handler to resolve `file:///` URLs since
-    /// we aren't using any in this tutorial.
-    ///
     Platform::instance().set_config(config);
     
     ///
-    /// We will use AppCore's font loader singleton to load fonts from the OS.
+    /// Use AppCore's font loader singleton to load fonts from the OS.
     ///
     Platform::instance().set_font_loader(GetPlatformFontLoader());
 
@@ -153,7 +146,7 @@ public:
   /// loading a page into the main frame.
   ///
   virtual void OnFinishLoading(ultralight::View* caller) {
-    std::cout << "Our page has loaded! Rendering it now..." << std::endl;
+    std::cout << "Our page has loaded!" << std::endl;
 
     ///
     /// Set our done flag to true to exit the Run loop.
