@@ -117,10 +117,11 @@ public:
   /// Inherited from WindowListener, called when the Window is resized.
   ///
   virtual void OnResize(uint32_t width, uint32_t height) override {
-    left_pane_->Resize(LEFT_PANE_WIDTH, height);
+    uint32_t left_pane_width_px = window_->DeviceToPixels(LEFT_PANE_WIDTH);
+    left_pane_->Resize(left_pane_width_px, height);
 
     // Calculate the width of our right pane (window width - left width)
-    int right_pane_width = (int)width - LEFT_PANE_WIDTH;
+    int right_pane_width = (int)width - left_pane_width_px;
 
     // Clamp our right pane's width to a minimum of 1
     right_pane_width = right_pane_width > 1 ? right_pane_width: 1;
@@ -128,7 +129,7 @@ public:
     right_pane_->Resize((uint32_t)right_pane_width, height);
 
     left_pane_->MoveTo(0, 0);
-    right_pane_->MoveTo(LEFT_PANE_WIDTH, 0);
+    right_pane_->MoveTo(left_pane_width_px, 0);
   }
 
   ///

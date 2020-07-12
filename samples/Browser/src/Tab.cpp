@@ -91,6 +91,12 @@ void Tab::OnAddConsoleMessage(View* caller,
   const String& source_id) {
 }
 
+RefPtr<View> Tab::OnCreateChildView(ultralight::View* caller,
+  const String& opener_url, const String& target_url,
+  bool is_popup, const IntRect& popup_rect) {
+  return ui_->CreateNewTabForChildView(target_url);
+}
+
 void Tab::OnBeginLoading(View* caller) {
   ui_->UpdateTabNavigation(id_, caller->is_loading(), caller->CanGoBack(), caller->CanGoForward());
 }

@@ -44,6 +44,7 @@ class UI : public WindowListener,
 
 protected:
   void CreateNewTab();
+  RefPtr<View> CreateNewTabForChildView(const String& url);
   void UpdateTabTitle(uint64_t id, const String& title);
   void UpdateTabURL(uint64_t id, const String& url);
   void UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, bool can_go_forward);

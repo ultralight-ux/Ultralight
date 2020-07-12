@@ -72,7 +72,8 @@ public:
     ///
     /// Set our View's JSContext as the one to use in subsequent JSHelper calls
     ///
-    SetJSContext(caller->js_context());
+    Ref<JSContext> context = caller->LockJSContext();
+    SetJSContext(context.get());
 
     ///
     /// Get the global object (this would be the "window" object in JS)

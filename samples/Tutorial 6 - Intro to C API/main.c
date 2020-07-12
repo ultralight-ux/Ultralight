@@ -88,14 +88,14 @@ void Init() {
   ulAppSetWindow(app, window);
 
   ///
-  /// Create a 500x500 overlay inside our window at 0,0 (top-left) origin.
+  /// Create an overlay same size as our window at 0,0 (top-left) origin.
   /// Overlays also create an HTML view for us to display content in.
   ///
   /// **Note**:
   ///     Ownership of the view remains with the overlay since we don't
   ///     explicitly create it.
   ///
-  overlay = ulCreateOverlay(window, 500, 500, 0, 0);
+  overlay = ulCreateOverlay(window, ulWindowGetWidth(window), ulWindowGetHeight(window), 0, 0);
   
   ///
   /// Get the overlay's view.
@@ -185,9 +185,12 @@ JSValueRef GetMessage(JSContextRef ctx, JSObjectRef function,
 ///
 void OnDOMReady(void* user_data, ULView caller) {
   ///
-  /// Get the page's JavaScript execution context.
+  /// Acquire the page's JavaScript execution context.
   ///
-  JSContextRef ctx = ulViewGetJSContext(view);
+  /// This locks the JavaScript context so we can modify it safely on this
+  /// thread, we need to unlock it when we're done via ulViewUnlockJSContext().
+  ///
+  JSContextRef ctx = ulViewLockJSContext(view);
 
   ///
   /// Create a JavaScript String containing the name of our callback.
@@ -212,6 +215,11 @@ void OnDOMReady(void* user_data, ULView caller) {
   /// Release the JavaScript String we created earlier.
   ///
   JSStringRelease(name);
+
+  ///
+  /// Unlock the JS context so other threads can modify JavaScript state.
+  ///
+  ulViewUnlockJSContext(view);
 }
 
 ///
