@@ -26,7 +26,8 @@ class UI : public WindowListener,
   virtual void OnResize(uint32_t width, uint32_t height) override;
 
   // Inherited from LoadListener
-  virtual void OnDOMReady(View* caller) override;
+  virtual void OnDOMReady(View* caller, uint64_t frame_id,
+    bool is_main_frame, const String& url) override;
 
   // Inherited from ViewListener
   virtual void OnChangeCursor(ultralight::View* caller, Cursor cursor) override { SetCursor(cursor); }

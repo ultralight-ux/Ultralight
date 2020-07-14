@@ -175,20 +175,26 @@ public:
   /// Inherited from LoadListener, this event is called when the View finishes
   /// loading a page into the main frame.
   ///
-  virtual void OnFinishLoading(ultralight::View* caller) {
-    std::cout << "Our page has loaded!" << std::endl;
+  virtual void OnFinishLoading(ultralight::View* caller,
+    uint64_t frame_id, bool is_main_frame, const String& url) override {
+    ///
+    /// Our page is done when the main frame finishes loading.
+    ///
+    if (is_main_frame) {
+      std::cout << "Our page has loaded!" << std::endl;
 
-    ///
-    /// Set our done flag to true to exit the Run loop.
-    ///
-    done_ = true;
+      ///
+      /// Set our done flag to true to exit the Run loop.
+      ///
+      done_ = true;
+    }
   }
 
   ///
   /// Inherited from Logger, this event is called when the library wants to
   /// print a message to the log.
   ///
-  virtual void LogMessage(LogLevel log_level, const String16& message) {
+  virtual void LogMessage(LogLevel log_level, const String16& message) override {
     std::cout << String(message).utf8().data() << std::endl << std::endl;
   }
 };

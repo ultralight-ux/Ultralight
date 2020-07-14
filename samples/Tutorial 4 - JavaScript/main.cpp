@@ -64,11 +64,14 @@ public:
 
   ///
   /// Inherited from LoadListener, called when the page has finished parsing
-  /// the document and is ready to execute scripts.
+  /// the document.
   ///
   /// We perform all our JavaScript initialization here.
   ///
-  virtual void OnDOMReady(ultralight::View* caller) {
+  virtual void OnDOMReady(ultralight::View* caller,
+                          uint64_t frame_id,
+                          bool is_main_frame,
+                          const String& url) override {
     ///
     /// Set our View's JSContext as the one to use in subsequent JSHelper calls
     ///

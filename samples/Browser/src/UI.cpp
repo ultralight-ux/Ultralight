@@ -40,7 +40,7 @@ void UI::OnResize(uint32_t width, uint32_t height) {
   }
 }
 
-void UI::OnDOMReady(ultralight::View* caller) {
+void UI::OnDOMReady(View* caller, uint64_t frame_id, bool is_main_frame, const String& url) {
   // Set the context for all subsequent JS* calls
   Ref<JSContext> locked_context = view()->LockJSContext();
   SetJSContext(locked_context.get());

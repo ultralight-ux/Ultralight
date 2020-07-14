@@ -40,10 +40,14 @@ public:
     bool is_popup, const IntRect& popup_rect) override;
 
   // Inherited from Listener::Load
-  virtual void OnBeginLoading(View* caller) override;
-  virtual void OnFinishLoading(View* caller) override;
+  virtual void OnBeginLoading(View* caller, uint64_t frame_id,
+    bool is_main_frame, const String& url) override;
+  virtual void OnFinishLoading(View* caller, uint64_t frame_id,
+    bool is_main_frame, const String& url) override;
+  virtual void OnFailLoading(View* caller, uint64_t frame_id,
+    bool is_main_frame, const String& url, const String& description,
+    const String& error_domain, int error_code) override;
   virtual void OnUpdateHistory(View* caller) override;
-  virtual void OnDOMReady(View* caller) override;
 
 protected:
   UI* ui_;

@@ -38,7 +38,8 @@ void OnUpdate(void* user_data);
 void OnResize(void* user_data, unsigned int width, unsigned int height);
 
 /// Forward declaration of our OnDOMReady callback.
-void OnDOMReady(void* user_data, ULView caller);
+void OnDOMReady(void* user_data, ULView caller, unsigned long long frame_id,
+  bool is_main_frame, ULString url);
 
 ///
 /// We set up our application here.
@@ -183,7 +184,8 @@ JSValueRef GetMessage(JSContextRef ctx, JSObjectRef function,
 ///
 /// We will use this event to set up our JavaScript <-> C callback.
 ///
-void OnDOMReady(void* user_data, ULView caller) {
+void OnDOMReady(void* user_data, ULView caller, unsigned long long frame_id,
+                bool is_main_frame, ULString url) {
   ///
   /// Acquire the page's JavaScript execution context.
   ///

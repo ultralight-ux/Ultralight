@@ -97,16 +97,19 @@ RefPtr<View> Tab::OnCreateChildView(ultralight::View* caller,
   return ui_->CreateNewTabForChildView(target_url);
 }
 
-void Tab::OnBeginLoading(View* caller) {
+void Tab::OnBeginLoading(View* caller, uint64_t frame_id, bool is_main_frame, const String& url) {
   ui_->UpdateTabNavigation(id_, caller->is_loading(), caller->CanGoBack(), caller->CanGoForward());
 }
 
-void Tab::OnFinishLoading(View* caller) {
+void Tab::OnFinishLoading(View* caller, uint64_t frame_id, bool is_main_frame, const String& url) {
   ui_->UpdateTabNavigation(id_, caller->is_loading(), caller->CanGoBack(), caller->CanGoForward());
+}
+
+void Tab::OnFailLoading(View* caller, uint64_t frame_id, bool is_main_frame, const String& url,
+  const String& description, const String& error_domain, int error_code) {
+
 }
 
 void Tab::OnUpdateHistory(View* caller) {
   ui_->UpdateTabNavigation(id_, caller->is_loading(), caller->CanGoBack(), caller->CanGoForward());
 }
-
-void Tab::OnDOMReady(View* caller) {}

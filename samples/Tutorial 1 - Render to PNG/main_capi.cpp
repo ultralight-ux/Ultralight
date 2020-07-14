@@ -19,13 +19,19 @@ const char* htmlString();
 
 bool done = false;
 
-void OnFinishLoading(void* user_data, ULView caller) {
-  printf("Our page has loaded!\n");
+void OnFinishLoading(void* user_data, ULView caller,
+  unsigned long long frame_id, bool is_main_frame, ULString url) {
+  ///
+  /// Our page is done when the main frame is finished loading.
+  ///
+  if (is_main_frame) {
+    printf("Our page has loaded!\n");
 
-  ///
-  /// Set our done flag to true to exit the Run loop.
-  ///
-  done = true;
+    ///
+    /// Set our done flag to true to exit the Run loop.
+    ///
+    done = true;
+  }
 }
 
 int main() {
