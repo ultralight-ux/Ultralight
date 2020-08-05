@@ -1,15 +1,19 @@
-<img src="logo.png" width="600">
+<img src="media/logo.png" width="600">
 <a href='https://ci.ultralig.ht/job/Ultralight/job/master/'><img src='https://ci.ultralig.ht/buildStatus/icon?job=Ultralight%2Fmaster'></a>
 
-[Website](https://ultralig.ht) | [Join our Chat!](https://chat.ultralig.ht) | [Forum](https://forum.ultralig.ht) | [Browse API](https://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
+[Website](https://ultralig.ht) | [Join our Discord!](https://chat.ultralig.ht) | [Forum](https://forum.ultralig.ht) | [Browse API](https://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
 
-> :warning: **This is a preview for v1.2!**: Please bear with us as we update documentation and samples for the new release. A porting guide will be up soon. Visit our Slack for more info.
+## Discord Chat
+
+Got a question about Ultralight? Come chat with us on Discord!
+
+[<strong>Join the Ultralight Discord!</strong> <img src="media/discord-logo.svg">](https://chat.ultralig.ht)
 
 # About
 
 Ultralight is a lightweight, cross-platform, HTML rendering engine for desktop apps and games. It supports most modern HTML5 and JavaScript features while still remaining small in binary size and memory usage.
 
-API is currently available for C and C++, with bindings for more languages in development.
+API is available for C and C++, with community bindings for C#, Rust, Java, and Go in our forum [here](https://forum.ultralig.ht/t/community-language-bindings). 
 
 ### Base Memory Usage
 
@@ -93,7 +97,7 @@ Click any of the links for an XML listing of available files.
 
 | Link                       | URL                                                 |
 | -------------------------- | --------------------------------------------------- |
-| __Join our Chat!__         | <https://chat.ultralig.ht>                          |
+| __Join our Discord!__      | <https://chat.ultralig.ht>                          |
 | __Support Forum__          | <https://forum.ultralig.ht>                         |
 | __Browse API Headers__     | <https://github.com/ultralight-ux/Ultralight-API/>  |
 | __Docs / Getting Started__ | <https://docs.ultralig.ht>                          |
