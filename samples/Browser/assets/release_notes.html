@@ -3,7 +3,7 @@
 <title>Release Notes</title>
 <style type="text/css">
 body {
-  background: #CCC;
+  background: linear-gradient(-45deg, #acb4ff, #f5d4e2);
   margin: 0;
   line-height: 1.4;
 }
@@ -29,7 +29,7 @@ code {
   padding: 40px 60px;
   color: #333;
   border-radius:20px;
-  box-shadow: 20px 25px 15px -10px#BBB;
+  box-shadow: 0 7px 18px -6px #8f8ae1;
 }
 h3 {
   border-bottom: 3px solid #EEE;
@@ -47,7 +47,7 @@ p {
   margin: 0.5em 0;
   margin-bottom: 1.5em;
  }
- ul {
+ dd ul {
   padding: 0;
   margin: 0;
  }
@@ -56,69 +56,79 @@ p {
 <body>
 <div id="content">
 
-<h2>Ultralight v1.1.0 Release Notes</h2>
+<h2>Ultralight v1.2.0 Release Notes</h2>
 
 <h3>Changelog</h3>
-This release brings many important stability, rendering, performance, and memory usage improvements to the library. Notable improvements include:
-<dl>
-  <dt>Rendering</dt>
-  <dd>
+This is one of our biggest releases yet!
+
+<h4>Overview of Major Changes</h4>
+<ul>
+  <li><strong>Updated to latest WebKit</strong>
     <ul>
-    <li>Added CSS 3D / perspective transforms</li>
-    <li>Accelerated CSS transforms / transitions via new compositor</li>
-    <li>Improved Font Hinting and CJK Font support</li>
-    <li>Fixed many CSS / painting glitches (backgrounds, clips, transitions, etc.)</li>
-    <li>Made rendering pipeline sRGB-aware and gamma-correct</li>
-    <li>Improved scrollbar theming and sub-frame scrolling</li>
-    <li>Added support for checkbox, text input, radio buttons</li>
-    <li>Added support for radial gradients</li>
-    <li>Improved SVG Path stroke/fill rendering</li>
-    <li>Accelerated path rendering via MSAA</li>
-    <li>Enabled primitive Canvas API support (filled/stroked paths only)</li>
-    <li>Improved image scaling and memory usage for very large images</li>
+      <li>Integrated latest updates (WebKit 608.3.10.10.1 / Safari 13.0.3)</li>
+      <li>Added support for WebSockets over SSL</li>
+      <li>Added support for WebAssembly</li>
+      <li>Fixed several flexbox layout bugs</li>
     </ul>
-  </dd>
-  <dt>JavaScript</dt>
-  <dd>
+  </li>
+  <li><strong>Improved HTML5 platform support</strong>
     <ul>
-    <li>Fixed GC crash in pages with heavy JavaScript</li>
-    <li>Enabled DFG JIT for faster performance with long-running scripts</li>
-    <li>Enabled ES6 Module support</li>
-    <li>Enabled bmalloc slab allocator on all platforms</li>
-    <li>Reduced initial memory usage and heap scaling</li>
+      <li>Improved SVG support</li>
+      <li>Improved HTML5 canvas support</li>
+      <li>Added support for <code>&lt;select&gt;</code></li>
+      <li>Added support for <code>&lt;input type=&quot;range&quot;&gt;</code></li>
+      <li>Added support for <code>&lt;progress&gt;</code></li>
+      <li>Added support for <code>&lt;a target=&quot;_blank&quot;&gt;</code> and <code>window.open()</code></li>
     </ul>
-  </dd>
-  <dt>Platform / Drivers</dt>
-  <dd>
+  </li>
+  <li><strong>Sharper rendering at all DPIs</strong>
     <ul>
-    <li>Added DirectX 12 driver support (experimental in AppCore repo)</li>
-    <li>Fixed rendering glitches on macOS/Metal</li>
-    <li>Added triple-buffering to macOS/Metal driver, improved performance</li>
-    <li>Accelerated View/Window resizing</li>
-    <li>Improve rendering with fractional DPI scales</li>
-    <li>Improved tab key handling (tab navigation works correctly now)
-    <li>Enabled CPU-only WARP fallback in Windows/D3D11 driver</li>
-    <li>Fixed crash during App destruction on Linux</li>
-    <li>Added native Linux font loader (uses FontConfig)</li>
-    <li>Made it easier to bundle shared libs on Linux by having the rpath search the executable path first</li>
-    <li>Fixed crash when creating an App on Windows 7 platform</li>
-    <li>Fixed issues with tracking mouse during drag operation</li>
+      <li>Improved glyph compositing (hinting and gamma are now user-configurable)</li>
+      <li>Improved pixel-snapping of various borders</li>
+      <li>Improved hairline stroke rendering</li>
     </ul>
-  </dd>
-  <dt>Debugging / Profiling</dt>
-  <dd>
+  </li>
+  </li>
+  <li><strong>Better JavaScript performance</strong>
     <ul>
-    <li>Added Web Inspector (useful for debugging JS / CSS locally)</li>
-    <li>Added Config option to force repaints (for debugging GPUDriver)</li>
-    <li>Debug symbols are now available for the WebCore and AppCore modules for every build/commit as part of our continuous delivery system.</li>
+      <li>Enabled FTL JIT for faster JavaScript performance</li>
+      <li>Enabled Riptide GC for lower-latency collection</li>
     </ul>
-  </dd>
-</dt>
-</dl>
+  </li>
+  <li><strong>Added accelerated CPU renderer</strong>
+    <ul>
+      <li>Implemented an additional SIMD-accelerated CPU rendering backend</li>
+      <li>Can paint directly to a user-supplied BGRA32 pixel-buffer</li>
+      <li>Useful for integrating into games or environments with limited GPU</li>
+    </ul>
+  </li>
+  <li><strong>Added support for UWP/Xbox</strong>
+    <ul>
+      <li>Can be used to target Windows Store apps (Windows 10, HoloLens, Xbox One)</li>
+      <li>(Contact us if you are developing with the Xbox toolchain)</li>
+    </ul>
+  </li>
+  <li><strong>Decreased memory usage</strong>
+    <ul>
+      <li>Significantly decreased memory usage</li>
+      <li>Added API to dump memory statistics</li>
+    </ul>
+  </li>
+  <li><strong>Other improvements</strong>
+    <ul>
+      <li>Added support for user-selection, cut, copy, and paste (new Clipboard API)</li>
+      <li>Expanded C API support (we now expose all the Platform callbacks).</li>
+      <li>Fix rendering issues with nested scrolling containers and iframes.</li>
+      <li>Improved SSL certificate verification, uses bundled CA cert file (from Mozilla).</li>
+      <li>Exposed network errors to LoadListener API</li>
+      <li>Improved cursor support in AppCore</li>
+    </ul>
+  </li>
+</ul>
 
 <h3>Useful Links</h3>
 <dl>
-  <dt>Join our Slack Channel</dt><dd><a href="https://chat.ultralig.ht">chat.ultralig.ht</a></dd>
+  <dt>Join our Discord!</dt><dd><a href="https://chat.ultralig.ht">chat.ultralig.ht</a></dd>
   <dt>Website</dt>
   <dd><a href="https://ultralig.ht">ultralig.ht</a></dd>
   <dt>Issue Tracker</dt><dd><a href="https://github.com/ultralight-ux/ultralight/issues">github.com/ultralight-ux/ultralight/issues</a></dd>
