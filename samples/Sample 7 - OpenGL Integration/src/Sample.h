@@ -105,15 +105,24 @@ class Sample : public WindowListener,
                           const String16& message) override;
 
  protected:
-  bool shouldQuit, isAnimating, isDragging, isActiveWebTileFocused,
-       zoomDirection;
-  double offset, startTime, startOff, startPos, startSpeed, runDelta, lastPos,
-         zoomStart, zoomEnd;
-  int numTiles;
-  std::vector<std::unique_ptr<WebTile>> webTiles;
-  GLfloat customColor[16];
-  int activeWebTile;
-  int WIDTH, HEIGHT;
+  bool should_quit_ = false;
+  bool is_animating_ = false;
+  bool is_dragging_ = false;
+  bool is_active_web_tile_focused_ = false;
+  bool zoom_direction_;
+  double offset_ = 0;
+  double start_time_;
+  double start_off_;
+  double start_pos_;
+  double start_speed_;
+  double run_delta_;
+  double last_pos_;
+  double zoom_start_ = 1;
+  double zoom_end_;
+  int active_web_tile_ = -1;
+  int width_, height_;
+  std::vector<std::unique_ptr<WebTile>> web_tiles_;
+  GLfloat color_[16];
   RefPtr<Renderer> renderer_;
   std::unique_ptr<GLTextureSurfaceFactory> surface_factory_;
   std::unique_ptr<Window> window_;

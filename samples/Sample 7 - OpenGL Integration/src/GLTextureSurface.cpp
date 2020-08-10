@@ -5,42 +5,167 @@
 #include <sstream>
 #include <string>
 
-#if _WIN32
-#include <Windows.h>
-#define FATAL(x) { std::stringstream str; \
-  str << "[ERROR] " << __FUNCSIG__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
-  OutputDebugStringA(str.str().c_str()); \
-  std::cerr << str.str() << std::endl; \
-  __debugbreak(); std::cin.get(); exit(-1); }
-#else
-#define FATAL(x) { std::cerr << "[ERROR] " << __PRETTY_FUNCTION__ << " @ Line " << __LINE__ << ":\n\t" << x << std::endl; \
-  std::cin.get(); exit(-1); }
-#endif
+///
+/// Custom Surface implementation that allows Ultralight to paint directly
+/// into an OpenGL PBO (pixel buffer object).
+///
+/// PBOs in OpenGL allow us to get a pointer to a block of GPU-controlled
+/// memory for lower-latency uploads to a texture.
+///
+/// For more info: <http://www.songho.ca/opengl/gl_pbo.html>
+///
+class GLPBOTextureSurface : public GLTextureSurface {
+public:
+  GLPBOTextureSurface(uint32_t width, uint32_t height) {
+    Resize(width, height);
+  }
 
-inline char const* glErrorString(GLenum const err) noexcept
-{
-  switch (err)
-  {
-    // OpenGL 2.0+ Errors:
-  case GL_NO_ERROR: return "GL_NO_ERROR";
-  case GL_INVALID_ENUM: return "GL_INVALID_ENUM";
-  case GL_INVALID_VALUE: return "GL_INVALID_VALUE";
-  case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
-  case GL_STACK_OVERFLOW: return "GL_STACK_OVERFLOW";
-  case GL_STACK_UNDERFLOW: return "GL_STACK_UNDERFLOW";
-  case GL_OUT_OF_MEMORY: return "GL_OUT_OF_MEMORY";
-    // OpenGL 3.0+ Errors
-  case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
-  default: return "UNKNOWN ERROR";
+  virtual ~GLPBOTextureSurface() {
+    ///
+    /// Destroy our PBO and texture.
+    ///
+    if (pbo_id_) {
+      glDeleteBuffers(1, &pbo_id_);
+      pbo_id_ = 0;
+      glDeleteTextures(1, &texture_id_);
+      texture_id_ = 0;
+    }
+  }
+
+  virtual uint32_t width() const override { return width_; }
+
+  virtual uint32_t height() const override { return height_; }
+
+  virtual uint32_t row_bytes() const override { return row_bytes_; }
+
+  virtual size_t size() const override { return size_; }
+
+  virtual void* LockPixels() override { 
+    ///
+    /// Map our PBO to system memory so Ultralight can draw to it.
+    ///
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
+    void* result = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_READ_WRITE);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    return result;
+  }
+
+  virtual void UnlockPixels() override { 
+    ///
+    /// Unmap our PBO.
+    ///
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER); 
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  }
+
+  virtual void Resize(uint32_t width, uint32_t height) override {
+    if (pbo_id_ && width_ == width && height_ == height)
+      return;
+
+    ///
+    /// Destroy any existing PBO and texture.
+    ///
+    if (pbo_id_) {
+      glDeleteBuffers(1, &pbo_id_);
+      pbo_id_ = 0;
+      glDeleteTextures(1, &texture_id_);
+      texture_id_ = 0;
+    }
+
+    width_ = width;
+    height_ = height;
+    row_bytes_ = width_ * 4;
+    size_ = row_bytes_ * height_;
+
+    ///
+    /// Create our PBO (pixel buffer object), with a size of 'size_'
+    ///
+    glGenBuffers(1, &pbo_id_);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, size_, 0, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    ///
+    /// Create our Texture object.
+    ///
+    glGenTextures(1, &texture_id_);
+    glBindTexture(GL_TEXTURE_2D, texture_id_);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glBindTexture(GL_TEXTURE_2D, 0);
+  }
+
+  virtual GLuint GetTextureAndSyncIfNeeded() {
+    ///
+    /// This is called when our application wants to draw this Surface to
+    /// an OpenGL quad. (We return an OpenGL texture handle)
+    ///
+    /// We take this opportunity to upload the PBO to the texture if the
+    /// pixels have changed since the last call (indicated by dirty_bounds()
+    /// being non-empty)
+    ///
+    if (!dirty_bounds().IsEmpty()) {
+      ///
+      /// Update our Texture from our PBO (pixel buffer object)
+      ///
+      glBindTexture(GL_TEXTURE_2D, texture_id_);
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_,
+        0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+      glBindTexture(GL_TEXTURE_2D, 0);
+
+      ///
+      /// Clear our Surface's dirty bounds to indicate we've handled any
+      /// pending modifications to our pixels.
+      ///
+      ClearDirtyBounds();
+    }
+
+    return texture_id_;
+  }
+
+protected:
+  GLuint texture_id_;
+  GLuint pbo_id_ = 0;
+  uint32_t width_;
+  uint32_t height_;
+  uint32_t row_bytes_;
+  uint32_t size_;
+};
+
+GLTextureSurfaceFactory::GLTextureSurfaceFactory() {
 }
+
+GLTextureSurfaceFactory::~GLTextureSurfaceFactory() {
 }
 
-#ifdef _DEBUG
-#define CHECK_GL()  {if (GLenum err = glGetError()) FATAL(glErrorString(err)) }                                                     
-#else
-#define CHECK_GL()
-#endif   
+ultralight::Surface* GLTextureSurfaceFactory::CreateSurface(uint32_t width, uint32_t height) {
+  ///
+  /// Called by Ultralight when it wants to create a Surface.
+  ///
+  return new GLPBOTextureSurface(width, height);
+}
 
+void GLTextureSurfaceFactory::DestroySurface(ultralight::Surface* surface) {
+  ///
+  /// Called by Ultralight when it wants to destroy a Surface.
+  ///
+  delete static_cast<GLPBOTextureSurface*>(surface);
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+///
+/// Optional bitmap-based GLTextureSurface.
+///
+/// We don't actually use this in this Sample but it's here for reference.
+///
 class GLBitmapTextureSurface : public GLTextureSurface {
 public:
   GLBitmapTextureSurface(uint32_t width, uint32_t height) {
@@ -105,111 +230,3 @@ protected:
   GLuint texture_id_;
   ultralight::RefPtr<ultralight::Bitmap> bitmap_;
 };
-
-class GLPBOTextureSurface : public GLTextureSurface {
-public:
-  GLPBOTextureSurface(uint32_t width, uint32_t height) {
-    Resize(width, height);
-  }
-
-  virtual ~GLPBOTextureSurface() {
-    if (pbo_id_) {
-      glDeleteBuffers(1, &pbo_id_);
-      pbo_id_ = 0;
-      glDeleteTextures(1, &texture_id_);
-      texture_id_ = 0;
-    }
-  }
-
-  virtual uint32_t width() const override { return width_; }
-
-  virtual uint32_t height() const override { return height_; }
-
-  virtual uint32_t row_bytes() const override { return row_bytes_; }
-
-  virtual size_t size() const override { return size_; }
-
-  virtual void* LockPixels() override { 
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
-    void* result = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_READ_WRITE);
-    CHECK_GL();
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-    return result;
-  }
-
-  virtual void UnlockPixels() override { 
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
-    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER); 
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-  }
-
-  virtual void Resize(uint32_t width, uint32_t height) override {
-    if (pbo_id_ && width_ == width && height_ == height)
-      return;
-
-    if (pbo_id_) {
-      glDeleteBuffers(1, &pbo_id_);
-      pbo_id_ = 0;
-      glDeleteTextures(1, &texture_id_);
-      texture_id_ = 0;
-    }
-
-    width_ = width;
-    height_ = height;
-    row_bytes_ = width_ * 4;
-    size_ = row_bytes_ * height_;
-
-    glGenBuffers(1, &pbo_id_);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, size_, 0, GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-
-    glGenTextures(1, &texture_id_);
-    glBindTexture(GL_TEXTURE_2D, texture_id_);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glBindTexture(GL_TEXTURE_2D, 0);
-  }
-
-  virtual GLuint GetTextureAndSyncIfNeeded() {
-    if (!dirty_bounds().IsEmpty()) {
-      // Update texture from pbo
-      glBindTexture(GL_TEXTURE_2D, texture_id_);
-      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id_);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_,
-        0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-      CHECK_GL();
-      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-      glBindTexture(GL_TEXTURE_2D, 0);
-
-      // Clear dirty bounds
-      ClearDirtyBounds();
-    }
-
-    return texture_id_;
-  }
-
-protected:
-  GLuint texture_id_;
-  GLuint pbo_id_ = 0;
-  uint32_t width_;
-  uint32_t height_;
-  uint32_t row_bytes_;
-  uint32_t size_;
-};
-
-GLTextureSurfaceFactory::GLTextureSurfaceFactory() {
-}
-
-GLTextureSurfaceFactory::~GLTextureSurfaceFactory() {
-}
-
-ultralight::Surface* GLTextureSurfaceFactory::CreateSurface(uint32_t width, uint32_t height) {
-  return new GLPBOTextureSurface(width, height);
-}
-
-void GLTextureSurfaceFactory::DestroySurface(ultralight::Surface* surface) {
-  delete static_cast<GLPBOTextureSurface*>(surface);
-}

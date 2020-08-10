@@ -30,21 +30,14 @@ const GLshort GTextures[] = {
 
 extern "C" {
 
+// Called by GLFW when an error is encountered.
 static void GLFW_error_callback(int error, const char* description) {
   fprintf(stderr, "GLFW Error: %s\n", description);
 }
 
 }
 
-Sample::Sample() : 
-  shouldQuit(false),
-  isAnimating(false),
-  isDragging(false),
-  isActiveWebTileFocused(false),
-  offset(0),
-  zoomStart(-1),
-  numTiles(0),
-  activeWebTile(-1) {
+Sample::Sample() {
   glfwSetErrorCallback(GLFW_error_callback);
 
   if (!glfwInit())
@@ -54,28 +47,28 @@ Sample::Sample() :
   int monitor_width = mode->width;
   int monitor_height = mode->height;
 
-  WIDTH = static_cast<int>(monitor_width * 0.8);
-  HEIGHT = static_cast<int>(monitor_height * 0.8);
+  // Make initial window size 80% of monitor's dimensions
+  width_ = static_cast<int>(monitor_width * 0.8);
+  height_ = static_cast<int>(monitor_height * 0.8);
 
-  if (WIDTH > 1800)
-    WIDTH = 1800;
-  if (HEIGHT > 1200)
-    HEIGHT = 1200;
+  // Clamp initial window width to 1920 pixels
+  if (width_ > 1920) width_ = 1920;
 
-  window_.reset(new Window(WIDTH, HEIGHT, false));
+  window_.reset(new Window(width_, height_, false));
   window_->MoveToCenter();
   window_->set_listener(this);
   window_->SetTitle("Ultralight Sample 7 - OpenGL Integration");
 
-  WIDTH = window_->width();
-  HEIGHT = window_->height();
+  width_ = window_->width();
+  height_ = window_->height();
   
-  glOrtho(0, WIDTH, 0, HEIGHT, -1, 1);
+  glOrtho(0, width_, 0, height_, -1, 1);
   glEnable(GL_TEXTURE_2D);
 
   Config config;
   config.device_scale = window_->scale();
-  config.scroll_timer_delay = 1.0 / 90.0;
+  config.scroll_timer_delay = 1.0 / (mode->refreshRate);
+  config.animation_timer_delay = 1.0 / (mode->refreshRate);
 
   ///
   /// We need to tell config where our resources are so it can load our
@@ -136,19 +129,19 @@ Sample::Sample() :
   ///
   renderer_ = Renderer::Create();
 
-  addWebTileWithURL("file:///welcome.html", WIDTH, HEIGHT);
+  addWebTileWithURL("file:///welcome.html", width_, height_);
 
   // Set our first WebTile as active
-  activeWebTile = 0;
-  webTiles[0]->view()->Focus();
+  active_web_tile_ = 0;
+  web_tiles_[0]->view()->Focus();
   double curTime = glfwGetTime();
-  zoomDirection = true;
-  zoomStart = curTime;
-  zoomEnd = curTime + ZOOMTIME;
+  zoom_direction_ = true;
+  zoom_start_ = curTime;
+  zoom_end_ = curTime + ZOOMTIME;
 }
 
 Sample::~Sample() {
-  webTiles.clear();
+  web_tiles_.clear();
 
   renderer_ = nullptr;
 
@@ -163,39 +156,75 @@ void Sample::addWebTileWithURL(const std::string& url, int width,
   tile->view()->set_view_listener(this);
   tile->view()->set_load_listener(this);
 
-  webTiles.push_back(std::unique_ptr<WebTile>(tile));
+  web_tiles_.push_back(std::unique_ptr<WebTile>(tile));
 }
 
 void Sample::Run() {
+  ///
+  /// Our main run loop tries to conserve CPU usage by sleeping in 4ms bursts
+  /// between each paint.
+  ///
+  /// We use glfwWaitEventsTimeout() to perform the sleep, which also allows
+  /// us the ability to wake up early if the OS sends us an event.
+  ///
   std::chrono::milliseconds interval_ms(4);
   std::chrono::steady_clock::time_point next_paint = std::chrono::steady_clock::now();
   
   while (!glfwWindowShouldClose(window_->handle())) {
+    ///
+    /// Query the system clock to see how many milliseconds are left until
+    /// the next scheduled paint.
+    ///
     long long timeout_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
       next_paint - std::chrono::steady_clock::now()).count();
     unsigned long timeout = timeout_ms <= 0 ? 0 : (unsigned long)timeout_ms;
 
+    ///
+    /// Use glfwWaitEventsTimeout() if we still have time left before the next
+    /// paint. (Will use OS primitives to sleep and wait for OS input events)
+    ///
+    /// Otherwise, call glfwPollEvents() immediately and continue.
+    ///
     if (timeout > 0)
       glfwWaitEventsTimeout(timeout / 1000.0);
     else
       glfwPollEvents();
 
+    ///
+    /// Allow Ultralight to update internal timers, JavaScript callbacks, and
+    /// other resource callbacks.
+    ///
     renderer_->Update();
 
-    if (shouldQuit)
+    if (should_quit_)
       return;
 
+    ///
+    /// Update our timeout by querying the system clock again.
+    ///
     timeout_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
       next_paint - std::chrono::steady_clock::now()).count();
 
+    ///
+    /// Perform paint if we have reached the scheduled time.
+    ///
     if (timeout_ms <= 0) {
+      ///
+      /// Re-paint the Surfaces of all Views as needed.
+      ///
       renderer_->Render();
 
-      if (isAnimating)
+      if (is_animating_)
         driveAnimation();
 
+      ///
+      /// Draw the WebTile overlays with OpenGL.
+      ///
       draw();
 
+      ///
+      /// Schedule the next paint.
+      ///
       next_paint = std::chrono::steady_clock::now() + interval_ms;
     }
   }
@@ -205,29 +234,29 @@ void Sample::draw() {
   double curTime = glfwGetTime();
   double zoom = 0;
 
-  if (zoomStart > 0) {
-    if (curTime < zoomEnd) {
-      zoom = (curTime - zoomStart) / (zoomEnd - zoomStart);
+  if (zoom_start_ > 0) {
+    if (curTime < zoom_end_) {
+      zoom = (curTime - zoom_start_) / (zoom_end_ - zoom_start_);
 
-      if (!zoomDirection)
+      if (!zoom_direction_)
         zoom = 1.0 - zoom;
     } else {
-      zoomStart = -1;
-      zoomEnd = 0;
+      zoom_start_ = -1;
+      zoom_end_ = 0;
 
-      isActiveWebTileFocused = zoomDirection;
+      is_active_web_tile_focused_ = zoom_direction_;
     }
   }
 
-  if (isActiveWebTileFocused) {
-    GLTextureSurface* surface = webTiles[activeWebTile]->surface();
+  if (is_active_web_tile_focused_) {
+    GLTextureSurface* surface = web_tiles_[active_web_tile_]->surface();
 
     if (surface) {
       int tileWidth = surface->width();
       int tileHeight = surface->height();
 
-      glViewport(0,0,WIDTH,HEIGHT);
-      glOrtho(0, WIDTH, 0, HEIGHT, -1, 1);
+      glViewport(0,0,width_,height_);
+      glOrtho(0, width_, 0, height_, -1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
@@ -248,7 +277,7 @@ void Sample::draw() {
       window_->PresentFrame();
     }
   } else {
-    glViewport(0,0,WIDTH,HEIGHT);
+    glViewport(0,0,width_,height_);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glClearColor(0,0,0,0);
@@ -256,7 +285,7 @@ void Sample::draw() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glTexCoordPointer(2, GL_SHORT, 0, GTextures);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glColorPointer(4, GL_FLOAT, 0, customColor);
+    glColorPointer(4, GL_FLOAT, 0, color_);
     glEnableClientState(GL_COLOR_ARRAY);
     glEnable(GL_TEXTURE_2D);
 #if TRANSPARENT
@@ -271,32 +300,32 @@ void Sample::draw() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    int i, len = webTiles.size();
-    int mid = (int)floor(offset + 0.5);
-    int iStartPos = mid - webTiles.size();
+    int i, len = (int)web_tiles_.size();
+    int mid = (int)floor(offset_ + 0.5);
+    int iStartPos = mid - (int)web_tiles_.size();
 
     if (iStartPos < 0)
       iStartPos = 0;
 
     for (i = iStartPos; i < mid; ++i)
-      drawTile(i, i-offset, 0);
+      drawTile(i, i-offset_, 0);
 
-    int iEndPos = mid + webTiles.size();
+    int iEndPos = mid + (int)web_tiles_.size();
 
     if (iEndPos >= len)
       iEndPos = len - 1;
 
     for (i = iEndPos; i > mid; --i)
-      drawTile(i, i - offset, 0);
+      drawTile(i, i - offset_, 0);
 
-    drawTile(mid, mid - offset, zoom);
+    drawTile(mid, mid - offset_, zoom);
 
     window_->PresentFrame();
   }
 }
 
 void Sample::drawTile(int index, double off, double zoom) {
-  GLTextureSurface* surface = webTiles[index]->surface();
+  GLTextureSurface* surface = web_tiles_[index]->surface();
 
   if (!surface)
     return;
@@ -317,8 +346,8 @@ void Sample::drawTile(int index, double off, double zoom) {
   else if (f > FLANKSPREAD)
     f = FLANKSPREAD;
 
-  m[3] = -f;
-  m[0] = 1-fabs(f);
+  m[3] = (GLfloat)-f;
+  m[0] = 1 - (GLfloat)fabs(f);
 
   double sc = 0.45 * (1 - fabs(f));
   sc = (1 - zoom) * sc + 1 * zoom;
@@ -326,27 +355,27 @@ void Sample::drawTile(int index, double off, double zoom) {
   trans += f * 1.1;
 
   for (int i = 0; i < 16; i++)
-    customColor[i] = 1.0;
+    color_[i] = 1.0;
 
   if (f >= 0) {
-    customColor[0] = customColor[1] = customColor[2] = 1 -
-                                      (f / FLANKSPREAD);
-    customColor[8] = customColor[9] = customColor[10] = 1 -
-                                      (f / FLANKSPREAD);
+    color_[0] = color_[1] = color_[2] = 1 -
+                                      (GLfloat)(f / FLANKSPREAD);
+    color_[8] = color_[9] = color_[10] = 1 -
+                                      (GLfloat)(f / FLANKSPREAD);
   } else {
-    customColor[4] = customColor[5] = customColor[6] = 1 -
-                                      (-f / FLANKSPREAD);
-    customColor[12] = customColor[13] = customColor[14] = 1 -
-                                        (-f / FLANKSPREAD);
+    color_[4] = color_[5] = color_[6] = 1 -
+                                      (GLfloat)(-f / FLANKSPREAD);
+    color_[12] = color_[13] = color_[14] = 1 -
+                                      (GLfloat)(-f / FLANKSPREAD);
   }
 
 
   glPushMatrix();
   glBindTexture(GL_TEXTURE_2D, surface->GetTextureAndSyncIfNeeded());
-  glTranslatef(trans, 0, 0);
-  glScalef(sc, sc, 1);
+  glTranslatef((GLfloat)trans, 0, 0);
+  glScalef((GLfloat)sc, (GLfloat)sc, 1);
   glMultMatrixf(m);
-  glColorPointer(4, GL_FLOAT, 0, customColor);
+  glColorPointer(4, GL_FLOAT, 0, color_);
   glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 
   // Draw reflection:
@@ -357,23 +386,22 @@ void Sample::drawTile(int index, double off, double zoom) {
   const double darkness = 4.0;
 
   for (int i = 0; i < 16; i += 4) {
-    customColor[i] = 1.0 / darkness + 0.05;
-    customColor[i + 1] = 1.0 / darkness + 0.05;
-    customColor[i + 2] = 1.0 / darkness + 0.05;
+    color_[i] = color_[i + 1] = color_[i + 2] = 
+      (GLfloat)(1.0 / darkness + 0.05);
   }
 
   if (f >= 0) {
-    customColor[0] = customColor[1] = customColor[2] =
-                                        (1- (f / FLANKSPREAD)) / darkness + 0.05;
+    color_[0] = color_[1] = color_[2] =
+                           (GLfloat)((1- (f / FLANKSPREAD)) / darkness + 0.05);
 
   } else {
-    customColor[4] = customColor[5] = customColor[6] =
-                                        (1-(-f / FLANKSPREAD)) / darkness + 0.05;
+    color_[4] = color_[5] = color_[6] =
+                           (GLfloat)((1-(-f / FLANKSPREAD)) / darkness + 0.05);
 
   }
 
-  customColor[8] = customColor[9] = customColor[10] = 0;
-  customColor[12] = customColor[13] = customColor[14] = 0;
+  color_[8] = color_[9] = color_[10] = 0;
+  color_[12] = color_[13] = color_[14] = 0;
 
   glDrawArrays(GL_TRIANGLE_STRIP,0,4);
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -382,52 +410,52 @@ void Sample::drawTile(int index, double off, double zoom) {
 }
 
 void Sample::updateAnimationAtTime(double elapsed) {
-  int max = webTiles.size() - 1;
+  int max = (int)web_tiles_.size() - 1;
 
-  if (elapsed > runDelta)
-    elapsed = runDelta;
+  if (elapsed > run_delta_)
+    elapsed = run_delta_;
 
-  double delta = fabs(startSpeed) * elapsed - FRICTION * elapsed *
+  double delta = fabs(start_speed_) * elapsed - FRICTION * elapsed *
                  elapsed / 2;
 
-  if (startSpeed < 0)
+  if (start_speed_ < 0)
     delta = -delta;
 
-  offset = startOff + delta;
+  offset_ = start_off_ + delta;
 
-  if (offset > max)
-    offset = max;
+  if (offset_ > max)
+    offset_ = max;
 
-  if (offset < 0)
-    offset = 0;
+  if (offset_ < 0)
+    offset_ = 0;
 }
 
 void Sample::endAnimation() {
-  if (isAnimating) {
-    int max = webTiles.size() - 1;
-    offset = floor(offset + 0.5);
+  if (is_animating_) {
+    int max = (int)web_tiles_.size() - 1;
+    offset_ = floor(offset_ + 0.5);
 
-    if (offset > max)
-      offset = max;
+    if (offset_ > max)
+      offset_ = max;
 
-    if (offset < 0)
-      offset = 0;
+    if (offset_ < 0)
+      offset_ = 0;
 
-    isAnimating = false;
+    is_animating_ = false;
   }
 }
 
 void Sample::driveAnimation() {
-  double elapsed = glfwGetTime() - startTime;
+  double elapsed = glfwGetTime() - start_time_;
 
-  if (elapsed >= runDelta)
+  if (elapsed >= run_delta_)
     endAnimation();
   else
     updateAnimationAtTime(elapsed);
 }
 
 void Sample::startAnimation(double speed) {
-  if (isAnimating)
+  if (is_animating_)
     endAnimation();
 
   // Adjust speed to make this land on an even location
@@ -435,51 +463,51 @@ void Sample::startAnimation(double speed) {
   if (speed < 0)
     delta = -delta;
 
-  double nearest = startOff + delta;
+  double nearest = start_off_ + delta;
   nearest = floor(nearest + 0.5);
-  startSpeed = sqrt(fabs(nearest - startOff) * FRICTION * 2);
+  start_speed_ = sqrt(fabs(nearest - start_off_) * FRICTION * 2);
 
-  if (nearest < startOff)
-    startSpeed = -startSpeed;
+  if (nearest < start_off_)
+    start_speed_ = -start_speed_;
 
-  runDelta = fabs(startSpeed / FRICTION);
-  startTime = glfwGetTime();
+  run_delta_ = fabs(start_speed_ / FRICTION);
+  start_time_ = glfwGetTime();
 
-  isAnimating = true;
+  is_animating_ = true;
 
-  int lastActiveWebTile = activeWebTile;
+  int lastActiveWebTile = active_web_tile_;
 
-  activeWebTile = (int)nearest;
+  active_web_tile_ = (int)nearest;
 
-  if (activeWebTile >= (int)webTiles.size())
-    activeWebTile = webTiles.size() - 1;
-  else if (activeWebTile < 0)
-    activeWebTile = 0;
+  if (active_web_tile_ >= (int)web_tiles_.size())
+    active_web_tile_ = (int)web_tiles_.size() - 1;
+  else if (active_web_tile_ < 0)
+    active_web_tile_ = 0;
 
-  if (activeWebTile != lastActiveWebTile) {
-    webTiles[lastActiveWebTile]->view()->Unfocus();
-    //webTiles[lastActiveWebTile]->view()->PauseRendering();
-    webTiles[activeWebTile]->view()->Focus();
-    //webTiles[activeWebTile]->view()->ResumeRendering();
+  if (active_web_tile_ != lastActiveWebTile) {
+    web_tiles_[lastActiveWebTile]->view()->Unfocus();
+    //web_tiles_[lastActiveWebTile]->view()->PauseRendering();
+    web_tiles_[active_web_tile_]->view()->Focus();
+    //web_tiles_[active_web_tile_]->view()->ResumeRendering();
   }
 }
 
 void Sample::animateTo(int index) {
-  if (index == offset)
+  if (index == offset_)
     return;
 
-  if (isActiveWebTileFocused) {
+  if (is_active_web_tile_focused_) {
     double curTime = glfwGetTime();
-    zoomDirection = false;
-    zoomStart = curTime;
-    zoomEnd = curTime + ZOOMTIME;
-    isActiveWebTileFocused = false;
+    zoom_direction_ = false;
+    zoom_start_ = curTime;
+    zoom_end_ = curTime + ZOOMTIME;
+    is_active_web_tile_focused_ = false;
   }
 
-  startOff = offset;
-  offset = index;
+  start_off_ = offset_;
+  offset_ = index;
 
-  int dist = (int)offset - (int)startOff;
+  int dist = (int)offset_ - (int)start_off_;
 
   double speed = sqrt(abs(dist) * 2 * FRICTION);
 
@@ -491,50 +519,50 @@ void Sample::animateTo(int index) {
 
 
 void Sample::handleDragBegin(int x, int y) {
-  isDragging = true;
+  is_dragging_ = true;
 
-  startPos = (x / (double)WIDTH) * 10 - 5;
-  startOff = offset;
+  start_pos_ = (x / (double)width_) * 10 - 5;
+  start_off_ = offset_;
 
-  isDragging = true;
+  is_dragging_ = true;
 
-  startTime = glfwGetTime();
-  lastPos = startPos;
+  start_time_ = glfwGetTime();
+  last_pos_ = start_pos_;
 
   endAnimation();
 }
 
 void Sample::handleDragMove(int x, int y) {
-  double pos = (x / (double)WIDTH) * 10 - 5;
+  double pos = (x / (double)width_) * 10 - 5;
 
-  int max = webTiles.size()-1;
+  int max = (int)web_tiles_.size() - 1;
 
-  offset = startOff + (startPos - pos);
+  offset_ = start_off_ + (start_pos_ - pos);
 
-  if (offset > max)
-    offset = max;
+  if (offset_ > max)
+    offset_ = max;
 
-  if (offset < 0)
-    offset = 0;
+  if (offset_ < 0)
+    offset_ = 0;
 
   double time = glfwGetTime();
 
-  if (time - startTime > 0.2) {
-    startTime = time;
-    lastPos = pos;
+  if (time - start_time_ > 0.2) {
+    start_time_ = time;
+    last_pos_ = pos;
   }
 }
 
 void Sample::handleDragEnd(int x, int y) {
-  double pos = (x / (double)WIDTH) * 10 - 5;
+  double pos = (x / (double)width_) * 10 - 5;
 
-  if (isDragging) {
+  if (is_dragging_) {
     // Start animation to nearest
-    startOff += (startPos - pos);
-    offset = startOff;
+    start_off_ += (start_pos_ - pos);
+    offset_ = start_off_;
 
     double time = glfwGetTime();
-    double speed = (lastPos - pos)/((time - startTime) + 0.00001);
+    double speed = (last_pos_ - pos)/((time - start_time_) + 0.00001);
 
     if (speed > MAXSPEED)
       speed = MAXSPEED;
@@ -545,25 +573,25 @@ void Sample::handleDragEnd(int x, int y) {
     startAnimation(speed);
   }
 
-  isDragging = false;
+  is_dragging_ = false;
 }
 
 void Sample::OnClose() {
-  shouldQuit = true;
+  should_quit_ = true;
 }
 
 void Sample::OnResize(uint32_t width, uint32_t height) {
-  if (width == WIDTH && height == HEIGHT)
+  if (width == width_ && height == height_)
     return;
 
-  WIDTH = width;
-  HEIGHT = height;  
+  width_ = width;
+  height_ = height;  
 
-  for (auto& i : webTiles) {
+  for (auto& i : web_tiles_) {
     i->view()->Resize(width, height);
   }
 
-  glViewport(0,0,WIDTH,HEIGHT);
+  glViewport(0,0,width_,height_);
 }
 
 void Sample::OnChangeFocus(bool focused) {
@@ -572,101 +600,101 @@ void Sample::OnChangeFocus(bool focused) {
 void Sample::OnKeyEvent(const KeyEvent& evt) {
   if (evt.type == evt.kType_RawKeyDown) {
     if (evt.virtual_key_code == KeyCodes::GK_ESCAPE) {
-      shouldQuit = true;
+      should_quit_ = true;
       return;
     }
     else if (evt.virtual_key_code == KeyCodes::GK_OEM_3 /* Backquote */) {
-      if (zoomStart > 0)
+      if (zoom_start_ > 0)
         return;
 
-      if (isActiveWebTileFocused) {
+      if (is_active_web_tile_focused_) {
         double curTime = glfwGetTime();
-        zoomDirection = false;
-        zoomStart = curTime;
-        zoomEnd = curTime + ZOOMTIME;
-        isActiveWebTileFocused = false;
+        zoom_direction_ = false;
+        zoom_start_ = curTime;
+        zoom_end_ = curTime + ZOOMTIME;
+        is_active_web_tile_focused_ = false;
       }
       else {
         double curTime = glfwGetTime();
-        zoomDirection = true;
-        zoomStart = curTime;
-        zoomEnd = curTime + ZOOMTIME;
+        zoom_direction_ = true;
+        zoom_start_ = curTime;
+        zoom_end_ = curTime + ZOOMTIME;
       }
 
       return;
     }
     else if (evt.modifiers & KeyEvent::kMod_AltKey) {
       if (evt.virtual_key_code == KeyCodes::GK_LEFT) {
-        webTiles[activeWebTile]->view()->GoBack();
+        web_tiles_[active_web_tile_]->view()->GoBack();
         return;
       }
       else if (evt.virtual_key_code == KeyCodes::GK_RIGHT) {
-        webTiles[activeWebTile]->view()->GoForward();
+        web_tiles_[active_web_tile_]->view()->GoForward();
         return;
       }
       else if (evt.virtual_key_code == KeyCodes::GK_T) {
-        webTiles[activeWebTile]->ToggleTransparency();
+        web_tiles_[active_web_tile_]->ToggleTransparency();
         return;
       }
       else if (evt.virtual_key_code == KeyCodes::GK_X) {
-        if (webTiles.size() > 1) {
-          for (auto i = webTiles.begin(); i != webTiles.end(); ++i) {
-            if (*i == webTiles[activeWebTile]) {
-              webTiles.erase(i);
+        if (web_tiles_.size() > 1) {
+          for (auto i = web_tiles_.begin(); i != web_tiles_.end(); ++i) {
+            if (*i == web_tiles_[active_web_tile_]) {
+              web_tiles_.erase(i);
               break;
             }
           }
 
-          if (activeWebTile > 0) {
-            activeWebTile--;
-            startOff = offset + 1;
-            animateTo(activeWebTile);
+          if (active_web_tile_ > 0) {
+            active_web_tile_--;
+            start_off_ = offset_ + 1;
+            animateTo(active_web_tile_);
           }
           else {
-            startOff = offset - 1;
-            animateTo(activeWebTile);
+            start_off_ = offset_ - 1;
+            animateTo(active_web_tile_);
           }
 
-          webTiles[activeWebTile]->view()->Focus();
-          //webTiles[activeWebTile]->view()->ResumeRendering();
+          web_tiles_[active_web_tile_]->view()->Focus();
+          //web_tiles_[active_web_tile_]->view()->ResumeRendering();
 
           return;
         }
       }
       else if (evt.virtual_key_code == KeyCodes::GK_D) {
-        addWebTileWithURL("http://www.duckduckgo.com", WIDTH, HEIGHT);
+        addWebTileWithURL("http://www.duckduckgo.com", width_, height_);
 
-        animateTo(webTiles.size() - 1);
+        animateTo((int)web_tiles_.size() - 1);
 
         return;
       }
     }
   }
 
-  webTiles[activeWebTile]->view()->FireKeyEvent(evt);
+  web_tiles_[active_web_tile_]->view()->FireKeyEvent(evt);
 }
 
 void Sample::OnMouseEvent(const MouseEvent& evt) {
   switch (evt.type) {
   case MouseEvent::kType_MouseMoved: {
-    if (isActiveWebTileFocused)
-      webTiles[activeWebTile]->view()->FireMouseEvent(evt);
+    if (is_active_web_tile_focused_)
+      web_tiles_[active_web_tile_]->view()->FireMouseEvent(evt);
 
-    if (isDragging)
+    if (is_dragging_)
       handleDragMove(evt.x, evt.y);
 
     break;
   }
   case MouseEvent::kType_MouseDown: {
-    if (isActiveWebTileFocused)
-      webTiles[activeWebTile]->view()->FireMouseEvent(evt);
+    if (is_active_web_tile_focused_)
+      web_tiles_[active_web_tile_]->view()->FireMouseEvent(evt);
     else if (evt.button == MouseEvent::kButton_Left)
       handleDragBegin(evt.x, evt.y);
     break;
   }
   case MouseEvent::kType_MouseUp: {
-    if (isActiveWebTileFocused)
-      webTiles[activeWebTile]->view()->FireMouseEvent(evt);
+    if (is_active_web_tile_focused_)
+      web_tiles_[active_web_tile_]->view()->FireMouseEvent(evt);
     else if (evt.button == MouseEvent::kButton_Left)
       handleDragEnd(evt.x, evt.y);
     break;
@@ -675,7 +703,7 @@ void Sample::OnMouseEvent(const MouseEvent& evt) {
 }
 
 void Sample::OnScrollEvent(const ScrollEvent& evt) {
-  webTiles[activeWebTile]->view()->FireScrollEvent(evt);
+  web_tiles_[active_web_tile_]->view()->FireScrollEvent(evt);
 }
 
 void Sample::OnChangeCursor(ultralight::View* caller,
@@ -688,13 +716,13 @@ RefPtr<View> Sample::OnCreateChildView(ultralight::View* caller,
   const String& target_url,
   bool is_popup,
   const IntRect& popup_rect) {
-  RefPtr<View> new_view = renderer_->CreateView(WIDTH, HEIGHT, false, nullptr);
+  RefPtr<View> new_view = renderer_->CreateView(width_, height_, false, nullptr);
   WebTile* new_tile = new WebTile(new_view);
   new_view->set_view_listener(this);
   new_view->set_load_listener(this);
 
-  webTiles.push_back(std::unique_ptr<WebTile>(new_tile));
-  animateTo(webTiles.size() - 1);
+  web_tiles_.push_back(std::unique_ptr<WebTile>(new_tile));
+  animateTo((int)web_tiles_.size() - 1);
 
   return new_view;
 }
