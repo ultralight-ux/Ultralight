@@ -226,6 +226,7 @@ void Sample::draw() {
       int tileWidth = surface->width();
       int tileHeight = surface->height();
 
+      glViewport(0,0,WIDTH,HEIGHT);
       glOrtho(0, WIDTH, 0, HEIGHT, -1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
       glMatrixMode(GL_PROJECTION);
@@ -243,6 +244,7 @@ void Sample::draw() {
       glTexCoord2f(0,0);
       glVertex3f(0, (GLfloat)tileHeight, 0.0f);
       glEnd();
+      glBindTexture(GL_TEXTURE_2D, 0);
       window_->PresentFrame();
     }
   } else {
@@ -374,6 +376,7 @@ void Sample::drawTile(int index, double off, double zoom) {
   customColor[12] = customColor[13] = customColor[14] = 0;
 
   glDrawArrays(GL_TRIANGLE_STRIP,0,4);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
   glPopMatrix();
 }
@@ -553,11 +556,14 @@ void Sample::OnResize(uint32_t width, uint32_t height) {
   if (width == WIDTH && height == HEIGHT)
     return;
 
+  WIDTH = width;
+  HEIGHT = height;  
+
   for (auto& i : webTiles) {
     i->view()->Resize(width, height);
-    WIDTH = width;
-    HEIGHT = height;    
   }
+
+  glViewport(0,0,WIDTH,HEIGHT);
 }
 
 void Sample::OnChangeFocus(bool focused) {
@@ -627,7 +633,7 @@ void Sample::OnKeyEvent(const KeyEvent& evt) {
           return;
         }
       }
-      else if (evt.virtual_key_code == KeyCodes::GK_G) {
+      else if (evt.virtual_key_code == KeyCodes::GK_D) {
         addWebTileWithURL("http://www.duckduckgo.com", WIDTH, HEIGHT);
 
         animateTo(webTiles.size() - 1);

@@ -122,7 +122,7 @@ static void WindowGLFW_scroll_callback(GLFWwindow* window, double xoffset, doubl
   listener->OnScrollEvent(evt);
 }
 
-static void WindowGLFW_window_size_callback(GLFWwindow* window, int width, int height)
+static void WindowGLFW_framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
   Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
   WindowListener* listener = win->listener();
@@ -164,7 +164,7 @@ Window::Window(uint32_t width, uint32_t height, bool enable_vsync) {
   glfwSetCursorPosCallback(window_, WindowGLFW_cursor_pos_callback);
   glfwSetMouseButtonCallback(window_, WindowGLFW_mouse_button_callback);
   glfwSetScrollCallback(window_, WindowGLFW_scroll_callback);
-  glfwSetWindowSizeCallback(window_, WindowGLFW_window_size_callback);
+  glfwSetFramebufferSizeCallback(window_, WindowGLFW_framebuffer_size_callback);
   glfwSetWindowFocusCallback(window_, WindowGLFW_focus_callback);
 
   // Create standard cursors
@@ -216,14 +216,14 @@ void Window::MoveToCenter() {
 uint32_t Window::width() const {
   // Returns width in pixels
   int width, height;
-  glfwGetWindowSize(window_, &width, &height);
+  glfwGetFramebufferSize(window_, &width, &height);
   return (uint32_t)width;
 }
 
 uint32_t Window::height() const {
   // Return height in pixels
   int width, height;
-  glfwGetWindowSize(window_, &width, &height);
+  glfwGetFramebufferSize(window_, &width, &height);
   return (uint32_t)height;
 }
 
@@ -264,11 +264,19 @@ void Window::Close() {
 }
 
 int Window::DeviceToPixels(int val) const {
+#if __APPLE__
+  return val;
+#else
   return (int)round(val * scale());
+#endif
 }
 
 int Window::PixelsToDevice(int val) const {
+#if __APPLE__
+  return val;
+#else
   return (int)round(val / scale());
+#endif
 }
 
 void Window::PresentFrame() {

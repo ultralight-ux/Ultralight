@@ -3,10 +3,6 @@ include_directories("${ULTRALIGHT_INCLUDE_DIR}")
 link_directories("${ULTRALIGHT_LIBRARY_DIR}")
 link_libraries(UltralightCore Ultralight WebCore AppCore)
 
-if (PORT MATCHES "UltralightMac")
-    SET(CMAKE_INSTALL_RPATH ".")
-endif ()
-
 # Disable various GLFW options
 option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
 option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
@@ -33,13 +29,22 @@ set(SOURCES "src/Sample.h"
             "src/GLTextureSurface.cpp"
             "src/main.cpp")
 
-add_executable(${APP_NAME} ${SOURCES} ${GLAD_SOURCES})
+add_executable(${APP_NAME} MACOSX_BUNDLE ${SOURCES} ${GLAD_SOURCES})
+
+if (APPLE)
+  # Enable High-DPI on macOS through our custom Info.plist template
+  set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in) 
+endif()
 
 # Copy all binaries to target directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>)  
 
-set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
+if (APPLE)
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/assets") 
+else ()
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
+endif ()
   
 # Copy assets to assets path
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
