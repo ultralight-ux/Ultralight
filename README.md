@@ -13,7 +13,13 @@ Got a question about Ultralight? Come chat with us on Discord!
 
 Ultralight is a lightweight, cross-platform, HTML rendering engine for desktop apps and games. It supports most modern HTML5 and JavaScript features while still remaining small in binary size and memory usage.
 
-API is available for C and C++, with community bindings for C#, Rust, Java, and Go in our forum [here](https://forum.ultralig.ht/t/community-language-bindings). 
+API is available for C and C++, with community bindings for C#, Rust, Java, and Go in our forum [here](https://forum.ultralig.ht/t/community-language-bindings).
+
+## Why Would I Use This Over WebKit?
+
+You can think of Ultralight like a smaller, lighter, cross-platform WebKit that's way more "hackable" and is designed to display HTML in an existing app rather than function as a standalone browser.
+
+The API allows you to integrate your native code deeply with JavaScript (we offer bare-metal access to the JavaScriptCore VM API) and allows you to customize file system loaders, font loading, clipboard integration, and drawing itself (via GPU display lists or the Surface API).
 
 ### Base Memory Usage
 
@@ -43,6 +49,10 @@ API is available for C and C++, with community bindings for C#, Rust, Java, and 
 # Architecture
 
 Ultralight is a new port of WebKit combined with a new lightweight renderer intended specifically for embedding in apps and games.
+
+**Our port of WebCore/JavaScriptCore is at: https://github.com/ultralight-ux/WebCore**
+
+**Our cross-platform desktop app runtime is at: https://github.com/ultralight-ux/AppCore**
 
 ## Virtual GPU Renderer
 
