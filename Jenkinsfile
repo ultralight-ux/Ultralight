@@ -54,32 +54,6 @@ pipeline {
             }
           }
         }
-        stage('Build Windows x64 UWP') {
-          agent {
-            node {
-              label 'win10_x64'
-            }
-          }
-          steps {
-            bat '''
-               rem Setup environment
-               call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" amd64 uwp
-               set CC=cl.exe
-               set CXX=cl.exe
-
-               rem Build Release
-               if not exist build mkdir build
-               cd build
-               cmake ../packager -G "Ninja" -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0
-               ninja
-            '''
-          }
-          post {
-            success {
-              deploy();
-            }
-          }
-        }
         stage('Build Linux') {
           agent {
             node {
