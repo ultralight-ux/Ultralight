@@ -95,7 +95,7 @@ int main() {
   ///
   /// Views are sized containers for loading and displaying web content.
   ///
-  ULView view = ulCreateView(renderer, 1600, 1600, false, 0);
+  ULView view = ulCreateView(renderer, 1600, 1600, false, 0, false);
 
   ///
   /// Register OnFinishLoading() callback with our View.
