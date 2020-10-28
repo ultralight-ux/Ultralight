@@ -1,4 +1,4 @@
-set(APP_NAME Browser)
+set(APP_NAME Sample8)
 include_directories("${ULTRALIGHT_INCLUDE_DIR}")
 link_directories("${ULTRALIGHT_LIBRARY_DIR}")
 link_libraries(UltralightCore AppCore Ultralight WebCore)
@@ -45,6 +45,9 @@ if (APPLE)
   # Copy resources to resources directory
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/bin/resources/" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/resources")
+
+  # Resources directory is also copied to target directory in the "Copy all binaries" step.
+  # Remove this duplicate directory.
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "$<TARGET_FILE_DIR:${APP_NAME}>/resources")
 endif ()
-
-
