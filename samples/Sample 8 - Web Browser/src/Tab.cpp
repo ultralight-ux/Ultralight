@@ -107,7 +107,25 @@ void Tab::OnFinishLoading(View* caller, uint64_t frame_id, bool is_main_frame, c
 
 void Tab::OnFailLoading(View* caller, uint64_t frame_id, bool is_main_frame, const String& url,
   const String& description, const String& error_domain, int error_code) {
+  if (is_main_frame) {
+    char error_code_str[16]; 
+    sprintf(error_code_str,"%d", error_code);
 
+    String html_string = "<html><head><style>";
+    html_string += "* { font-family: sans-serif; }";
+    html_string += "body { background-color: #CCC; color: #555; padding: 4em; }";
+    html_string += "dt { font-weight: bold; padding: 1em; }";
+    html_string += "</style></head><body>";
+    html_string += "<h2>A Network Error was Encountered</h2>";
+    html_string += "<dl>";
+    html_string += "<dt>URL</dt><dd>" + url + "</dd>";
+    html_string += "<dt>Description</dt><dd>" + description + "</dd>";
+    html_string += "<dt>Error Domain</dt><dd>" + error_domain + "</dd>";
+    html_string += "<dt>Error Code</dt><dd>" + String(error_code_str) + "</dd>";
+    html_string += "</dl></body></html>";
+
+    view()->LoadHTML(html_string);
+  }
 }
 
 void Tab::OnUpdateHistory(View* caller) {
