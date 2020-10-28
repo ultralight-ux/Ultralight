@@ -1,7 +1,7 @@
 <img src="media/logo.png" width="600">
 <a href='https://ci.ultralig.ht/job/Ultralight/job/master/'><img src='https://ci.ultralig.ht/buildStatus/icon?job=Ultralight%2Fmaster'></a>
 
-[Website](https://ultralig.ht) | [Join our Discord!](https://chat.ultralig.ht) | [Forum](https://forum.ultralig.ht) | [Browse API](https://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
+[Website](https://ultralig.ht) | [Join our Discord!](https://chat.ultralig.ht) | [Browse API](https://github.com/ultralight-ux/Ultralight-API/) | [Quick Start / Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
 
 ## Discord Chat
 
@@ -11,9 +11,11 @@ Got a question about Ultralight? Come chat with us on Discord!
 
 # About
 
-Ultralight is a lightweight, cross-platform, HTML rendering engine for desktop apps and games. It supports most modern HTML5 and JavaScript features while still remaining small in binary size and memory usage.
+Ultralight is an ultra-fast, ultra-light, standards-compliant HTML renderer for applications and games. It supports most modern HTML5, CSS, and JavaScript features while still remaining light in binary size and memory usage.
 
-API is available for C and C++, with community bindings for C#, Rust, Java, and Go in our forum [here](https://forum.ultralig.ht/t/community-language-bindings).
+Currently available for Windows, macOS, and Linux (64-bit only, ARM64 coming).
+
+Official API is available for C and C++, with community bindings for C#, Rust, Java, and Go [available here](https://docs.ultralig.ht/docs/language-bindings).
 
 ## Why Would I Use This Over WebKit?
 
