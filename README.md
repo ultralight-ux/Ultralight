@@ -19,7 +19,7 @@ Official API is available for C and C++, with community bindings for C#, Rust, J
 
 Get started now by [reading the docs](https://docs.ultralig.ht).
 
-## Designed for Embedding
+## Next-Generation HTML Renderer
 
 You can think of Ultralight like a smaller, lighter, cross-platform WebKit that's more customizable and designed to display HTML in an existing app rather than function as a standalone browser.
 
@@ -28,17 +28,13 @@ The API allows you to integrate your native code deeply with JavaScript (we offe
 
 ## For Games
 
-<span style="font-size: 1.4em;">Power your next game's UI with HTML/JS</span>
-
 Render HTML to an in-game texture using our CPU renderer or take performance to the next level using our GPU renderer.
 
 Take advantage of our low-level platform API— load HTML assets directly from your game's existing asset pipeline using the FileSystem interface.
 
-→ Learn more by visiting our [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).
+__→ Learn more by visiting our [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).__
 
 ## For Desktop Apps
-
-<span style="font-size: 1.4em;">Build portable desktop apps with HTML/JS</span>
 
 Get the best of both worlds by building your native C/C++ desktop app's front-end with modern HTML/CSS/JS.
 
@@ -46,7 +42,7 @@ Take advantage of our AppCore framework to launch cross-platform windows and ren
 
 _AppCore is currently under active development and only supports single-window apps at this writing. A number of planned features (app icons, automatic packager, borderless windows with custom draggable titlebars, etc) are missing but on the way._
 
-→ Learn more by visiting our [Desktop App Guide](https://docs.ultralig.ht/docs/writing-your-first-app).
+__→ Learn more by visiting our [Desktop App Guide](https://docs.ultralig.ht/docs/writing-your-first-app).__
 
 ### Base Memory Usage
 
