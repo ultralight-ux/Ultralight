@@ -49,3 +49,14 @@ endif ()
 # Copy assets to assets path
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "${ASSETS_PATH}")
+
+if (APPLE)
+  # Copy resources to resources directory
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}/resources/" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/resources")
+
+  # Resources directory is also copied to target directory in the "Copy all binaries" step.
+  # Remove this duplicate directory.
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "$<TARGET_FILE_DIR:${APP_NAME}>/resources")
+endif ()
