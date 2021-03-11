@@ -5,7 +5,7 @@ static UI* g_ui = 0;
 #define UI_HEIGHT 80
 
 UI::UI(Ref<Window> window) : window_(window) {
-  uint32_t window_width = App::instance()->window()->width();
+  uint32_t window_width = window_->width();
   ui_height_ = (uint32_t)std::round(UI_HEIGHT * window_->scale());
   overlay_ = Overlay::Create(window_, window_width, ui_height_, 0, 0);
   g_ui = this;
@@ -21,12 +21,11 @@ UI::~UI() {
   g_ui = nullptr;
 }
 
-void UI::OnClose() {
+void UI::OnClose(ultralight::Window* window) {
+  App::instance()->Quit();
 }
 
-void UI::OnResize(uint32_t width, uint32_t height) {
-  RefPtr<Window> window = App::instance()->window();
-
+void UI::OnResize(ultralight::Window* window, uint32_t width, uint32_t height) {
   int tab_height = window->height() - ui_height_;
 
   if (tab_height < 1)
@@ -162,7 +161,7 @@ void UI::OnRequestChangeURL(const JSObject& obj, const JSArgs& args) {
 
 void UI::CreateNewTab() {
   uint64_t id = tab_id_counter_++;
-  RefPtr<Window> window = App::instance()->window();
+  RefPtr<Window> window = window_;
   int tab_height = window->height() - ui_height_;
   if (tab_height < 1)
     tab_height = 1;
@@ -175,7 +174,7 @@ void UI::CreateNewTab() {
 
 RefPtr<View> UI::CreateNewTabForChildView(const String& url) {
   uint64_t id = tab_id_counter_++;
-  RefPtr<Window> window = App::instance()->window();
+  RefPtr<Window> window = window_;
   int tab_height = window->height() - ui_height_;
   if (tab_height < 1)
     tab_height = 1;
@@ -234,5 +233,5 @@ void UI::SetURL(const ultralight::String& url) {
 
 void UI::SetCursor(ultralight::Cursor cursor) {
   if (App::instance())
-    App::instance()->window()->SetCursor(cursor);
+    window_->SetCursor(cursor);
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        font-size: 13px;
+    }
+    .ace-dracula .ace_marker-layer .ace_active-line {background: #44475a;}
+    .ace-dracula .ace_marker-layer .ace_selection {background: #64599a}
+    .ace-dracula .ace_gutter-active-line {background-color: #44475a;}
+</style>
+</head>
+<body>
+
+<div id="editor">
+</div>
+    
+<script src="ace-1.4.12-src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="ace-1.4.12-src-min-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+    var editor = ace.edit("editor");
+    var html = `<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            html {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                color: black;
+                font-family: Arial;
+                background: linear-gradient(-45deg, #acb4ff, #f5d4e2);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            div {
+                width: 350px;
+                height: 350px;
+                text-align: center;
+                border-radius: 25px;
+                background: linear-gradient(-45deg, #e5eaf9, #f9eaf6);
+                box-shadow: 0 7px 18px -6px #8f8ae1;
+            }
+            h1 {
+                padding: 1em;
+            }
+            p {
+                background: white;
+                padding: 2em;
+                margin: 40px;
+                border-radius: 25px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Hello World!</h1>
+            <p>Welcome to Ultralight!</p>
+        </div>
+    </body>
+</html>
+`
+    editor.setTheme("ace/theme/dracula");
+    editor.setValue(html);
+    editor.session.setMode("ace/mode/html");
+    editor.setOptions({
+      showPrintMargin: false,
+      showInvisibles: true,
+      enableLiveAutocompletion: true,
+      enableSnippets: true
+    });
+    editor.clearSelection();
+    editor.getSession().on('change', function() {
+      var content = editor.getSession().getValue();
+      UpdateEditor(content);
+    });
+</script>
+</body>
+</html>

@@ -66,7 +66,6 @@ Sample::Sample() {
   glEnable(GL_TEXTURE_2D);
 
   Config config;
-  config.device_scale = window_->scale();
   config.scroll_timer_delay = 1.0 / (mode->refreshRate);
   config.animation_timer_delay = 1.0 / (mode->refreshRate);
 
@@ -75,12 +74,6 @@ Sample::Sample() {
   /// bundled certificate chain and make HTTPS requests.
   ///
   config.resource_path = "./resources/";
-
-  ///
-  /// Make sure the GPU renderer is disabled so we can render to an offscreen
-  /// pixel buffer surface.
-  ///
-  config.use_gpu_renderer = false;
 
   ///
   /// Pass our configuration to the Platform singleton so that the library
@@ -150,7 +143,7 @@ Sample::~Sample() {
 
 void Sample::addWebTileWithURL(const std::string& url, int width,
                                     int height) {
-  WebTile* tile = new WebTile(renderer_, width, height);
+  WebTile* tile = new WebTile(renderer_, width, height, window_->scale());
 
   tile->view()->LoadURL(url.c_str());
   tile->view()->set_view_listener(this);
@@ -716,7 +709,10 @@ RefPtr<View> Sample::OnCreateChildView(ultralight::View* caller,
   const String& target_url,
   bool is_popup,
   const IntRect& popup_rect) {
-  RefPtr<View> new_view = renderer_->CreateView(width_, height_, false, nullptr);
+  ViewConfig view_config;
+  view_config.is_accelerated = false;
+  view_config.initial_device_scale = window_->scale();
+  RefPtr<View> new_view = renderer_->CreateView(width_, height_, view_config, nullptr);
   WebTile* new_tile = new WebTile(new_view);
   new_view->set_view_listener(this);
   new_view->set_load_listener(this);

@@ -54,6 +54,7 @@ add_subdirectory("Sample 5 - File Loading")
 add_subdirectory("Sample 6 - Intro to C API")
 add_subdirectory("Sample 7 - OpenGL Integration")
 add_subdirectory("Sample 8 - Web Browser")
+add_subdirectory("Sample 9 - Multi Window")
 
 if (${IN_SOURCE_BUILD})
     add_custom_target(
@@ -93,4 +94,5 @@ if (${IN_SOURCE_BUILD})
     add_dependencies(Sample6 CopySDK)
     add_dependencies(Sample7 CopySDK)
     add_dependencies(Sample8 CopySDK)
+    add_dependencies(Sample9 CopySDK)
 endif ()

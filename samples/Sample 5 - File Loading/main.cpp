@@ -36,14 +36,32 @@ using namespace ultralight;
 ///
 ///  See <Ultralight/platform/FileSystem.h> for more information.
 ///
-class MyApp {
+class MyApp : public WindowListener {
+  RefPtr<App> app_;
+  RefPtr<Window> window_;
   RefPtr<Overlay> overlay_;
 public:
-  MyApp(Ref<Window> win) {
+  MyApp() {
+    ///
+    /// Create our main App instance.
+    ///
+    app_ = App::Create();
+
+    ///
+    /// Create our Window using default window flags.
+    ///
+    window_ = Window::Create(app_->main_monitor(), 450, 700, false,
+      kWindowFlags_Titled);
+
+    ///
+    /// Set the title of our window.
+    ///
+    window_->SetTitle("Ultralight Sample 5 - File Loading");
+
     ///
     /// Create an Overlay using the same dimensions as our Window.
     ///
-    overlay_ = Overlay::Create(win, win->width(), win->height(), 0, 0);
+    overlay_ = Overlay::Create(*window_, window_->width(), window_->height(), 0, 0);
 
     ///
     /// Load a file from the FileSystem.
@@ -54,41 +72,31 @@ public:
   }
 
   virtual ~MyApp() {}
+
+  ///
+  /// Inherited from WindowListener, called when the Window is closed.
+  /// 
+  /// We exit the application when the window is closed.
+  ///
+  virtual void OnClose(ultralight::Window* window) override {
+    app_->Quit();
+  }
+
+  ///
+  /// Inherited from WindowListener, called when the Window is resized.
+  /// 
+  /// (Not used in this sample)
+  ///
+  virtual void OnResize(ultralight::Window* window, uint32_t width, uint32_t height) override {}
+
+  void Run() {
+    app_->Run();
+  }
 };
 
 int main() {
-  ///
-  /// Create our main App instance.
-  ///
-  auto app = App::Create();
-    
-  ///
-  /// Create our Window using default window flags.
-  ///
-  auto window = Window::Create(app->main_monitor(), 450, 700, false,
-    kWindowFlags_Titled);
-
-  ///
-  /// Set the title of our window.
-  ///
-  window->SetTitle("Ultralight Sample 5 - File Loading");
-
-  ///
-  /// Tell our app to use 'window' as our main window.
-  ///
-  /// This call is required before creating any overlays or calling App::Run
-  ///
-  app->set_window(window);
-    
-  ///
-  /// Create our MyApp instance (creates overlays and handles all logic).
-  ///
-  MyApp my_app(window);
-
-  ///
-  /// Run our main loop.
-  ///
-  app->Run();
+  MyApp app;
+  app.Run();
 
   return 0;
 }

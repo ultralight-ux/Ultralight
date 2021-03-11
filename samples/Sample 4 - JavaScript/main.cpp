@@ -27,14 +27,43 @@ const char* htmlString();
 ///  JavaScriptCore (@see JSHelpers.h). We'll be using this wrapper for the
 ///  sake of convenience in this sample.
 ///
-class MyApp : public LoadListener {
+class MyApp : public WindowListener,
+              public LoadListener {
+  RefPtr<App> app_;
+  RefPtr<Window> window_;
   RefPtr<Overlay> overlay_;
 public:
-  MyApp(Ref<Window> win) {
+  MyApp() {
+    ///
+    /// Create our main App instance.
+    ///
+    /// The App class is responsible for the lifetime of the application
+    /// and is required to create any windows.
+    ///
+    app_ = App::Create();
+
+    ///
+    /// Create our Window.
+    ///
+    /// This command creates a native platform window and shows it immediately.
+    /// 
+    window_ = Window::Create(app_->main_monitor(), 300, 300, false, kWindowFlags_Titled);
+
+    ///
+    /// Set our window title.
+    ///
+    window_->SetTitle("Ultralight Sample 4 - JavaScript");
+
+    ///
+    /// Register our MyApp instance as a WindowListener so we can handle the
+    /// Window's OnClose event below.
+    ///
+    window_->set_listener(this);
+
     ///
     /// Create an Overlay using the same dimensions as our Window.
     ///
-    overlay_ = Overlay::Create(win, win->width(), win->height(), 0, 0);
+    overlay_ = Overlay::Create(*window_, window_->width(), window_->height(), 0, 0);
 
     ///
     /// Register our MyApp instance as a load listener so we can handle the
@@ -100,40 +129,31 @@ public:
     ///
     global["GetMessage"] = BindJSCallbackWithRetval(&MyApp::GetMessage);
   }
+
+  ///
+  /// Inherited from WindowListener, called when the Window is closed.
+  /// 
+  /// We exit the application when the window is closed.
+  ///
+  virtual void OnClose(ultralight::Window* window) override {
+    app_->Quit();
+  }
+
+  ///
+  /// Inherited from WindowListener, called when the Window is resized.
+  /// 
+  /// (Not used in this sample)
+  ///
+  virtual void OnResize(ultralight::Window* window, uint32_t width, uint32_t height) override {}
+
+  void Run() {
+    app_->Run();
+  }
 };
 
 int main() {
-  ///
-  /// Create our main App instance.
-  ///
-  auto app = App::Create();
-    
-  ///
-  /// Create our Window using default window flags.
-  ///
-  auto window = Window::Create(app->main_monitor(), 300, 300, false, kWindowFlags_Titled);
-
-  ///
-  /// Set our window title.
-  ///
-  window->SetTitle("Ultralight Sample 4 - JavaScript");
-
-  ///
-  /// Bind our App's main window.
-  ///
-  /// @note This MUST be done before creating any overlays or calling App::Run
-  ///
-  app->set_window(window);
-    
-  ///
-  /// Create our MyApp instance (creates overlays and handles all logic).
-  ///
-  MyApp my_app(window);
-
-  ///
-  /// Run our main loop.
-  ///
-  app->Run();
+  MyApp app;
+  app.Run();
 
   return 0;
 }

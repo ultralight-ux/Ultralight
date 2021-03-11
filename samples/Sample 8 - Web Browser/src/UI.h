@@ -22,8 +22,8 @@ class UI : public WindowListener,
   ~UI();
                
   // Inherited from WindowListener
-  virtual void OnClose() override;
-  virtual void OnResize(uint32_t width, uint32_t height) override;
+  virtual void OnClose(ultralight::Window* window) override;
+  virtual void OnResize(ultralight::Window* window, uint32_t width, uint32_t height) override;
 
   // Inherited from LoadListener
   virtual void OnDOMReady(View* caller, uint64_t frame_id,

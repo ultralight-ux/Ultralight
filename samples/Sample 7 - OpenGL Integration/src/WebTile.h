@@ -7,7 +7,7 @@ using namespace ultralight;
 // A "WebTile" is a View backed by an OpenGL texture.
 class WebTile {
 public:
-  WebTile(RefPtr<Renderer> renderer, int width, int height);
+  WebTile(RefPtr<Renderer> renderer, int width, int height, double scale);
 
   WebTile(RefPtr<View> existing_view);
 

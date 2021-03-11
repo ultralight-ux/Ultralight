@@ -34,8 +34,11 @@ ULView view = 0;
 /// Forward declaration of our OnUpdate callback.
 void OnUpdate(void* user_data);
 
+/// Forward declaration of our OnClose callback.
+void OnClose(void* user_data, ULWindow window);
+
 /// Forward declaration of our OnResize callback.
-void OnResize(void* user_data, unsigned int width, unsigned int height);
+void OnResize(void* user_data, ULWindow window, unsigned int width, unsigned int height);
 
 /// Forward declaration of our OnDOMReady callback.
 void OnDOMReady(void* user_data, ULView caller, unsigned long long frame_id,
@@ -80,14 +83,14 @@ void Init() {
   ulWindowSetTitle(window, "Ultralight Sample 6 - Intro to C API");
 
   ///
+  /// Register a callback to handle window close.
+  /// 
+  ulWindowSetCloseCallback(window, OnClose, 0);
+
+  ///
   /// Register a callback to handle window resize.
   ///
   ulWindowSetResizeCallback(window, OnResize, 0);
-
-  ///
-  /// Tell our app to use this window as the main window.
-  ///
-  ulAppSetWindow(app, window);
 
   ///
   /// Create an overlay same size as our window at 0,0 (top-left) origin.
@@ -132,10 +135,17 @@ void OnUpdate(void* user_data) {
 }
 
 ///
+/// This is called when the window is closed.
+///
+void OnClose(void* user_data, ULWindow window) {
+  ulAppQuit(app);
+}
+
+///
 /// This is called whenever the window resizes. Width and height are in
 /// DPI-independent logical coordinates (not pixels).
 ///
-void OnResize(void* user_data, unsigned int width, unsigned int height) {
+void OnResize(void* user_data, ULWindow window, unsigned int width, unsigned int height) {
   ulOverlayResize(overlay, width, height);
 }
 

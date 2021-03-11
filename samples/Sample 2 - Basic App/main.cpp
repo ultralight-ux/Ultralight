@@ -23,65 +23,101 @@ const char* htmlString();
 ///
 /// We will create the simplest possible AppCore application in this sample.
 ///
-int main() {
+
+class MyApp : public WindowListener,
+              public ViewListener {
+  RefPtr<App> app_;
+  RefPtr<Window> window_;
+  RefPtr<Overlay> overlay_;
+public:
+  MyApp() {
+    ///
+    /// Create our main App instance.
+    ///
+    /// The App class is responsible for the lifetime of the application
+    /// and is required to create any windows.
+    ///
+    app_ = App::Create();
+
+    ///
+    /// Create our Window.
+    ///
+    /// This command creates a native platform window and shows it immediately.
+    /// 
+    /// The window's size (900 by 600) is in virtual device coordinates, the
+    /// actual size in pixels is automatically determined by the monitor's DPI.
+    ///
+    window_ = Window::Create(app_->main_monitor(), 900, 600, false,
+      kWindowFlags_Titled);
+
+    ///
+    /// Set the title of our window.
+    ///
+    window_->SetTitle("Ultralight Sample 2 - Basic App");
+
+    ///
+    /// Create a web-content overlay that spans the entire window.
+    ///
+    /// You can create multiple overlays per window, each overlay has its own
+    /// View which can be used to load and display web-content.
+    ///
+    /// AppCore automatically manages focus, keyboard/mouse input, and GPU
+    /// painting for each active overlay. Destroying the overlay will remove
+    /// it from the window.
+    ///
+    overlay_ = Overlay::Create(*window_, window_->width(), window_->height(), 0, 0);
+
+    ///
+    /// Load a string of HTML into our overlay's View
+    ///
+    overlay_->view()->LoadHTML(htmlString());
+
+    ///
+    /// Register our MyApp instance as a WindowListener so we can handle the
+    /// Window's OnClose event below.
+    ///
+    window_->set_listener(this);
+
+    ///
+    /// Register our MyApp instance as a ViewListener so we can handle the
+    /// View's OnChangeCursor event below.
+    ///
+    overlay_->view()->set_view_listener(this);
+  }
+
+  virtual ~MyApp() {}
+
   ///
-  /// Create our main App instance.
-  ///
-  /// The App class is responsible for the lifetime of the application
-  /// and is required to create any windows.
-  ///
-  Ref<App> app = App::Create();
-  
-  ///
-  /// Create our Window.
-  ///
-  /// This command creates a native platform window and shows it immediately.
+  /// Inherited from WindowListener, called when the Window is closed.
   /// 
-  /// The window's size (400 by 400) is in virtual device coordinates, the
-  /// actual size in pixels is automatically determined by the monitor's DPI.
+  /// We exit the application when the window is closed.
   ///
-  Ref<Window> window = Window::Create(app->main_monitor(), 900, 600, false,
-    kWindowFlags_Titled);
+  virtual void OnClose(ultralight::Window* window) override {
+    app_->Quit();
+  }
 
   ///
-  /// Set the title of our window.
+  /// Inherited from WindowListener, called when the Window is resized.
+  /// 
+  /// (Not used in this sample)
   ///
-  window->SetTitle("Ultralight Sample 2 - Basic App");
+  virtual void OnResize(ultralight::Window* window, uint32_t width, uint32_t height) override {}
 
   ///
-  /// Tell our app to use 'window' as our main window.
+  /// Inherited from ViewListener, called when the Cursor changes.
   ///
-  /// This call is required before creating any overlays or calling App::Run
-  ///
-  /// **Note**:
-  ///   As of v1.1, AppCore only supports one window per application which is
-  ///   why this call is required. This API method will be deprecated once 
-  ///   multi-monitor and multi-window support is added in v1.2.
-  ///
-  app->set_window(window);
+  virtual void OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor) override {
+    window_->SetCursor(cursor);
+  }
 
-  ///
-  /// Create a web-content overlay that spans the entire window.
-  ///
-  /// You can create multiple overlays per window, each overlay has its own
-  /// View which can be used to load and display web-content.
-  ///
-  /// AppCore automatically manages focus, keyboard/mouse input, and GPU
-  /// painting for each active overlay. Destroying the overlay will remove
-  /// it from the window.
-  ///
-  Ref<Overlay> overlay = Overlay::Create(window, window->width(),
-    window->height(), 0, 0);
+  void Run() {
+    app_->Run();
+  }
+};
 
-  ///
-  /// Load a string of HTML into our overlay's View
-  ///
-  overlay->view()->LoadHTML(htmlString());
-
-  ///
-  /// Run our main loop.
-  ///
-  app->Run();
+int main() {
+  MyApp app;
+  app.Run();
 
   return 0;
 }

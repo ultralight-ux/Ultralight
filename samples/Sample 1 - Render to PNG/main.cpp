@@ -31,26 +31,17 @@ class MyApp : public LoadListener,
 public:
   MyApp() {
     ///
-    /// Setup our config. The config can be used to customize various
-    /// options within the renderer and WebCore module.
-    ///
-    /// Our config uses 2x DPI scale and "Arial" as the default font.
+    /// Setup our config.
+    /// 
+    /// We need to tell config where our resources are so it can load our
+    /// bundled certificate chain to make HTTPS requests and perform text layout
+    /// using the ICU unicode data library.
+    /// 
+    /// *NOTE* Failure to load the ICU library may cause the library to crash
+    ///        during certain text layout operations. Check the log for warnings.
     ///
     Config config;
-    config.device_scale = 2.0;
-    config.font_family_standard = "Arial";
-
-    ///
-    /// We need to tell config where our resources are so it can load our
-    /// bundled certificate chain and make HTTPS requests.
-    ///
     config.resource_path = "./resources/";
-    
-    ///
-    /// Make sure the GPU renderer is disabled so we can render to an offscreen
-    /// pixel buffer surface.
-    ///
-    config.use_gpu_renderer = false;
 
     ///
     /// Pass our configuration to the Platform singleton so that the library
@@ -97,8 +88,18 @@ public:
     /// Create our View.
     ///
     /// Views are sized containers for loading and displaying web content.
+    /// 
+    /// Our view config uses 2x DPI scale and "Arial" as the default font.
+    /// 
+    /// We make sure GPU acceleration is disabled so we can render to an
+    /// offscreen pixel buffer surface.
     ///
-    view_ = renderer_->CreateView(1600, 1600, false, nullptr);
+    ViewConfig view_config;
+    view_config.initial_device_scale = 2.0;
+    view_config.font_family_standard = "Arial";
+    view_config.is_accelerated = false;
+
+    view_ = renderer_->CreateView(1600, 1600, view_config, nullptr);
 
     ///
     /// Register our MyApp instance as a load listener so we can handle the

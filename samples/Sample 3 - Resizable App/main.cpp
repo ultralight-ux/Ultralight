@@ -66,25 +66,18 @@ public:
     window_->SetTitle("Ultralight Sample 3 - Resize Me!");
 
     ///
-    /// Tell our app to use 'window' as our main window.
-    ///
-    /// This call is required before creating any overlays or calling App::Run
-    ///
-    app_->set_window(*window_.get());
-
-    ///
     /// Create the overlays for our left and right panes-- we don't care about
     /// their initial size and position because they'll be set when we call
     /// OnResize() below.
     ///
-    left_pane_ = Overlay::Create(*window_.get(), 1, 1, 0, 0);
-    right_pane_ = Overlay::Create(*window_.get(), 1, 1, 0, 0);
+    left_pane_ = Overlay::Create(*window_.get(), 100, 100, 0, 0);
+    right_pane_ = Overlay::Create(*window_.get(), 100, 100, 0, 0);
 
     ///
     /// Force a call to OnResize to perform initial layout and sizing of our
     /// left and right overlays.
     ///
-    OnResize(window_->width(), window_->height());
+    OnResize(window_.get(), window_->width(), window_->height());
 
     ///
     /// Load some HTML into our left and right overlays.
@@ -109,15 +102,19 @@ public:
   virtual ~MyApp() {}
 
   ///
-  /// Inherited from WindowListener, not used.
+  /// Inherited from WindowListener, called when the Window is closed.
+  /// 
+  /// We exit the application when the window is closed.
   ///
-  virtual void OnClose() override {}
+  virtual void OnClose(ultralight::Window* window) override {
+    app_->Quit();
+  }
 
   ///
   /// Inherited from WindowListener, called when the Window is resized.
   ///
-  virtual void OnResize(uint32_t width, uint32_t height) override {
-    uint32_t left_pane_width_px = window_->DeviceToPixels(LEFT_PANE_WIDTH);
+  virtual void OnResize(ultralight::Window* window, uint32_t width, uint32_t height) override {
+    uint32_t left_pane_width_px = window_->ScreenToPixels(LEFT_PANE_WIDTH);
     left_pane_->Resize(left_pane_width_px, height);
 
     // Calculate the width of our right pane (window width - left width)
@@ -135,8 +132,7 @@ public:
   ///
   /// Inherited from ViewListener, called when the Cursor changes.
   ///
-  virtual void OnChangeCursor(ultralight::View* caller,
-    Cursor cursor) {
+  virtual void OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor) override {
     window_->SetCursor(cursor);
   }
 

@@ -6,8 +6,11 @@
 #define TEX_FORMAT	GL_RGB
 #endif
 
-WebTile::WebTile(RefPtr<Renderer> renderer, int width, int height) {
-  view_ = renderer->CreateView(width, height, true, nullptr);
+WebTile::WebTile(RefPtr<Renderer> renderer, int width, int height, double scale) {
+  ViewConfig view_config;
+  view_config.initial_device_scale = scale;
+  view_config.is_accelerated = false;
+  view_ = renderer->CreateView(width, height, view_config, nullptr);
 }
 
 WebTile::WebTile(RefPtr<View> existing_view) : view_(existing_view) {

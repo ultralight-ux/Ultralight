@@ -12,8 +12,7 @@ Browser::Browser()  {
   window_ = Window::Create(app_->main_monitor(), 1024, 768, false, 
     kWindowFlags_Resizable | kWindowFlags_Titled | kWindowFlags_Maximizable);
   window_->SetTitle("Ultralight Sample 8 - Web Browser");
-  app_->set_window(*window_.get());
-    
+
   // Create the UI
   ui_.reset(new UI(*window_.get()));
   window_->set_listener(ui_.get());
