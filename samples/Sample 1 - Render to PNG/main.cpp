@@ -33,15 +33,7 @@ public:
     ///
     /// Setup our config.
     /// 
-    /// We need to tell config where our resources are so it can load our
-    /// bundled certificate chain to make HTTPS requests and perform text layout
-    /// using the ICU unicode data library.
-    /// 
-    /// *NOTE* Failure to load the ICU library may cause the library to crash
-    ///        during certain text layout operations. Check the log for warnings.
-    ///
     Config config;
-    config.resource_path = "./resources/";
 
     ///
     /// Pass our configuration to the Platform singleton so that the library
@@ -66,7 +58,7 @@ public:
     /// You could replace this with your own to provide your own file loader
     /// (useful if you need to bundle encrypted / compressed HTML assets).
     ///
-    Platform::instance().set_file_system(GetPlatformFileSystem("."));
+    Platform::instance().set_file_system(GetPlatformFileSystem("./assets/"));
 
     ///
     /// Register our MyApp instance as a logger so we can handle the

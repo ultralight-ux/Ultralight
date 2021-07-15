@@ -3,36 +3,39 @@
 <title>Release Notes</title>
 <style type="text/css">
 body {
-  background: linear-gradient(-45deg, #acb4ff, #f5d4e2);
+  background: radial-gradient(circle at center 80px, #33246f, transparent 900px), #13121d;
+    background-size: 100% 1250px;
+    background-repeat: no-repeat;
   margin: 0;
   line-height: 1.4;
+  font-weight: 300;
 }
+h1, h2, h3, h4, strong, dt { font-weight: 400; color: white; }
 a, a:link, a:visited {
-  color: #6d59fb;
+  color: #6f00ff;
+  font-weight: 400;
 }
 a:hover { 
-  color: #8676ff;
+  color: #8223ff;
 }
 a:active {
-  color: black;
+  color: 6f00ff;
 }
 code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  background-color: rgb(255, 250, 223);
+  background-color: #13121d;
   padding: 2px;
+  font-size: 0.9em;
 }
 #content {
   width: 700px;
   margin: 45px auto;
-  background-color: white;
   font-family: Segoe UI, -apple-system, sans-serif;
   padding: 40px 60px;
-  color: #333;
+  color: #f6f2ff;
   border-radius:20px;
-  box-shadow: 0 7px 18px -6px #8f8ae1;
 }
 h3 {
-  border-bottom: 3px solid #EEE;
   margin-top: 1.5em;
 }
 
@@ -40,7 +43,6 @@ h4, dt {
   margin:0;
   margin-top: 1em;
   padding:6px;
-  font-weight: bold;
 }
 p {
   padding: 6px;
@@ -56,74 +58,12 @@ p {
 <body>
 <div id="content">
 
-<h2>Ultralight v1.2.0 Release Notes</h2>
+<h2>Ultralight v1.3.0 Release Notes</h2>
 
 <h3>Changelog</h3>
 
-<h4>Overview of Major Changes</h4>
 <ul>
-  <li><strong>Updated to latest WebKit</strong>
-    <ul>
-      <li>Integrated latest updates (WebKit 608.3.10.10.1 / Safari 13.0.3)</li>
-      <li>Added support for WebSockets over SSL</li>
-      <li>Added support for WebAssembly</li>
-      <li>Fixed several flexbox layout bugs</li>
-    </ul>
-  </li>
-  <li><strong>Improved HTML5 platform support</strong>
-    <ul>
-      <li>Improved SVG support</li>
-      <li>Improved HTML5 canvas support</li>
-      <li>Added support for <code>&lt;select&gt;</code></li>
-      <li>Added support for <code>&lt;input type=&quot;range&quot;&gt;</code></li>
-      <li>Added support for <code>&lt;progress&gt;</code></li>
-      <li>Added support for <code>&lt;a target=&quot;_blank&quot;&gt;</code> and <code>window.open()</code></li>
-      <li>Added support for HTML5 IndexedDB</li>
-    </ul>
-  </li>
-  <li><strong>Sharper rendering at all DPIs</strong>
-    <ul>
-      <li>Improved glyph compositing (hinting and gamma are now user-configurable)</li>
-      <li>Improved pixel-snapping of various borders</li>
-      <li>Improved hairline stroke rendering</li>
-    </ul>
-  </li>
-  </li>
-  <li><strong>Better JavaScript performance</strong>
-    <ul>
-      <li>Enabled FTL JIT for faster JavaScript performance</li>
-      <li>Enabled Riptide GC for lower-latency collection</li>
-    </ul>
-  </li>
-  <li><strong>Added accelerated CPU renderer</strong>
-    <ul>
-      <li>Implemented an additional SIMD-accelerated CPU rendering backend</li>
-      <li>Can paint directly to a user-supplied BGRA32 pixel-buffer</li>
-      <li>Useful for integrating into games or environments with limited GPU</li>
-    </ul>
-  </li>
-  <li><strong>Added support for UWP/Xbox</strong>
-    <ul>
-      <li>Can be used to target Windows Store apps (Windows 10, HoloLens, Xbox One)</li>
-      <li>(Contact us if you are developing with the Xbox toolchain)</li>
-    </ul>
-  </li>
-  <li><strong>Decreased memory usage</strong>
-    <ul>
-      <li>Significantly decreased memory usage</li>
-      <li>Added API to dump memory statistics</li>
-    </ul>
-  </li>
-  <li><strong>Other improvements</strong>
-    <ul>
-      <li>Added support for user-selection, cut, copy, and paste (new Clipboard API)</li>
-      <li>Expanded C API support (we now expose all the Platform callbacks).</li>
-      <li>Fix rendering issues with nested scrolling containers and iframes.</li>
-      <li>Improved SSL certificate verification, uses bundled CA cert file (from Mozilla).</li>
-      <li>Exposed network errors to LoadListener API</li>
-      <li>Improved cursor support in AppCore</li>
-    </ul>
-  </li>
+  <li>In progress!</li>
 </ul>
 
 <h3>Useful Links</h3>

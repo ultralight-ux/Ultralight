@@ -27,6 +27,7 @@ endif ()
 set(ULTRALIGHT_INCLUDE_DIR "${SDK_ROOT}/include")
 set(ULTRALIGHT_BINARY_DIR "${SDK_ROOT}/bin")
 set(ULTRALIGHT_INSPECTOR_DIR "${SDK_ROOT}/inspector")
+set(ULTRALIGHT_RESOURCES_DIR "${SDK_ROOT}/resources")
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(ULTRALIGHT_LIBRARY_DIR "${SDK_ROOT}/lib")
@@ -63,10 +64,13 @@ if (${IN_SOURCE_BUILD})
         COMMAND ${CMAKE_COMMAND} -E make_directory "${SDK_ROOT}/bin"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${SDK_ROOT}/include"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${SDK_ROOT}/inspector"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${SDK_ROOT}/resources"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHTCORE_DIR}/bin/" "${SDK_ROOT}/bin"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHTCORE_DIR}/include/" "${SDK_ROOT}/include"
         COMMAND ${CMAKE_COMMAND} -E remove_directory "${SDK_ROOT}/include/Ultralight/private"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/bin/" "${SDK_ROOT}/bin"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/bin/resources" "${SDK_ROOT}/resources"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${SDK_ROOT}/bin/resources"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/include/" "${SDK_ROOT}/include"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${WEBCORE_DIR}/inspector/" "${SDK_ROOT}/inspector"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_DIR}/bin/" "${SDK_ROOT}/bin"

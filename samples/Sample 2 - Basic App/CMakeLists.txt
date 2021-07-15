@@ -17,5 +17,15 @@ endif()
 
 # Copy all binaries to target directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>)  
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>)
 
+# Set the assets path to "/assets" or "/../Resources/assets" on macOS
+if (APPLE)
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/assets") 
+else ()
+  set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
+endif ()
+
+# Copy resources to assets directory
+add_custom_command(TARGET ${APP_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_RESOURCES_DIR}" "${ASSETS_PATH}/resources")

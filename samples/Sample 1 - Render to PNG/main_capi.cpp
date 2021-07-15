@@ -50,14 +50,6 @@ int main() {
   ulDestroyString(font_family);
 
   ///
-  /// We need to tell config where our resources are so it can load our
-  /// bundled certificate chain and make HTTPS requests.
-  ///
-  ULString resource_path = ulCreateString("./resources/");
-  ulConfigSetResourcePath(config, resource_path);
-  ulDestroyString(resource_path);
-
-  ///
   /// Make sure the GPU renderer is disabled so we can render to an offscreen
   /// pixel buffer surface. (This is disabled by default, so not needed here)
   ///

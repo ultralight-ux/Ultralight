@@ -70,12 +70,6 @@ Sample::Sample() {
   config.animation_timer_delay = 1.0 / (mode->refreshRate);
 
   ///
-  /// We need to tell config where our resources are so it can load our
-  /// bundled certificate chain and make HTTPS requests.
-  ///
-  config.resource_path = "./resources/";
-
-  ///
   /// Pass our configuration to the Platform singleton so that the library
   /// can use it.
   ///
