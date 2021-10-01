@@ -142,12 +142,6 @@ int main() {
   ULBitmap bitmap = ulBitmapSurfaceGetBitmap(surface);
     
   ///
-  /// The renderer uses a BGRA pixel format but PNG expects RGBA format,
-  /// let's convert the format by swapping Red and Blue channels.
-  ///
-  ulBitmapSwapRedBlueChannels(bitmap);
-    
-  ///
   /// Write our bitmap to a PNG in the current working directory.
   ///
   ulBitmapWritePNG(bitmap, "result.png");
