@@ -102,7 +102,7 @@ class Sample : public WindowListener,
   /////////////////////////////////////////////////////////////////////////////
 
   virtual void LogMessage(LogLevel log_level,
-                          const String16& message) override;
+                          const String& message) override;
 
  protected:
   bool should_quit_ = false;

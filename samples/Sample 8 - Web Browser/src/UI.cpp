@@ -4,7 +4,7 @@ static UI* g_ui = 0;
 
 #define UI_HEIGHT 80
 
-UI::UI(Ref<Window> window) : window_(window) {
+UI::UI(RefPtr<Window> window) : window_(window) {
   uint32_t window_width = window_->width();
   ui_height_ = (uint32_t)std::round(UI_HEIGHT * window_->scale());
   overlay_ = Overlay::Create(window_, window_width, ui_height_, 0, 0);
@@ -41,8 +41,8 @@ void UI::OnResize(ultralight::Window* window, uint32_t width, uint32_t height) {
 
 void UI::OnDOMReady(View* caller, uint64_t frame_id, bool is_main_frame, const String& url) {
   // Set the context for all subsequent JS* calls
-  Ref<JSContext> locked_context = view()->LockJSContext();
-  SetJSContext(locked_context.get());
+  RefPtr<JSContext> locked_context = view()->LockJSContext();
+  SetJSContext(locked_context->ctx());
 
   JSObject global = JSGlobalObject();
   updateBack = global["updateBack"];
@@ -114,7 +114,7 @@ void UI::OnRequestTabClose(const JSObject& obj, const JSArgs& args) {
       tab->set_ready_to_close(true);
     }
 
-    Ref<JSContext> lock(view()->LockJSContext());
+    RefPtr<JSContext> lock(view()->LockJSContext());
     closeTab({ id });
   }
 }
@@ -168,7 +168,7 @@ void UI::CreateNewTab() {
   tabs_[id].reset(new Tab(this, id, window->width(), (uint32_t)tab_height, 0, ui_height_));
   tabs_[id]->view()->LoadURL("file:///new_tab_page.html");
 
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   addTab({ id, "New Tab", "", tabs_[id]->view()->is_loading() });
 }
 
@@ -180,7 +180,7 @@ RefPtr<View> UI::CreateNewTabForChildView(const String& url) {
     tab_height = 1;
   tabs_[id].reset(new Tab(this, id, window->width(), (uint32_t)tab_height, 0, ui_height_));
 
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   addTab({ id, "", url, tabs_[id]->view()->is_loading() });
 
   return tabs_[id]->view();
@@ -188,7 +188,7 @@ RefPtr<View> UI::CreateNewTabForChildView(const String& url) {
 
 
 void UI::UpdateTabTitle(uint64_t id, const ultralight::String& title) {
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   updateTab({ id, title, "", tabs_[id]->view()->is_loading() });
 }
 
@@ -201,7 +201,7 @@ void UI::UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, boo
   if (tabs_.empty())
     return;
 
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   updateTab({ id, tabs_[id]->view()->title(), "", tabs_[id]->view()->is_loading() });
 
   if (id == active_tab_id_) {
@@ -212,22 +212,22 @@ void UI::UpdateTabNavigation(uint64_t id, bool is_loading, bool can_go_back, boo
 }
 
 void UI::SetLoading(bool is_loading) {
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   updateLoading({ is_loading });
 }
 
 void UI::SetCanGoBack(bool can_go_back) {
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   updateBack({ can_go_back });
 }
 
 void UI::SetCanGoForward(bool can_go_forward) {
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   updateForward({ can_go_forward });
 }
 
 void UI::SetURL(const ultralight::String& url) {
-  Ref<JSContext> lock(view()->LockJSContext());
+  RefPtr<JSContext> lock(view()->LockJSContext());
   updateURL({ url });
 }
 

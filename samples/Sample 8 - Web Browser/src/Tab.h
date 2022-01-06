@@ -17,7 +17,7 @@ public:
   void set_ready_to_close(bool ready) { ready_to_close_ = ready; }
   bool ready_to_close() { return ready_to_close_; }
                 
-  Ref<View> view() { return overlay_->view(); }
+  RefPtr<View> view() { return overlay_->view(); }
 
   void Show();
 

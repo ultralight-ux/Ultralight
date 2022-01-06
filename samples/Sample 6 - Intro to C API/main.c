@@ -4,25 +4,23 @@
 ///
 ///  Welcome to Sample 6!
 ///
-///  In this sample we'll demonstrate how to set up a simple JavaScript app
-///  using only the C API.
+///  In this sample we'll demonstrate how to set up a simple JavaScript app using only the C API.
 ///
-///  We will bind a JavaScript function to a C callback and use it to display
-///  a welcome message in our HTML view.
+///  We will bind a JavaScript function to a C callback and use it to display a welcome message
+///  in our HTML view.
 ///
 ///  __About the C API__
 ///
-///  The C API is useful for porting the library to other languages or using it
-///  in scenarios that are unsuitable for C++.
+///  The C API is useful for porting the library to other languages or using it in scenarios that
+///  are unsuitable for C++.
 ///
-///  Most of the C++ API functionality is currently available via the CAPI
-///  headers with the exception of some of the Platform API.
+///  Most of the C++ API functionality is currently available via the CAPI headers with the
+///  exception of some of the Platform API.
 ///
 ///  JavaScriptCore's native API is already in C so we can use it directly.
 ///  
-///  Both Ultralight and JavaScriptCore follow the same paradigm when it
-///  comes to ownership/destruction: You should explicitly Destroy/Release
-///  anything you Create.
+///  Both Ultralight and JavaScriptCore follow the same paradigm when it comes to
+///  ownership/destruction: You should explicitly Destroy/Release anything you Create.
 ///
 
 /// Various globals
@@ -93,12 +91,11 @@ void Init() {
   ulWindowSetResizeCallback(window, OnResize, 0);
 
   ///
-  /// Create an overlay same size as our window at 0,0 (top-left) origin.
-  /// Overlays also create an HTML view for us to display content in.
+  /// Create an overlay same size as our window at 0,0 (top-left) origin. Overlays also create an
+  /// HTML view for us to display content in.
   ///
   /// **Note**:
-  ///     Ownership of the view remains with the overlay since we don't
-  ///     explicitly create it.
+  ///     Ownership of the view remains with the overlay since we don't explicitly create it.
   ///
   overlay = ulCreateOverlay(window, ulWindowGetWidth(window), ulWindowGetHeight(window), 0, 0);
   
@@ -108,8 +105,8 @@ void Init() {
   view = ulOverlayGetView(overlay);
 
   ///
-  /// Register a callback to handle our view's DOMReady event. We will use this
-  /// event to setup any JavaScript <-> C bindings and initialize our page.
+  /// Register a callback to handle our view's DOMReady event. We will use this event to setup any
+  /// JavaScript <-> C bindings and initialize our page.
   ///
   ulViewSetDOMReadyCallback(view, OnDOMReady, 0);
 
@@ -118,8 +115,8 @@ void Init() {
   ///
   ///  **IMPORTANT**: Make sure `file:///` has three (3) forward slashes.
   ///
-  ///  **Note**: You can configure the base path for the FileSystem in the
-  ///            Settings we passed to ulCreateApp earlier.
+  ///  **Note**: You can configure the base path for the FileSystem in the Settings we passed to
+  ///            ulCreateApp earlier.
   ///
   ULString url = ulCreateString("file:///app.html");
   ulViewLoadURL(view, url);
@@ -127,8 +124,8 @@ void Init() {
 }
 
 ///
-/// This is called continuously from the app's main run loop. You should
-/// update any app logic inside this callback.
+/// This is called continuously from the app's main run loop. You should update any app logic
+/// inside this callback.
 ///
 void OnUpdate(void* user_data) {
   /// We don't use this in this tutorial, just here for example.
@@ -142,8 +139,8 @@ void OnClose(void* user_data, ULWindow window) {
 }
 
 ///
-/// This is called whenever the window resizes. Width and height are in
-/// DPI-independent logical coordinates (not pixels).
+/// This is called whenever the window resizes. Width and height are in DPI-independent logical
+/// coordinates (not pixels).
 ///
 void OnResize(void* user_data, ULWindow window, unsigned int width, unsigned int height) {
   ulOverlayResize(overlay, width, height);
@@ -166,18 +163,15 @@ JSValueRef GetMessage(JSContextRef ctx, JSObjectRef function,
   /// Create a garbage-collected JSValue using the String we just created.
   ///
   ///  **Note**:
-  ///    Both JSValueRef and JSObjectRef types are garbage-collected types.
-  ///    (And actually, JSObjectRef is just a typedef of JSValueRef, they
-  ///    share definitions).
+  ///    Both JSValueRef and JSObjectRef types are garbage-collected types. (And actually,
+  ///    JSObjectRef is just a typedef of JSValueRef, they share definitions).
   ///
-  ///    The garbage collector in JavaScriptCore periodically scans the entire
-  ///    stack to check if there are any active JSValueRefs, and marks those
-  ///    with no references for destruction.
+  ///    The garbage collector in JavaScriptCore periodically scans the entire stack to check if
+  ///    there are any active JSValueRefs, and marks those with no references for destruction.
   ///
-  ///    If you happen to store a JSValueRef/JSObjectRef in heap memory or
-  ///    in memory unreachable by the stack-based garbage-collector, you should
-  ///    explicitly call JSValueProtect() and JSValueUnprotect() on the
-  ///    reference to ensure it is kept alive.
+  ///    If you happen to store a JSValueRef/JSObjectRef in heap memory or in memory unreachable
+  ///    by the stack-based garbage-collector, you should explicitly call JSValueProtect() and
+  ///    JSValueUnprotect() on the reference to ensure it is kept alive.
   ///
   JSValueRef value = JSValueMakeString(ctx, str);
 
@@ -190,8 +184,7 @@ JSValueRef GetMessage(JSContextRef ctx, JSObjectRef function,
 }
 
 ///
-/// This is called when the page has finished parsing the document and is ready
-/// to execute scripts.
+/// This is called when the page has finished parsing the document and is ready to execute scripts.
 ///
 /// We will use this event to set up our JavaScript <-> C callback.
 ///
@@ -200,8 +193,8 @@ void OnDOMReady(void* user_data, ULView caller, unsigned long long frame_id,
   ///
   /// Acquire the page's JavaScript execution context.
   ///
-  /// This locks the JavaScript context so we can modify it safely on this
-  /// thread, we need to unlock it when we're done via ulViewUnlockJSContext().
+  /// This locks the JavaScript context so we can modify it safely on this thread, we need to
+  /// unlock it when we're done via ulViewUnlockJSContext().
   ///
   JSContextRef ctx = ulViewLockJSContext(view);
 
@@ -211,14 +204,14 @@ void OnDOMReady(void* user_data, ULView caller, unsigned long long frame_id,
   JSStringRef name = JSStringCreateWithUTF8CString("GetMessage");
 
   ///
-  /// Create a garbage-collected JavaScript function that is bound to our
-  /// native C callback 'GetMessage()'.
+  /// Create a garbage-collected JavaScript function that is bound to our native C callback 
+  /// 'GetMessage()'.
   ///
   JSObjectRef func = JSObjectMakeFunctionWithCallback(ctx, name, GetMessage);
 
   ///
-  /// Store our function in the page's global JavaScript object so that it
-  /// accessible from the page as 'GetMessage()'.
+  /// Store our function in the page's global JavaScript object so that it is accessible from the
+  /// page as 'GetMessage()'.
   ///
   /// The global JavaScript object is also known as 'window' in JS.
   ///

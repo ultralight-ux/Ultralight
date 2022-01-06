@@ -727,7 +727,7 @@ void Sample::OnFailLoading(ultralight::View* caller,
 }
 
 void Sample::LogMessage(LogLevel log_level,
-  const String16& message) {
+  const String& message) {
   String msg(message);
   std::cout << msg.utf8().data() << std::endl;
 }

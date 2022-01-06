@@ -12,20 +12,18 @@ const char* htmlString();
 ///
 ///  In this sample we'll show how to integrate C++ code with JavaScript.
 ///
-///  We will introduce the DOMReady event and use it to bind a C++ callback to
-///  a JavaScript function on our page. Later, when that callback is triggered,
-///  we will execute some JavaScript to update a hidden message on the page.
+///  We will introduce the DOMReady event and use it to bind a C++ callback to a JavaScript
+///  function on our page. Later, when that callback is triggered, we will execute some JavaScript
+///  to update a hidden message on the page.
 ///
 ///  __JavaScriptCore and AppCore__
 ///
-///  Ultralight integrates the full JavaScriptCore engine (the same JS engine
-///  in Safari on macOS and iOS). The SDK includes full C API bindings to
-///  JavaScriptCore which gives you a great deal of flexibility but can be a
-///  little daunting for first-time users.
+///  Ultralight integrates the full JavaScriptCore engine (the same JS engine in Safari on macOS
+///  and iOS). The SDK includes full C API bindings to JavaScriptCore which gives you a great deal
+///  of flexibility but can be a little daunting for first-time users.
 /// 
-///  To help simplify things, AppCore provides a simple C++ wrapper over
-///  JavaScriptCore (@see JSHelpers.h). We'll be using this wrapper for the
-///  sake of convenience in this sample.
+///  To help simplify things, AppCore provides a simple C++ wrapper over JavaScriptCore
+///  (@see JSHelpers.h). We'll be using this wrapper for the sake of convenience in this sample.
 ///
 class MyApp : public WindowListener,
               public LoadListener {
@@ -37,8 +35,8 @@ public:
     ///
     /// Create our main App instance.
     ///
-    /// The App class is responsible for the lifetime of the application
-    /// and is required to create any windows.
+    /// The App class is responsible for the lifetime of the application and is required to create
+    /// any windows.
     ///
     app_ = App::Create();
 
@@ -55,19 +53,19 @@ public:
     window_->SetTitle("Ultralight Sample 4 - JavaScript");
 
     ///
-    /// Register our MyApp instance as a WindowListener so we can handle the
-    /// Window's OnClose event below.
+    /// Register our MyApp instance as a WindowListener so we can handle the Window's OnClose
+    /// event below.
     ///
     window_->set_listener(this);
 
     ///
     /// Create an Overlay using the same dimensions as our Window.
     ///
-    overlay_ = Overlay::Create(*window_, window_->width(), window_->height(), 0, 0);
+    overlay_ = Overlay::Create(window_, window_->width(), window_->height(), 0, 0);
 
     ///
-    /// Register our MyApp instance as a load listener so we can handle the
-    /// View's OnDOMReady event below.
+    /// Register our MyApp instance as a load listener so we can handle the View's OnDOMReady
+    /// event below.
     ///
     overlay_->view()->set_load_listener(this);
 
@@ -80,9 +78,8 @@ public:
   virtual ~MyApp() {}
 
   ///
-  /// Our native JavaScript callback. This function will be called from
-  /// JavaScript by calling GetMessage(). We bind the callback within
-  /// the DOMReady callback defined below.
+  /// Our native JavaScript callback. This function will be called from JavaScript by calling
+  /// GetMessage(). We bind the callback within the DOMReady callback defined below.
   ///
   JSValue GetMessage(const JSObject& thisObject, const JSArgs& args) {
     ///
@@ -92,8 +89,7 @@ public:
   }
 
   ///
-  /// Inherited from LoadListener, called when the page has finished parsing
-  /// the document.
+  /// Inherited from LoadListener, called when the page has finished parsing the document.
   ///
   /// We perform all our JavaScript initialization here.
   ///
@@ -104,8 +100,8 @@ public:
     ///
     /// Set our View's JSContext as the one to use in subsequent JSHelper calls
     ///
-    Ref<JSContext> context = caller->LockJSContext();
-    SetJSContext(context.get());
+    RefPtr<JSContext> context = caller->LockJSContext();
+    SetJSContext(context->ctx());
 
     ///
     /// Get the global object (this would be the "window" object in JS)
@@ -115,8 +111,8 @@ public:
     ///
     /// Bind MyApp::GetMessage to the JavaScript function named "GetMessage".
     ///
-    /// You can get/set properties of JSObjects by using the [] operator with
-    /// the following types as potential property values:
+    /// You can get/set properties of JSObjects by using the [] operator with the following types
+    /// as potential property values:
     ///  - JSValue
     ///      Represents a JavaScript value, eg String, Object, Function, etc.
     ///  - JSCallback 
@@ -124,8 +120,8 @@ public:
     ///  - JSCallbackWithRetval 
     ///      Typedef of std::function<JSValue(const JSObject&, const JSArgs&)>)
     ///
-    /// We use the BindJSCallbackWithRetval macro to bind our C++ class member
-    /// function to our JavaScript callback.
+    /// We use the BindJSCallbackWithRetval macro to bind our C++ class member function to our
+    /// JavaScript callback.
     ///
     global["GetMessage"] = BindJSCallbackWithRetval(&MyApp::GetMessage);
   }

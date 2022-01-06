@@ -16,12 +16,12 @@ const char* htmlString();
 ///
 ///  In this sample we'll load a string of HTML and render it to a PNG.
 ///  
-///  Since we're rendering offscreen and don't need to create any windows or
-///  handle any user input, we won't be using App::Create() and will instead be using
-///  the Ultralight API directly with our own custom main loop.
+///  Since we're rendering offscreen and don't need to create any windows or handle any user input,
+///  we won't be using App::Create() and will instead be using the Ultralight API directly with our
+///  own custom main loop.
 ///
-///  Our main loop waits for the page to finish loading by subscribing to the
-///  LoadListener interface then writes the rendering surface to a PNG on disk.
+///  Our main loop waits for the page to finish loading by subscribing to the LoadListener
+///  interface then writes the rendering surface to a PNG on disk.
 ///
 class MyApp : public LoadListener,
               public Logger {
@@ -32,6 +32,9 @@ public:
   MyApp() {
     ///
     /// Setup our config.
+    /// 
+    /// @note:
+    ///   We don't set any config options in this sample but you could set your own options here.
     /// 
     Config config;
 
@@ -46,31 +49,45 @@ public:
     Platform::instance().set_config(config);
     
     ///
-    /// Use AppCore's font loader singleton to load fonts from the OS.
+    /// Since we're not using App::Create(), we must provide our own Platform API handlers.
+    /// 
+    /// The Platform API handlers we can set are:
+    /// 
+    ///  - Platform::set_logger          (empty, optional)
+    ///  - Platform::set_gpu_driver      (empty, optional)
+    ///  - Platform::set_font_loader     (empty, **required**)
+    ///  - Platform::set_file_system     (empty, optional)
+    ///  - Platform::set_clipboard       (empty, optional)
+    ///  - Platform::set_surface_factory (defaults to BitmapSurfaceFactory, **required**)
+    /// 
+    /// The only Platform API handler we are required to provide is a font loader.
+    /// 
+    /// In this sample we will use AppCore's font loader singleton via GetPlatformFontLoader()
+    /// which loads fonts from the OS.
     ///
-    /// You could replace this with your own to provide your own fonts.
+    /// You could replace this with your own loader if you wanted to bundle your own fonts.
     ///
     Platform::instance().set_font_loader(GetPlatformFontLoader());
 
     ///
     /// Use AppCore's file system singleton to load file:/// URLs from the OS.
     ///
-    /// You could replace this with your own to provide your own file loader
-    /// (useful if you need to bundle encrypted / compressed HTML assets).
+    /// You could replace this with your own to provide your own file loader (useful if you need to
+    /// bundle encrypted / compressed HTML assets).
     ///
     Platform::instance().set_file_system(GetPlatformFileSystem("./assets/"));
 
     ///
-    /// Register our MyApp instance as a logger so we can handle the
-    /// library's LogMessage() event below in case we encounter an error.
+    /// Register our MyApp instance as a logger so we can handle the library's LogMessage() event
+    /// below in case we encounter an error.
     ///
     Platform::instance().set_logger(this);
 
     ///
     /// Create our Renderer (you should only create this once per application).
     /// 
-    /// The Renderer singleton maintains the lifetime of the library and
-    /// is required before creating any Views. It should outlive any Views.
+    /// The Renderer singleton maintains the lifetime of the library and is required before
+    /// creating any Views. It should outlive any Views.
     ///
     /// You should set up the Platform singleton before creating this.
     ///
@@ -83,8 +100,7 @@ public:
     /// 
     /// Our view config uses 2x DPI scale and "Arial" as the default font.
     /// 
-    /// We make sure GPU acceleration is disabled so we can render to an
-    /// offscreen pixel buffer surface.
+    /// We make sure GPU acceleration is disabled so we can render to an offscreen bitmap.
     ///
     ViewConfig view_config;
     view_config.initial_device_scale = 2.0;
@@ -94,19 +110,18 @@ public:
     view_ = renderer_->CreateView(1600, 1600, view_config, nullptr);
 
     ///
-    /// Register our MyApp instance as a load listener so we can handle the
-    /// View's OnFinishLoading event below.
+    /// Register our MyApp instance as a LoadListener so we can handle the View's OnFinishLoading
+    /// event below.
     ///
     view_->set_load_listener(this);
 
     ///
-    /// Load a string of HTML into our View. (For code readability, the string
-    /// is defined in the htmlString() function at the bottom of this file)
+    /// Load a string of HTML into our View. (For code readability, the string is defined in the
+    /// htmlString() function at the bottom of this file)
     ///
-    /// **Note**:
-    ///   This operation may not complete immediately-- we will call
-    ///   Renderer::Update continuously and wait for the OnFinishLoading event
-    ///   before rendering our View.
+    /// @note:
+    ///   This operation may not complete immediately-- we will call Renderer::Update continuously
+    ///   and wait for the OnFinishLoading event before rendering our View.
     ///
     /// Views can also load remote URLs, try replacing the code below with:
     ///
@@ -122,24 +137,32 @@ public:
 
   void Run() {
     std::cout << "Starting Run(), waiting for page to load..." << std::endl;
+
     ///
-    /// Continuously update our Renderer until are done flag is set to true.
+    /// Continuously update until OnFinishLoading() is called below (which sets done = true).
     ///
-    /// **Note**:
-    ///   Calling Renderer::Update handles any pending network requests,
-    ///   resource loads, and JavaScript timers.
+    /// @note:
+    ///   Calling Renderer::Update handles any pending network requests, resource loads, and 
+    ///   JavaScript timers.
     ///
-    while (!done_) {
-      std::this_thread::sleep_for (std::chrono::milliseconds(10));
+    do {
       renderer_->Update();
-      renderer_->Render();
-    }
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    } while (!done_);
+
+    ///
+    /// Render our View.
+    /// 
+    /// @note:
+    ///   Calling Renderer::Render will render any dirty Views to their respective Surfaces.
+    /// 
+    renderer_->Render();
 
     ///
     /// Get our View's rendering surface and cast it to BitmapSurface.
     ///
-    /// BitmapSurface is the default Surface implementation, you can provide
-    /// your own via Platform::set_surface_factory.
+    /// BitmapSurface is the default Surface implementation, you can provide your own via
+    /// Platform::set_surface_factory.
     ///
     BitmapSurface* bitmap_surface = (BitmapSurface*)view_->surface();
     
@@ -159,11 +182,10 @@ public:
   }
 
   ///
-  /// Inherited from LoadListener, this event is called when the View finishes
-  /// loading a page into the main frame.
+  /// Inherited from LoadListener, this is called when a View finishes loading a page into a frame.
   ///
-  virtual void OnFinishLoading(ultralight::View* caller,
-    uint64_t frame_id, bool is_main_frame, const String& url) override {
+  virtual void OnFinishLoading(ultralight::View* caller, uint64_t frame_id, bool is_main_frame,
+                               const String& url) override {
     ///
     /// Our page is done when the main frame finishes loading.
     ///
@@ -178,11 +200,10 @@ public:
   }
 
   ///
-  /// Inherited from Logger, this event is called when the library wants to
-  /// print a message to the log.
+  /// Inherited from Logger, this is called when the library wants to print a message to the log.
   ///
-  virtual void LogMessage(LogLevel log_level, const String16& message) override {
-    std::cout << String(message).utf8().data() << std::endl << std::endl;
+  virtual void LogMessage(LogLevel log_level, const String& message) override {
+    std::cout << message.utf8().data() << std::endl << std::endl;
   }
 };
 
@@ -193,6 +214,9 @@ int main() {
   return 0;
 }
 
+///
+/// Our HTML string to load into the View.
+/// 
 const char* htmlString() {
   return R"(
     <html>

@@ -14,12 +14,11 @@ const char* htmlString_RightPane();
 ///
 /// Welcome to Sample 3!
 ///
-/// In this sample we'll continue working with the AppCore API and show
-/// how to make your app responsive to changes in window size by updating the
-/// layout of multiple overlays.
+/// In this sample we'll continue working with the AppCore API and show how to make your app
+/// responsive to changes in window size by updating the layout of multiple overlays.
 ///
-/// We will create a window with two overlays-- a left pane with a fixed width
-/// and a right pane that takes up the remaining width.
+/// We will create a window with two overlays-- a left pane with a fixed width and a right pane
+/// that takes up the remaining width.
 ///
 ///    +----------------------------------------------------+
 ///    |               |                                    |
@@ -36,8 +35,8 @@ const char* htmlString_RightPane();
 ///    |               |                                    |
 ///    +----------------------------------------------------+
 /// 
-/// To respond to resize events, we'll attach a WindowListener to our window
-/// and re-calculate layout of our overlays in the OnResize callback.
+/// To respond to resize events, we'll attach a WindowListener to our window and re-calculate
+/// layout of our overlays in the OnResize callback.
 ///
 
 class MyApp : public WindowListener,
@@ -57,8 +56,8 @@ public:
     /// Create a resizable window by passing by OR'ing our window flags with
     /// kWindowFlags_Resizable.
     ///
-    window_ = Window::Create(app_->main_monitor(), WINDOW_WIDTH, WINDOW_HEIGHT,
-      false, kWindowFlags_Titled | kWindowFlags_Resizable);
+    window_ = Window::Create(app_->main_monitor(), WINDOW_WIDTH, WINDOW_HEIGHT, false,
+        kWindowFlags_Titled | kWindowFlags_Resizable);
 
     ///
     /// Set the title of our window.
@@ -66,16 +65,15 @@ public:
     window_->SetTitle("Ultralight Sample 3 - Resize Me!");
 
     ///
-    /// Create the overlays for our left and right panes-- we don't care about
-    /// their initial size and position because they'll be set when we call
-    /// OnResize() below.
+    /// Create the overlays for our left and right panes-- we don't care about their initial size
+    /// and position because they'll be set when we call OnResize() below.
     ///
-    left_pane_ = Overlay::Create(*window_.get(), 100, 100, 0, 0);
-    right_pane_ = Overlay::Create(*window_.get(), 100, 100, 0, 0);
+    left_pane_ = Overlay::Create(window_.get(), 100, 100, 0, 0);
+    right_pane_ = Overlay::Create(window_.get(), 100, 100, 0, 0);
 
     ///
-    /// Force a call to OnResize to perform initial layout and sizing of our
-    /// left and right overlays.
+    /// Force a call to OnResize to perform initial layout and sizing of our left and right
+    /// overlays.
     ///
     OnResize(window_.get(), window_->width(), window_->height());
 
@@ -86,14 +84,14 @@ public:
     right_pane_->view()->LoadHTML(htmlString_RightPane());
 
     ///
-    /// Register our MyApp instance as a WindowListener so we can handle the
-    /// Window's OnResize event below.
+    /// Register our MyApp instance as a WindowListener so we can handle the Window's OnResize
+    /// event below.
     ///
     window_->set_listener(this);
 
     ///
-    /// Register our MyApp instance as a ViewListener so we can handle the
-    /// Views' OnChangeCursor event below.
+    /// Register our MyApp instance as a ViewListener so we can handle the Views' OnChangeCursor
+    /// event below.
     ///
     left_pane_->view()->set_view_listener(this);
     right_pane_->view()->set_view_listener(this);

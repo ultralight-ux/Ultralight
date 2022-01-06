@@ -12,27 +12,25 @@ using namespace ultralight;
 ///
 ///  __FileSystem API__
 ///
-///  Ultralight uses the FileSystem interface (part of the Platform API) to
-///  load file:/// URLs and handle JavaScript FileSystem API requests.
+///  Ultralight uses the FileSystem interface (part of the Platform API) to load file:/// URLs and
+///  handle JavaScript FileSystem API requests.
 ///
-///  AppCore provides default FileSystem implementations for Windows, macOS,
-///  and Linux out-of-the-box. 
+///  AppCore provides default FileSystem implementations for Windows, macOS, and Linux
+///  out-of-the-box. 
 ///
 ///   * On Windows/Linux, it will use ./assets/ as the base file path.
 ///   * On macOS, it will use the app bundle's @resource_path
 ///
-///  You can configure the base file system path by passing your own Settings
-///  to App::Create.
+///  You can configure the base file system path by passing your own Settings to App::Create.
 ///
-///  When building your application, it's best to use a CMake script to copy
-///  these assets to your application's output folder/bundle. Look at the
-///  CMakeLists.txt of this sample for an example.
+///  When building your application, it's best to use a CMake script to copy these assets to your
+///  application's output folder/bundle. Look at the CMakeLists.txt of this sample for an example.
 ///
 ///  __Custom FileSystem API__
 ///
-///  You can provide your own FileSystem implementation in case you need
-///  greater control over file loading. This is useful if you're using your own
-///  data format and/or need to encrypt or compress resources.
+///  You can provide your own FileSystem implementation in case you need greater control over file
+///  loading. This is useful if you're using your own data format and/or need to encrypt or
+///  compress resources.
 ///
 ///  See <Ultralight/platform/FileSystem.h> for more information.
 ///
@@ -50,8 +48,7 @@ public:
     ///
     /// Create our Window using default window flags.
     ///
-    window_ = Window::Create(app_->main_monitor(), 450, 700, false,
-      kWindowFlags_Titled);
+    window_ = Window::Create(app_->main_monitor(), 450, 700, false, kWindowFlags_Titled);
 
     ///
     /// Set the title of our window.
@@ -61,7 +58,7 @@ public:
     ///
     /// Create an Overlay using the same dimensions as our Window.
     ///
-    overlay_ = Overlay::Create(*window_, window_->width(), window_->height(), 0, 0);
+    overlay_ = Overlay::Create(window_, window_->width(), window_->height(), 0, 0);
 
     ///
     /// Load a file from the FileSystem.

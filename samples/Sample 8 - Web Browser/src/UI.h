@@ -18,7 +18,7 @@ class UI : public WindowListener,
            public LoadListener,
            public ViewListener {
  public:
-  UI(Ref<Window> window);
+  UI(RefPtr<Window> window);
   ~UI();
                
   // Inherited from WindowListener
@@ -58,9 +58,9 @@ protected:
 
   Tab* active_tab() { return tabs_.empty() ? nullptr : tabs_[active_tab_id_].get(); }
                
-  Ref<View> view() { return overlay_->view(); }
+  RefPtr<View> view() { return overlay_->view(); }
 
-  Ref<Window> window_;
+  RefPtr<Window> window_;
   RefPtr<Overlay> overlay_;
   int ui_height_;
   int tab_height_;

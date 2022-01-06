@@ -14,7 +14,7 @@ Browser::Browser()  {
   window_->SetTitle("Ultralight Sample 8 - Web Browser");
 
   // Create the UI
-  ui_.reset(new UI(*window_.get()));
+  ui_.reset(new UI(window_));
   window_->set_listener(ui_.get());
 }
 

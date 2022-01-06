@@ -28,14 +28,14 @@ public:
     window_->Show();
     window_->set_listener(this);
 
-    overlay_ = Overlay::Create(*window_, window_->width(), window_->height(), 0, 0);
+    overlay_ = Overlay::Create(window_, window_->width(), window_->height(), 0, 0);
     overlay_->view()->LoadURL(url);
     overlay_->view()->set_view_listener(this);
   }
 
-  inline Ref<View> view() { return overlay_->view(); }
-  inline Ref<Window> window() { return *window_; }
-  inline Ref<Overlay> overlay() { return *overlay_; }
+  inline RefPtr<View> view() { return overlay_->view(); }
+  inline RefPtr<Window> window() { return window_; }
+  inline RefPtr<Overlay> overlay() { return overlay_; }
 
   virtual void OnClose(ultralight::Window* window) override {
     // We quit the application when any of the windows are closed.
@@ -82,8 +82,8 @@ public:
     ///
     /// Set our View's JSContext as the one to use in subsequent JSHelper calls
     ///
-    Ref<JSContext> context = caller->LockJSContext();
-    SetJSContext(context.get());
+    RefPtr<JSContext> context = caller->LockJSContext();
+    SetJSContext(context->ctx());
 
     ///
     /// Get the global object (this would be the "window" object in JS)
@@ -146,8 +146,8 @@ public:
   virtual ~MyApp() {}
 
   virtual void OnUpdateEditor(const ultralight::String& content) {
-    Ref<JSContext> context = preview_window_->view()->LockJSContext();
-    SetJSContext(context.get());
+    RefPtr<JSContext> context = preview_window_->view()->LockJSContext();
+    SetJSContext(context->ctx());
     JSObject global = JSGlobalObject();
     global["html_content"] = content;
 

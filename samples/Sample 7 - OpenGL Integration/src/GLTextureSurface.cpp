@@ -200,7 +200,7 @@ public:
       glDeleteTextures(1, &texture_id_);
     }
 
-    bitmap_ = ultralight::Bitmap::Create(width, height, ultralight::kBitmapFormat_BGRA8_UNORM_SRGB);
+    bitmap_ = ultralight::Bitmap::Create(width, height, ultralight::BitmapFormat::BGRA8_UNORM_SRGB);
 
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture_id_);

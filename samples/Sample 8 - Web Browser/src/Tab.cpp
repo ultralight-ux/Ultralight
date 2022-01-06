@@ -35,7 +35,7 @@ void Tab::Hide() {
 
 void Tab::ToggleInspector() {
   if (!inspector_overlay_) {
-    inspector_overlay_ = Overlay::Create(ui_->window_, *view()->inspector(), 0, 0);
+    inspector_overlay_ = Overlay::Create(ui_->window_, view()->inspector(), 0, 0);
   } else {
     if (inspector_overlay_->is_hidden())
       inspector_overlay_->Show();
