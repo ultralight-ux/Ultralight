@@ -24,6 +24,14 @@ public:
   void Hide();
 
   void ToggleInspector();
+
+  bool IsInspectorShowing() const;
+
+  IntRect GetInspectorResizeDragHandle() const;
+
+  int GetInspectorHeight() const;
+
+  void SetInspectorHeight(int height);
                 
   void Resize(uint32_t width, uint32_t height);
 
@@ -38,6 +46,8 @@ public:
   virtual RefPtr<View> OnCreateChildView(ultralight::View* caller,
     const String& opener_url, const String& target_url,
     bool is_popup, const IntRect& popup_rect) override;
+  virtual RefPtr<View> OnCreateInspectorView(ultralight::View* caller, bool is_local,
+      const String& inspected_url) override;
 
   // Inherited from Listener::Load
   virtual void OnBeginLoading(View* caller, uint64_t frame_id,

@@ -22,6 +22,8 @@ class UI : public WindowListener,
   ~UI();
                
   // Inherited from WindowListener
+  virtual bool OnKeyEvent(const ultralight::KeyEvent& evt) override;
+  virtual bool OnMouseEvent(const ultralight::MouseEvent& evt) override;
   virtual void OnClose(ultralight::Window* window) override;
   virtual void OnResize(ultralight::Window* window, uint32_t width, uint32_t height) override;
 
@@ -42,6 +44,8 @@ class UI : public WindowListener,
   void OnRequestTabClose(const JSObject& obj, const JSArgs& args);
   void OnActiveTabChange(const JSObject& obj, const JSArgs& args);
   void OnRequestChangeURL(const JSObject& obj, const JSArgs& args);
+
+  RefPtr<Window> window() { return window_; }
 
 protected:
   void CreateNewTab();
@@ -70,6 +74,10 @@ protected:
   uint64_t active_tab_id_ = 0;
   uint64_t tab_id_counter_ = 0;
   Cursor cur_cursor_;
+  bool is_resizing_inspector_;
+  bool is_over_inspector_resize_drag_handle_;
+  int inspector_resize_begin_height_;
+  int inspector_resize_begin_mouse_y_;
 
   JSFunction updateBack;
   JSFunction updateForward;

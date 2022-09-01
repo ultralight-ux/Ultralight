@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#define INSPECTOR_HEIGHT 400
+#define INSPECTOR_DRAG_HANDLE_HEIGHT 10
 
 Tab::Tab(UI* ui, uint64_t id, uint32_t width, uint32_t height, int x, int y) 
   : ui_(ui), id_(id), container_width_(width), container_height_(height) {
@@ -35,16 +35,56 @@ void Tab::Hide() {
 
 void Tab::ToggleInspector() {
   if (!inspector_overlay_) {
-    inspector_overlay_ = Overlay::Create(ui_->window_, view()->inspector(), 0, 0);
+    view()->CreateLocalInspectorView();
   } else {
-    if (inspector_overlay_->is_hidden())
+    if (inspector_overlay_->is_hidden()) {
       inspector_overlay_->Show();
-    else
+    } else {
       inspector_overlay_->Hide();
+    }
   }
 
   // Force resize to update layout
-  Resize(container_width_, container_height_);
+}
+
+
+bool Tab::IsInspectorShowing() const {
+  if (!inspector_overlay_)
+    return false;
+
+  return !inspector_overlay_->is_hidden();
+}
+
+IntRect Tab::GetInspectorResizeDragHandle() const {
+  if (!IsInspectorShowing())
+    return IntRect::MakeEmpty();
+
+  int drag_handle_height_px = (uint32_t)std::round(INSPECTOR_DRAG_HANDLE_HEIGHT * ui_->window()->scale());
+
+  // This drag handle should span the width of the UI and be centered vertically at the boundary between
+  // the page overlay and inspector overlay.
+
+  int drag_handle_x = (int)inspector_overlay_->x();
+  int drag_handle_y = (int)inspector_overlay_->y() - drag_handle_height_px / 2;
+
+  return { drag_handle_x, drag_handle_y, drag_handle_x + (int)inspector_overlay_->width(),
+           drag_handle_y + drag_handle_height_px };
+}
+
+int Tab::GetInspectorHeight() const {
+  if (inspector_overlay_)
+    return inspector_overlay_->height();
+
+  return 0;
+}
+
+void Tab::SetInspectorHeight(int height) {
+  if (height > 2) {
+    inspector_overlay_->Resize(inspector_overlay_->width(), height);
+
+    // Trigger a resize to perform re-layout / re-size of content overlay
+    Resize(container_width_, container_height_);
+  }
 }
 
 void Tab::Resize(uint32_t width, uint32_t height) {
@@ -53,9 +93,7 @@ void Tab::Resize(uint32_t width, uint32_t height) {
 
   uint32_t content_height = container_height_;
   if (inspector_overlay_ && !inspector_overlay_->is_hidden()) {
-    uint32_t inspector_height_px = (uint32_t)std::round(INSPECTOR_HEIGHT * ui_->window_->scale());
-    inspector_overlay_->Resize(container_width_, inspector_height_px);
-    content_height -= inspector_height_px;
+    content_height -= inspector_overlay_->height();
   }
   
   if (content_height < 1)
@@ -63,8 +101,10 @@ void Tab::Resize(uint32_t width, uint32_t height) {
 
   overlay_->Resize(container_width_, content_height);
 
-  if (inspector_overlay_ && !inspector_overlay_->is_hidden())
+  if (inspector_overlay_ && !inspector_overlay_->is_hidden()) {
     inspector_overlay_->MoveTo(0, overlay_->y() + overlay_->height());
+    inspector_overlay_->Resize(container_width_, inspector_overlay_->height());
+  }
 }
 
 void Tab::OnChangeTitle(View* caller, const String& title) {
@@ -95,6 +135,20 @@ RefPtr<View> Tab::OnCreateChildView(ultralight::View* caller,
   const String& opener_url, const String& target_url,
   bool is_popup, const IntRect& popup_rect) {
   return ui_->CreateNewTabForChildView(target_url);
+}
+
+RefPtr<View> Tab::OnCreateInspectorView(ultralight::View* caller, bool is_local,
+                                         const String& inspected_url) {
+  if (inspector_overlay_)
+    return nullptr;
+
+  inspector_overlay_ = Overlay::Create(ui_->window_, container_width_, container_height_ / 2, 0, 0);
+
+  // Force resize to update layout
+  Resize(container_width_, container_height_);
+  inspector_overlay_->Show();
+
+  return inspector_overlay_->view();
 }
 
 void Tab::OnBeginLoading(View* caller, uint64_t frame_id, bool is_main_frame, const String& url) {

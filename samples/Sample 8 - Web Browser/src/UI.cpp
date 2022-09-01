@@ -4,7 +4,8 @@ static UI* g_ui = 0;
 
 #define UI_HEIGHT 80
 
-UI::UI(RefPtr<Window> window) : window_(window) {
+UI::UI(RefPtr<Window> window) : window_(window), cur_cursor_(Cursor::kCursor_Pointer), 
+is_resizing_inspector_(false), is_over_inspector_resize_drag_handle_(false) {
   uint32_t window_width = window_->width();
   ui_height_ = (uint32_t)std::round(UI_HEIGHT * window_->scale());
   overlay_ = Overlay::Create(window_, window_width, ui_height_, 0, 0);
@@ -19,6 +20,53 @@ UI::~UI() {
   view()->set_load_listener(nullptr);
   view()->set_view_listener(nullptr);
   g_ui = nullptr;
+}
+
+bool UI::OnKeyEvent(const ultralight::KeyEvent& evt) {
+  return true;
+}
+
+bool UI::OnMouseEvent(const ultralight::MouseEvent& evt) {
+  if (active_tab() && active_tab()->IsInspectorShowing()) {
+    float x_px = std::round(evt.x * window()->scale());
+    float y_px = std::round(evt.y * window()->scale());
+
+    if (is_resizing_inspector_) {
+      int resize_delta = inspector_resize_begin_mouse_y_ - y_px;
+      int new_inspector_height = inspector_resize_begin_height_ + resize_delta;
+      active_tab()->SetInspectorHeight(new_inspector_height);
+
+      if (evt.type == MouseEvent::kType_MouseUp) {
+        is_resizing_inspector_ = false;
+      }
+
+      return false;
+    }
+
+    IntRect drag_handle = active_tab()->GetInspectorResizeDragHandle();
+
+    bool over_drag_handle = drag_handle.Contains(Point(x_px, y_px));
+
+    if (over_drag_handle && !is_over_inspector_resize_drag_handle_) {
+      // We entered the drag area
+      window()->SetCursor(Cursor::kCursor_NorthSouthResize);
+      is_over_inspector_resize_drag_handle_ = true;
+    } else if (!over_drag_handle && is_over_inspector_resize_drag_handle_) {
+      // We left the drag area, restore previous cursor
+      window()->SetCursor(cur_cursor_);
+      is_over_inspector_resize_drag_handle_ = false;
+    }
+
+    if (over_drag_handle && evt.type == MouseEvent::kType_MouseDown && !is_resizing_inspector_) {
+      is_resizing_inspector_ = true;
+      inspector_resize_begin_mouse_y_ = y_px;
+      inspector_resize_begin_height_ = active_tab()->GetInspectorHeight();
+    }
+
+    return !over_drag_handle;
+  }
+
+  return true;
 }
 
 void UI::OnClose(ultralight::Window* window) {
@@ -185,7 +233,6 @@ RefPtr<View> UI::CreateNewTabForChildView(const String& url) {
 
   return tabs_[id]->view();
 }
-
 
 void UI::UpdateTabTitle(uint64_t id, const ultralight::String& title) {
   RefPtr<JSContext> lock(view()->LockJSContext());
