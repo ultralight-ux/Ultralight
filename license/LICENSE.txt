@@ -66,7 +66,7 @@ CERTAIN LICENSEE OBLIGATIONS
       4.3 Licensing of End Users.  Subject to the license grant in ARTICLE 2, Licensee may distribute to End Users the Ultralight software, as part of and in conjunction with Licensed Products, provided that such distribution to End Users is subject to the End User License Agreement in Exhibit A, or a license by Licensee having substantially the same terms and conditions.
       4.4 Marking.  Licensee shall ensure that the following legend, or a successor legend as designated by Ultralight Inc from time to time, shall appear in the credit section of any Licensed Product:  
 
-			Please see the accompanying NOTICES.txt for full text.
+			Please see the accompanying NOTICES.md for full text.
 
       4.5 Export Controls.  The Ultralight software, including any downloading or use of, may be subject to export controls imposed by U.S. export control laws, including the U.S. Export Administration Act and its associated regulations, and may be subject to export or import regulations in other countries.  Licensee agrees to comply strictly with all such regulations and acknowledges that Licensee has the responsibility to obtain licenses to export, re-export, or import the Ultralight software.
       4.6 Infringement.  Licensee agrees to promptly notify Ultralight Inc if it becomes aware of any third party that infringes Ultralight Inc's intellectual property rights, including misappropriation of the Ultralight software or violations of an End User license agreement (an "Infringement").  Ultralight Inc, at its discretion, shall have the right, but not the obligation, to enforce intellectual property rights against any Infringement.  Ultralight Inc shall solely control any such enforcement action.
