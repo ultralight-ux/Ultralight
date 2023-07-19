@@ -1,7 +1,7 @@
-<img src="media/logo.png" width="700">
+<img src="media/logo.png" width="200">
 <a href='https://ci.ultralig.ht/job/Ultralight/job/master/'><img src='https://ci.ultralig.ht/buildStatus/icon?job=Ultralight%2Fmaster'></a>
 
-[Website](https://ultralig.ht) | [Join our Discord!](https://chat.ultralig.ht) | [Browse C/C++ API](https://github.com/ultralight-ux/Ultralight-API/) | [ Documentation](https://docs.ultralig.ht) | [Follow on Twitter](https://twitter.com/ultralight_ux)
+[Website](https://ultralig.ht) | [Join our Discord!](https://chat.ultralig.ht) | [C++ API](https://ultralig.ht/api/cpp/1_3_0/) | [C API](https://ultralig.ht/api/c/1_3_0/) | [Support Docs](https://docs.ultralig.ht) | [Twitter](https://twitter.com/ultralight_ux)
 
 ## Discord Chat
 
@@ -11,67 +11,56 @@ Got a question about Ultralight? Come chat with us on Discord!
 
 # About
 
-Ultralight is an ultra-fast, ultra-light, standards-compliant HTML renderer for applications and games. It supports most modern HTML5, CSS, and JavaScript features while still remaining light in binary size and memory usage.
+Ultralight is the ultimate solution for developers seeking to seamlessly integrate web-content into games and desktop apps. Our cutting-edge engine supports the latest HTML/CSS/JS features while remaining exceptionally lightweight in binary size and memory usage.
 
-Currently available for Windows, macOS, and Linux (64-bit only, ARM64 coming).
+## Key Features
 
-Official API is available for C and C++, with community bindings for C#, Rust, Java, and Go [available here](https://docs.ultralig.ht/docs/language-bindings).
+<dl>
+<dt>1. Lightweight and Powerful:</dt>
+<dd>
+    Thanks to its dual, high-performance CPU and GPU renderers, Ultralight offers the perfect balance between performance and resource consumption, making it the go-to choice for developers who demand speed in constrained environments.
+</dd>
 
-Get started now by [reading the docs](https://docs.ultralig.ht).
+<dt>2. Cross-Platform Compatibility:</dt>
+<dd>
+    With support for Windows, macOS, Linux, Xbox, PS4, and PS5 (and ARM64 coming in 1.4), Ultralight ensures your content displays smoothly and consistently on a wide range of platforms and hardware targets.
+</dd>
 
-## Next-Generation HTML Renderer
+<dt>3. Modern HTML/JS/CSS Support:</dt>
+<dd>
+    Based on WebKit, Ultralight enjoys many of the same cutting-edge web features as Apple's Safari browser, simplifying testing and reducing production costs.
+</dd>
 
-You can think of Ultralight like a smaller, lighter, cross-platform WebKit that's more customizable and designed to display HTML in an existing app rather than function as a standalone browser.
+<dt>4. Deep C/C++ and JavaScript Integration:</dt>
+<dd>
+    Unlock the true potential of your applications. Ultralight facilitates seamless C/C++ and JavaScript integration through direct access to the JavaScriptCore API. Expose native state to web pages, extend JavaScript classes, define C/C++ callbacks, and more.
+</dd>
 
-The API allows you to integrate your native code deeply with JavaScript (we offer bare-metal access to the JavaScriptCore VM API) and allows you to customize file system loaders, font loading, clipboard integration, and even drawing itself (via GPU display lists or the Surface API).
+<dt>5. Low-Level Customization:</dt>
+<dd>
+    Tailor your integration to perfection. Ultralight allows you to override platform-specific functionality, granting you control over file-system access, clipboard management, font loading, and more to suit the unique needs of your application.
+</dd>
+</dl>
 
+## For Game Developers
 
-## For Games
+Developed in collaboration with top AAA game studios, Ultralight is engineered to elevate web-content integration across a diverse set of game engine environments.
 
-Render HTML to an in-game texture using our CPU renderer or take performance to the next level using our GPU renderer.
-
-Take advantage of our low-level platform API— load HTML assets directly from your game's existing asset pipeline using the FileSystem interface.
+Choose between our CPU renderer for fast, reliable rendering across various architectures or our customizable GPU renderer to unlock unparalleled animation performance.
 
 __→ Learn more by visiting our [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).__
 
-## For Desktop Apps
+## For Desktop-App Developers
 
-Get the best of both worlds by building your native C/C++ desktop app's front-end with modern HTML/CSS/JS.
+Build your native app's front-end with modern HTML/CSS/JS while harnessing the power and performance of C/C++.
 
-Take advantage of our AppCore framework to launch cross-platform windows and render to OS-native GPU surfaces (D3D11, D3D12, Metal, OpenGL, and more).
-
-_AppCore is currently under active development and only supports single-window apps at this writing. A number of planned features (app icons, automatic packager, borderless windows with custom draggable titlebars, etc) are missing but on the way._
+Embed the renderer directly within your existing run loop or leverage our AppCore framework to do all the heavy lifting for you, offering convenient native window management and accelerated rendering.
 
 __→ Learn more by visiting our [Desktop App Guide](https://docs.ultralig.ht/docs/writing-your-first-app).__
 
-### Base Memory Usage
-
-|             | Ultralight  | Electron  |
-|-------------|-------------|-----------|
-| __Windows__ | 9 MB        | 72 MB     |
-| __macOS__   | 17 MB       | 97 MB     |
-| __Linux__   | 15 MB       | 136 MB    |
-
-### Base Distributable Size
-
-|             | Ultralight  | Electron  |
-|-------------|-------------|-----------|
-| __Windows__ | 40 MB       | 147 MB    |
-| __macOS__   | 55 MB       | 163 MB    |
-| __Linux__   | 55 MB       | 179 MB    |
-
-### Comparison with Chromium
-
-|                       | Ultralight               | Chromium                    |
-|-----------------------|--------------------------|-----------------------------|
-| __Renderer__          | Proprietary (GPU or CPU) | Skia (CPU) / GPU Compositor |
-| __Layout Engine__     | WebCore (WebKit fork)    | Blink                       |
-| __JavaScript VM__     | JavaScriptCore           | V8                          |
-| __IPC__               | None (Single Process)    | Yes (Multi Process)         |
-
 # Architecture
 
-Ultralight is a new port of WebKit combined with a new lightweight renderer intended specifically for embedding in apps and games.
+Ultralight is a platform-agnostic port of WebKit for games and desktop apps.
 
 Portions of the library are open-source, here's how the library is laid out:
 
@@ -80,25 +69,25 @@ Portions of the library are open-source, here's how the library is laid out:
 | __UltralightCore__ | Low-level graphics renderer       | Proprietary | (Available with license) |
 | __WebCore__        | HTML layout engine (WebKit fork)  | LGPL/BSD    | [ultralight-ux/WebCore](https://github.com/ultralight-ux/WebCore) |
 | __Ultralight__     | View, compositor, and event logic | Proprietary | (Avaiable with license)  |
-| __AppCore__        | Optional, desktop app runtime     | LGPL        | [ultralight-ux/AppCore](https://github.com/ultralight-ux/AppCore) |
+| __AppCore__        | Optional desktop app runtime      | LGPL        | [ultralight-ux/AppCore](https://github.com/ultralight-ux/AppCore) |
 
 ## Dual High-Performance Renderers
 
 We support two different renderers for integration into a variety of target environments.
+
+### CPU Renderer
+
+For easy integration into games and other complex environments, Ultralight can render to an offscreen pixel buffer via a multi-threaded CPU rendering pipeline. For more info, see the [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).
+
+The library can also render to a user-supplied block of memory via the Surface API (see [Using a Custom Surface](https://docs.ultralig.ht/docs/using-a-custom-surface)).
+
+Paths, gradients, images, and patterns in this pipeline are rasterized and composited in parallel using [Skia](https://skia.org/).
 
 ### GPU Renderer
 
 Our optional, high-performance GPU renderer can render HTML directly on the GPU. All painting is performed via virtual display lists and translated to your target graphics platform at runtime. For more info, see [Using a Custom GPUDriver](https://docs.ultralig.ht/docs/using-a-custom-gpudriver).
 
 The GPU renderer is enabled by default when using Ultralight via the AppCore runtime.
-
-### CPU Renderer
-
-For easier integration into games and other complex environments, Ultralight can render to an offscreen pixel buffer using an SIMD-accelerated CPU rendering pipeline. Fore more info, see the [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).
-
-The library can also render to a user-supplied pixel buffer via the Surface API (see [Using a Custom Surface](https://docs.ultralig.ht/docs/using-a-custom-surface)).
-
-Paths, gradients, and patterns in this mode are rasterized using [Blend2D's high-performance JIT compiler](https://blend2d.com).
 
 # Licensing
 
@@ -134,5 +123,6 @@ Pre-built binares are uploaded to the following S3 buckets every commit:
 | -------------------------- | --------------------------------------------------- |
 | __Join our Discord!__      | <https://chat.ultralig.ht>                          |
 | __Docs / Getting Started__ | <https://docs.ultralig.ht>                          |
-| __Browse C/C++ API__       | <https://github.com/ultralight-ux/Ultralight-API/>  |
+| __Browse C++ API__         | <https://ultralig.ht/api/cpp/1_3_0/>                |
+| __Browse C API__           | <https://ultralig.ht/api/c/1_3_0/>                  |
 | __Follow Us on Twitter__   | <https://twitter.com/ultralight_ux>                 |

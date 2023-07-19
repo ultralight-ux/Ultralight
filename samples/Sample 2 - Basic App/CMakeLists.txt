@@ -26,6 +26,10 @@ else ()
   set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
 endif ()
 
+# Copy assets to assets directory
+add_custom_command(TARGET ${APP_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "${ASSETS_PATH}")
+
 # Copy resources to assets directory
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_RESOURCES_DIR}" "${ASSETS_PATH}/resources")

@@ -56,6 +56,12 @@ public:
     window_->SetTitle("Ultralight Sample 5 - File Loading");
 
     ///
+    /// Register our MyApp instance as a WindowListener so we can handle the Window's OnClose
+    /// event below.
+    ///
+    window_->set_listener(this);
+
+    ///
     /// Create an Overlay using the same dimensions as our Window.
     ///
     overlay_ = Overlay::Create(window_, window_->width(), window_->height(), 0, 0);

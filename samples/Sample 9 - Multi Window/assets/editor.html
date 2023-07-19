@@ -28,45 +28,44 @@
     var editor = ace.edit("editor");
     var html = `<!DOCTYPE html>
 <html>
-    <head>
-        <style type="text/css">
-            html {
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-                color: black;
-                font-family: Arial;
-                background: linear-gradient(-45deg, #acb4ff, #f5d4e2);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-            }
-            div {
-                width: 350px;
-                height: 350px;
-                text-align: center;
-                border-radius: 25px;
-                background: linear-gradient(-45deg, #e5eaf9, #f9eaf6);
-                box-shadow: 0 7px 18px -6px #8f8ae1;
-            }
-            h1 {
-                padding: 1em;
-            }
-            p {
-                background: white;
-                padding: 2em;
-                margin: 40px;
-                border-radius: 25px;
-            }
-        </style>
-    </head>
-    <body>
-        <div>
-            <h1>Hello World!</h1>
-            <p>Welcome to Ultralight!</p>
-        </div>
-    </body>
+<head>
+    <style type="text/css">
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            color: white;
+            font-family: -apple-system, 'Segoe UI', 'Roboto', 'Ubuntu', 'Arial', sans-serif;
+            background: linear-gradient(45deg, #4e95ff, #6032e4, #c478ff);
+            height: 100%;
+        }
+
+        div {
+            width: 350px;
+            text-align: center;
+            border-radius: 5px;
+            background: rgba(0, 10, 30, 0.1);
+            border: 1px solid rgba(0, 10, 30, 0.5);
+        }
+
+        html, div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            padding: 1em;
+            font-size: 24px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Hello Ultralight!</h1>
+    </div>
+</body>
 </html>
 `
     editor.setTheme("ace/theme/dracula");

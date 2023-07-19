@@ -60,8 +60,9 @@ execute_process(
 )
 
 # Get formatted log
+separate_arguments(GIT_LOG_CMD UNIX_COMMAND "git log --date=short --format=\"%ad | %s [%h]%n%n%w(100,13,13)%b\"")
 execute_process(
-  COMMAND git log --pretty=oneline --abbrev-commit
+  COMMAND ${GIT_LOG_CMD}
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   OUTPUT_VARIABLE GIT_LOG
   OUTPUT_STRIP_TRAILING_WHITESPACE

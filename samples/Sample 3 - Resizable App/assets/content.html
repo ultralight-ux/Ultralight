@@ -1,0 +1,61 @@
+<html>
+<head>
+    <style type="text/css">
+        * {
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4e95ff, #6032e4);
+            color: #5088fb;
+            font-family: -apple-system, 'Segoe UI', Ubuntu, 'Open Sans', Arial, sans-serif;
+        }
+
+        #divider {
+            z-index: 100;
+            position: fixed;
+            width: 12px;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: linear-gradient(90deg, #1a215a44, rgba(0, 0, 35, 0.01));
+        }
+
+        h3 {
+            margin-left: 10px;
+            margin-top: 32px;
+        }
+
+        #message {
+            font-weight: 600;
+            margin: 0;
+            width: 14em;
+            height: 1.6em;
+            border-radius: 15px;
+            background: white;
+            text-align: center;
+            padding: 2em;
+            box-shadow: 0 8px 24px -6px #1f286540;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: top 0.15s ease-out, box-shadow 0.15s ease-out;
+            cursor: pointer;
+        }
+
+        #message:hover {
+            top: 49%;
+            box-shadow: 0 8px 24px -6px #1a225a72;
+        }
+    </style>
+</head>
+<body>
+    <div id="divider"></div>
+    <div id="contents">
+        <div id="message">
+            Welcome to the Dashboard!
+        </div>
+    </div>
+</body>
+</html>

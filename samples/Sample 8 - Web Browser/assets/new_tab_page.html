@@ -1,77 +1,135 @@
 <html>
+
 <head>
-<title>New Tab</title>
-<style type="text/css">
-body { background:linear-gradient(#FFF 0%, #FAFAFA 25%, #EEE); }
-* { font-family: Segoe UI, -apple-system, 'Ubuntu', 'Arial', sans-serif; }
-h1 { text-align: center; font-size: 4em; color: #CCC; margin: 70px auto; font-weight: 200; 
-  font-family: 'Segoe UI Light', -apple-system, 'Ubuntu', 'Arial', sans-serif; }
-div.row { clear: both; width: 652; margin: 0 auto; background-color: black; }
-div.row div {  }
-div.row div a { 
-  width: 144;
-  height: 144;
-  border: 1px solid #FFF;
-  border-width: 3px;
-  box-shadow: 0px 18px 16px -15px rgba(100, 100, 100, 0.25);
-  float: left;
-  margin: 5px;
-  border-radius: 50%;
-  text-decoration: none;
-  color: #777;
-  font-size: 0.9em;
-  transition: 0.1s;
-  background: #FFF;
-  position: relative;
-}
-div.row div a:active {
-  margin-top: 9px;
-  box-shadow: none !important;
-}
-div.row div a.special { background: #833efa; border: 4px solid #833efa; }
-div.row div a.special span { /*background-color: rgba(225, 220, 255, 0.3); */
-    color: white; }
-div.row div a span {
-  display: block;
-  height: 1.3em;
-  /*background-color: #FAFAFA; */
-  padding: 8px;
-  border-radius: 8px 8px 0 0;
-  transition: 0.1s;
-  position: absolute;
-  margin: 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  text-align: center;
-}
-pre { font-family: Courier New; color: #888; width: 610px; margin: 70 auto; }
-div.row div a:hover {
-  background-color: #FFF;
-  color: #833efa;
-  border-color: #833efa;
+  <title>New Tab</title>
+  <style type="text/css">
+    body {
+      background: #16151d;
+      color: #c4c2d0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-  /*background: linear-gradient(#E8E8E8, #FFF); */
-  box-shadow: 0px 5px 12px rgba(100, 100, 100, 0.23);
-}
-div.row div a:hover span {
-  /*background-color: #FCFCFC; */
-}
-div.row div a.special:hover span {
-  /*background-color: rgba(225, 220, 255, 0.3); */
-}
-div.row div a.special:hover { border-color: #b07cfd; background: #833efa; }
+    * {
+      font-family: Segoe UI, -apple-system, 'Ubuntu', 'Arial', sans-serif;
+    }
 
-</style>
+    h1 {
+      text-align: center;
+      font-size: 4em;
+      color: #2d2d3d;
+      margin: 60px auto;
+      margin-top: 0;
+      font-weight: 200;
+      font-family: 'Segoe UI Light', -apple-system, 'Ubuntu', 'Arial', sans-serif;
+      position: fixed;
+      top: 14%;
+    }
+
+    h1 img {
+      margin-left: -30px;
+    }
+
+    div.row {
+      clear: both;
+      width: 652;
+      margin: 0 auto;
+      background-color: black;
+    }
+
+    div.row div {
+      background: red;
+    }
+
+    div.row div a {
+      width: 144;
+      height: 144;
+      border: none;
+      border-width: 3px;
+      float: left;
+      margin: 5px;
+      border-radius: 50%;
+      text-decoration: none;
+      color: #c4c2d0;
+      font-size: 0.9em;
+      transition: 0.1s;
+      background: linear-gradient(225deg, #262633, #1e1e29);
+      position: relative;
+    }
+
+    div.row div a:active {
+      margin-top: 10px;
+      margin-bottom: 0px;
+      box-shadow: none !important;
+    }
+
+    div.row div a.special {
+      background: linear-gradient(45deg, #4085ec, #592dd2, #b16ae7);
+    }
+
+    div.row div a.special span {
+      /*background-color: rgba(225, 220, 255, 0.3); */
+      color: rgb(225, 220, 244);
+    }
+
+    div.row div a span {
+      display: block;
+      height: 1.3em;
+      /*background-color: #FAFAFA; */
+      padding: 8px;
+      border-radius: 8px 8px 0 0;
+      transition: 0.1s;
+      position: absolute;
+      margin: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px;
+      text-align: center;
+    }
+
+    pre {
+      font-family: Courier New;
+      color: #888;
+      width: 610px;
+      margin: 70 auto;
+    }
+
+    div.row div a:hover {
+      background: linear-gradient(225deg, #353549, #262633);
+      color: white;
+      border-color: #833efa;
+
+      /*background: linear-gradient(#E8E8E8, #FFF); */
+
+    }
+
+    div.row div a:hover span {
+      /*background-color: #FCFCFC; */
+    }
+
+    div.row div a.special:hover span {
+      /*background-color: rgba(225, 220, 255, 0.3); */
+      color: white;
+    }
+
+    div.row div a.special:hover {
+      background: linear-gradient(45deg, #4e95ff, #6032e4, #c478ff);
+    }
+  </style>
 </head>
+
 <body>
-<h1>Ultralight</h1>
-<div class="row">
-  <div><a class="special" href="file:///release_notes.html"><span>Release Notes</span></a></div>
-  <div><a href="https://en.wikipedia.com"><span>Wikipedia</span></a></div>
-  <div><a href="https://news.ycombinator.com"><span>Hacker News</span></a></div>
-  <div><a href="https://google.com/"><span>Google</span></a></div>
-</div>
+  <h1><img src="logo.png" width="300" /></h1>
+  <div id="wrap">
+    <div class="row">
+      <div><a class="special" href="file:///release_notes.html"><span>Release Notes</span></a></div>
+      <div><a href="https://en.wikipedia.com"><span>Wikipedia</span></a></div>
+      <div><a href="https://news.ycombinator.com"><span>Hacker News</span></a></div>
+      <div><a href="https://google.com/"><span>Google</span></a></div>
+    </div>
+  </div>
 </body>
+
 </html>

@@ -1,57 +1,73 @@
-* { overflow: hidden; user-select: none; -webkit-user-select: none; }
+* {
+     overflow: hidden;
+     user-select: none;
+     -webkit-user-select: none;
+}
+
 body {
      margin: 0;
      padding: 0;
      font-family: "Segoe UI", -apple-system, Ubuntu, Arial, sans-serif;
      font-size: 14px;
-     background: white;
+     background: #16151d;
+     color: #c4c2d0;
 }
+
 #bar {
-     background: rgba(236, 236, 236, 1.0);
+     background: #232330;
+     background: linear-gradient(0deg, #232330, #282836);
      height: 32px;
      padding: 4px 9px;
-     border-bottom: 0.8px solid rgb(200, 200, 200);
-	 cursor: default;
+     border-bottom: 0.8px solid #252532;
+     cursor: default;
      display: flex;
 }
+
 #address {
      border-radius: 24px;
      border: none;
      height: 32px;
      flex: 1;
      font-size: 14px;
-     color: #667;
-     background-color: #FAFAFA;
+     color: #c4c2d0;
+     background-color: #16151d;
      display: inline-block;
      padding: 2px 16px 2px 16px;
-	 margin-top: 0px;
-     margin-left:9px;
-	 user-select: auto !important;
-	 -webkit-user-select: text !important;
+     margin-top: 0px;
+     margin-left: 9px;
+     margin-right: 9px;
+     user-select: auto !important;
+     -webkit-user-select: text !important;
 }
+
 #address:focus {
-     background-color: #FFFFFF;
-     color: #223;
+     background-color: #16151d;
+     color: #FFF;
 }
+
 .icon {
      cursor: default;
-     fill: rgba(90, 90, 90, 1.0);
+     fill: rgba(200, 200, 200, 1.0);
      vertical-align: top;
-     margin-top: 4px;
-     margin-left:9px;
-     padding: 2px;
+     margin-top: -1px;
+     padding: 5px;
      height: 22px;
 }
+
 #back {
-     margin-left:0px;
+     margin-left: 0px;
 }
+
 .icon.disabled {
-	 fill: rgba(200, 200, 200, 1.0);
+
+     fill: rgb(99 96 116);
 }
+
 svg#icon_defs path {
-	 fill: inherit;
+     fill: inherit;
 }
+
 .icon:not(.disabled):hover {
-     background-color: rgba(220, 220, 220, 1.0);
-     border-radius: 2px;
+     background-color: #343446;
+     border-radius: 100%;
 }

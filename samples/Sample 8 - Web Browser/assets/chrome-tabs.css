@@ -9,13 +9,15 @@
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+
 .chrome-tabs * {
   box-sizing: inherit;
   font-family: inherit;
   cursor: default;
 }
+
 #chrome-tabs-add-tab {
-  background: linear-gradient(0deg, rgb(236, 236, 236), rgb(245, 245, 245));
+  background: linear-gradient(0deg, #232330, #282836);
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.4);
   display: block;
   position: absolute;
@@ -23,17 +25,20 @@
   padding: 5px 10px;
   margin-top: 9px;
   margin-right: 3px;
-  border: 0.8px solid rgb(200, 200, 200);
+  border: 0.8px solid #252532;
   border-radius: 8px;
   font-size: 12px;
   z-index: 1000000;
   height: 24px;
+  color: #c4c2d0 !important;
 }
+
 #chrome-tabs-add-tab:active {
-  background: linear-gradient(0deg, rgb(245, 245, 245), rgb(236, 236, 236));
+  background: linear-gradient(0deg, #262633, #1e1e29);
   box-shadow: none;
   top: 2px;
 }
+
 .chrome-tabs .chrome-tabs-bottom-bar {
   position: absolute;
   bottom: 0;
@@ -41,14 +46,16 @@
   left: 0;
   width: 100%;
   z-index: 20;
-  border-bottom: 0.8px solid rgb(200, 200, 200);
+  border-bottom: 0.8px solid #252532;
 }
+
 .chrome-tabs .chrome-tabs-content {
   position: relative;
   width: calc(100% - 75px);
   height: 100%;
   overflow: hidden;
 }
+
 .chrome-tabs .chrome-tab {
   position: absolute;
   left: 0;
@@ -58,12 +65,15 @@
   margin: 0;
   z-index: 1;
   top: 2px;
+  color: #c4c2d0;
 }
+
 .chrome-tabs .chrome-tab,
 .chrome-tabs .chrome-tab * {
   user-select: none;
   cursor: default;
 }
+
 .chrome-tabs .chrome-tab .chrome-tab-background {
   position: absolute;
   top: 0;
@@ -75,47 +85,58 @@
 
   width: calc(100% - 8px);
   height: 100%;
-  background: #d0d0d0;
+  background: linear-gradient(180deg, #212130, #1c1c24);
   border-radius: 8px 8px 0 0;
   margin: 2px 4px 4px 4px;
 }
-.chrome-tabs .chrome-tab .chrome-tab-background > svg {
+
+.chrome-tabs .chrome-tab .chrome-tab-background>svg {
   width: 100%;
   height: 100%;
 }
-.chrome-tabs .chrome-tab .chrome-tab-background > svg .chrome-tab-shadow {
+
+.chrome-tabs .chrome-tab .chrome-tab-background>svg .chrome-tab-shadow {
   fill: none;
   stroke: rgba(180, 180, 180, 1.0);
   stroke-width: 1.0px;
 }
-.chrome-tabs .chrome-tab .chrome-tab-background > svg .chrome-tab-background {
-  fill: #d0d0d0;
+
+.chrome-tabs .chrome-tab .chrome-tab-background>svg .chrome-tab-background {
+  fill: #c4c2d0;
   transform: translateX(0.25px) translateY(0.25px);
 }
+
 .chrome-tabs .chrome-tab.chrome-tab-current {
   z-index: 999;
+  color: white;
 }
+
 .chrome-tabs .chrome-tab.chrome-tab-current .chrome-tab-background {
-  background: linear-gradient(0deg, rgba(236, 236, 236, 1.0), rgb(245, 245, 245));
+  background: linear-gradient(180deg, #313141, #282836);
   /*box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4); */
-  border: 0.7px solid rgb(200, 200, 200);
+  border: 0.7px solid #292934;
   border-bottom: none;
 }
+
 .chrome-tabs .chrome-tab.chrome-tab-just-added {
   top: 14px;
   animation: chrome-tab-just-added 120ms forwards ease-in-out;
-  
+
 }
+
 @keyframes chrome-tab-just-added {
   to {
     top: 2px;
   }
 }
+
 .chrome-tabs.chrome-tabs-sorting .chrome-tab:not(.chrome-tab-currently-dragged),
 .chrome-tabs:not(.chrome-tabs-sorting) .chrome-tab.chrome-tab-just-dragged {
   transition: transform 120ms ease-in-out;
 }
-.chrome-tabs .chrome-tab-favicon, .chrome-tabs .chrome-tab-spinner {
+
+.chrome-tabs .chrome-tab-favicon,
+.chrome-tabs .chrome-tab-spinner {
   position: relative;
   margin-left: 1.6em;
   height: 14px;
@@ -129,14 +150,13 @@
 }
 
 .chrome-tabs .chrome-tab-spinner {
- content: url("data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJsb2FkZXItMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQogICAgIHdpZHRoPSIxNHB4IiBoZWlnaHQ9IjE0cHgiIHZpZXdCb3g9IjAgMCA1MCA1MCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTAgNTA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgPHBhdGggZmlsbD0iIzg4OCIgZD0iTTQzLjkzNSwyNS4xNDVjMC0xMC4zMTgtOC4zNjQtMTguNjgzLTE4LjY4My0xOC42ODNjLTEwLjMxOCwwLTE4LjY4Myw4LjM2NS0xOC42ODMsMTguNjgzaDQuMDY4YzAtOC4wNzEsNi41NDMtMTQuNjE1LDE0LjYxNS0xNC42MTVjOC4wNzIsMCwxNC42MTUsNi41NDMsMTQuNjE1LDE0LjYxNUg0My45MzV6Ij4NCiAgICA8YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVUeXBlPSJ4bWwiDQogICAgICBhdHRyaWJ1dGVOYW1lPSJ0cmFuc2Zvcm0iDQogICAgICB0eXBlPSJyb3RhdGUiDQogICAgICBmcm9tPSIwIDI1IDI1Ig0KICAgICAgdG89IjM2MCAyNSAyNSINCiAgICAgIGR1cj0iMC42cyINCiAgICAgIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIi8+DQogICAgPC9wYXRoPg0KICA8L3N2Zz4NCg==");
+  content: url("data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJsb2FkZXItMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCiAgICAgd2lkdGg9IjE0cHgiIGhlaWdodD0iMTRweCIgdmlld0JveD0iMCAwIDUwIDUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MCA1MDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgogIDxwYXRoIGZpbGw9IiM3YTc2OGYiIGQ9Ik00My45MzUsMjUuMTQ1YzAtMTAuMzE4LTguMzY0LTE4LjY4My0xOC42ODMtMTguNjgzYy0xMC4zMTgsMC0xOC42ODMsOC4zNjUtMTguNjgzLDE4LjY4M2g0LjA2OGMwLTguMDcxLDYuNTQzLTE0LjYxNSwxNC42MTUtMTQuNjE1YzguMDcyLDAsMTQuNjE1LDYuNTQzLDE0LjYxNSwxNC42MTVINDMuOTM1eiI+CiAgICA8YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVUeXBlPSJ4bWwiCiAgICAgIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIKICAgICAgdHlwZT0icm90YXRlIgogICAgICBmcm9tPSIwIDI1IDI1IgogICAgICB0bz0iMzYwIDI1IDI1IgogICAgICBkdXI9IjAuNnMiCiAgICAgIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIi8+CiAgICA8L3BhdGg+CiAgPC9zdmc+Cg==");
 }
 
 .chrome-tabs .chrome-tab-title {
   position: relative;
   display: inline-block;
   vertical-align: top;
-  color: #222;
   padding: 0 0.5em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -146,6 +166,7 @@
   max-width: calc(100% - 5em);
   pointer-events: none;
 }
+
 .chrome-tabs .chrome-tab-close {
   position: absolute;
   width: 1.4em;
@@ -155,6 +176,7 @@
   right: 1.4em;
   top: 11px;
 }
+
 .chrome-tabs .chrome-tab-close::before {
   content: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path stroke='%235a5a5a' stroke-width='1.3' d='M4 4 L10 10 M10 4 L4 10'></path></svg>");
   position: absolute;
@@ -164,22 +186,28 @@
   bottom: 0;
   left: 0;
 }
+
 .chrome-tabs .chrome-tab-close:hover::before,
 .chrome-tabs .chrome-tab-close:hover:active::before {
   content: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path stroke='%23fff' stroke-width='1.3' d='M4 4 L10 10 M10 4 L4 10'></path></svg>");
 }
+
 .chrome-tabs .chrome-tab-close:hover {
   background: #e25c4b;
 }
+
 .chrome-tabs .chrome-tab-close:hover:active {
   background: #b74a3b;
 }
+
 .chrome-tabs .chrome-tab {
   width: 243px
 }
+
 .chrome-tabs .chrome-tab:nth-child(1) {
   transform: translate3d(0px, 0, 0)
 }
+
 .chrome-tabs .chrome-tab:nth-child(2) {
   transform: translate3d(229px, 0, 0)
 }

@@ -1,0 +1,144 @@
+<html>
+<head>
+    <style type="text/css">
+        * {
+            -webkit-user-select: none;
+        }
+
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e3ed;
+            background: linear-gradient(135deg, #4e95ff, #6032e4);
+            width: 900px;
+            height: 600px;
+            font-family: -apple-system, 'Segoe UI', Ubuntu, Arial, sans-serif;
+        }
+
+        h2, h3 {
+            margin: 0;
+        }
+
+        div {
+            padding: 35px;
+            margin: 10px;
+            height: 510px;
+            width: 360px;
+        }
+
+        p, li {
+            font-size: 1em;
+        }
+
+        #leftPane {
+            float: left;
+            color: #90caff;
+            padding: 85px 65px;
+            height: 410px;
+            width: 300px;
+        }
+
+        #leftPane p {
+            color: #90caff;
+        }
+
+        #rightPane {
+            border-radius: 15px;
+            background-color: white;
+            float: right;
+            color: #5088fb;
+            box-shadow: 0 8px 24px -6px #1f286540;
+        }
+
+        #rightPane li, #rightPane p {
+            color: #7e7f8e;
+            font-size: 0.9em;
+        }
+
+        #rightPane li {
+            list-style-type: none;
+            padding: 0.6em 0;
+            border-radius: 20px;
+            margin: 0;
+            padding-left: 1em;
+            cursor: pointer;
+        }
+
+        #rightPane li:hover {
+            background-color: #437ff821;
+            color: #537cd2;
+        }
+
+        li:before {
+            content: '';
+            display: inline-block;
+            height: 18;
+            width: 18;
+            margin-bottom: -5px;
+            margin-right: 1em;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns=\
+            'http://www.w3.org/2000/svg' width='18' height='18' viewBox='-2 -2 27 27'>\
+            <path stroke='%23dbe2e7' stroke-width='2' fill='white' d='M12 0c-6.627 0-12 \
+            5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12z'/></svg>");
+        }
+
+        li.checked:before {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns=\
+            'http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'><path \
+            fill='%235088fb' d='M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 \
+            12-12-5.373-12-12-12zm-1.25 17.292l-4.5-4.364 1.857-1.858 2.643 2.506 \
+            5.643-5.784 1.857 1.857-7.5 7.643z'/></svg>");
+        }
+                    
+        #rightPane h5 {
+            border-bottom: 1px solid #eceef0;
+            padding-bottom: 9px;
+            margin-bottom: 1em;
+            margin-top: 3em;
+        }
+
+        #rightPane h5 {
+            padding-left: 1em;
+        }
+
+        #rightPane ul {
+            padding-left: 0;
+        }
+    </style>
+    <script>
+      window.onload = function() {
+        var listItems = document.getElementsByTagName('li');
+        for(var i = 0; i < listItems.length; i++) {
+          listItems[i].onclick = function() {
+            this.classList.toggle('checked');
+          }
+        }
+      }
+    </script>
+</head>
+<body>
+    <div id="leftPane">
+        <h2>Good morning.</h2>
+        <p>A brief look at the day ahead</p>
+    </div>
+    <div id="rightPane">
+        <h3>Upcoming Tasks</h3>
+        <p>Click a task to mark it as completed.</p>
+        <h5>Today</h5>
+        <ul>
+            <li class="checked">Create layout for initial mockup</li>
+            <li class="checked">Select icons for mobile interface</li>
+            <li class="checked">Discussions regarding new color scheme</li>
+            <li class="checked">Call with architecture clients</li>
+            <li>Create quote for the Marvel redesign</li>
+        </ul>
+        <h5>Tomorrow</h5>
+        <ul>
+            <li>Plan itinerary for conference</li>
+            <li>Discuss haptic interface optimizations</li>
+            <li>Performance improvement analysis</li>
+        </ul>
+    </div>
+</body>
+</html>
