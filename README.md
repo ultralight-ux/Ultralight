@@ -11,14 +11,14 @@ Got a question about Ultralight? Come chat with us on Discord!
 
 # About
 
-Ultralight is the ultimate solution for developers seeking to seamlessly integrate web-content into games and desktop apps. Our cutting-edge engine supports the latest HTML/CSS/JS features while remaining exceptionally lightweight in binary size and memory usage.
+Ultralight allows C/C++ developers to seamlessly integrate web-content into games and desktop apps. Our ultra-portable engine supports the latest HTML/CSS/JS standards while remaining exceptionally lightweight in binary size and memory usage.
 
 ## Key Features
 
 <dl>
 <dt>1. Lightweight and Powerful:</dt>
 <dd>
-    Thanks to its dual, high-performance CPU and GPU renderers, Ultralight offers the perfect balance between performance and resource consumption, making it the go-to choice for developers who demand speed in constrained environments.
+    Thanks to its dual, high-performance CPU and GPU renderers, Ultralight offers the perfect balance between performance and resource consumption-- making it the go-to choice for developers who demand speed in constrained environments.
 </dd>
 
 <dt>2. Cross-Platform Compatibility:</dt>
@@ -33,26 +33,26 @@ Ultralight is the ultimate solution for developers seeking to seamlessly integra
 
 <dt>4. Deep C/C++ and JavaScript Integration:</dt>
 <dd>
-    Unlock the true potential of your applications. Ultralight facilitates seamless C/C++ and JavaScript integration through direct access to the JavaScriptCore API. Expose native state to web pages, extend JavaScript classes, define C/C++ callbacks, and more.
+    Ultralight facilitates seamless C/C++ and JavaScript integration through direct access to the JavaScriptCore API. Expose native state to web pages, extend JavaScript classes, define C/C++ callbacks, and more.
 </dd>
 
 <dt>5. Low-Level Customization:</dt>
 <dd>
-    Tailor your integration to perfection. Ultralight allows you to override platform-specific functionality, granting you control over file-system access, clipboard management, font loading, and more to suit the unique needs of your application.
+    Ultralight allows you to override platform-specific functionality, granting OS-level control over file-system access, clipboard management, font loading, and more to suit the unique needs of your application.
 </dd>
 </dl>
 
 ## For Game Developers
 
-Developed in collaboration with top AAA game studios, Ultralight is engineered to elevate web-content integration across a diverse set of game engine environments.
+Developed in collaboration with top AAA game studios, Ultralight is engineered to display high-performance web-content across a diverse set of hardware targets and game engine environments.
 
-Choose between our CPU renderer for fast, reliable rendering across various architectures or our customizable GPU renderer to unlock unparalleled animation performance.
+Choose between our CPU renderer for fast, reliable rendering or our customizable GPU renderer for unparalleled animation performance.
 
 __→ Learn more by visiting our [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).__
 
 ## For Desktop-App Developers
 
-Build your native app's front-end with modern HTML/CSS/JS while harnessing the power and performance of C/C++.
+Get the best of both worlds-- save time by building your front-end with HTML/CSS/JS while retaining the power and performance of C/C++.
 
 Embed the renderer directly within your existing run loop or leverage our AppCore framework to do all the heavy lifting for you, offering convenient native window management and accelerated rendering.
 
@@ -79,7 +79,7 @@ We support two different renderers for integration into a variety of target envi
 
 For easy integration into games and other complex environments, Ultralight can render to an offscreen pixel buffer via a multi-threaded CPU rendering pipeline. For more info, see the [Game Integration Guide](https://docs.ultralig.ht/docs/integrating-with-games).
 
-The library can also render to a user-supplied block of memory via the Surface API (see [Using a Custom Surface](https://docs.ultralig.ht/docs/using-a-custom-surface)).
+The library can also render directly to a user-supplied block of memory via the Surface API (see [Using a Custom Surface](https://docs.ultralig.ht/docs/using-a-custom-surface)).
 
 Paths, gradients, images, and patterns in this pipeline are rasterized and composited in parallel using [Skia](https://skia.org/).
 

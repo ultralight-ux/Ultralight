@@ -85,10 +85,102 @@
     <h2>Ultralight v1.3.0 Release Notes</h2>
 
     <h3>Changelog</h3>
-
+    <h4 id="major-improvements">Major Improvements</h4>
     <ul>
-      <li>In progress!</li>
+    <li>Rewrite CPU renderer to be faster and more accurate (parallel engine built on Skia internals).</li>
+    <li>Add support for Xbox, PS4, and PS5 platforms.</li>
+    <li>Improve text rendering accuracy with more intelligent snapping and hinting.</li>
+    <li>Improve font scaling accuracy at various device scales.</li>
+    <li>Improve box-shadow rendering accuracy and performance.</li>
+    <li>Improve performance of layout and JavaScript execution using mimalloc.</li>
+    <li>Improve performance of JavaScript garbage-collector, reduce per-frame stalls.</li>
+    <li>Improve consistency of CPU and GPU renderers (both now blend in sRGB).</li>
+    <li>Add memory profiler and memory statistics tracking.</li>
+    <li>Add support for gamepad input devices.</li>
+    <li>Add support for remote web inspector.</li>
+    <li>Add support for multiple windows to AppCore.</li>
+    <li>Add support for rendering only a subset of Views.</li>
+    <li>Add support for dashed strokes to CPU renderer.</li>
+    <li>Add support for SVG onclick and other events that require path picking.</li>
+    <li>Add support for HTML5 Video / Audio (experimental) via GStreamer/FFmpeg (disabled by default).</li>
+    <li>Update user-agent string to reflect proper Safari / WebKit version.</li>
+    <li>Update to latest CA certificate chain.</li>
+    <li>Unify build scripts and toolchain.</li>
     </ul>
+    <h4 id="major-api-changes">Major API Changes</h4>
+    <ul>
+    <li>Unify API to use RefPtr&lt;&gt; everywhere (instead of Ref&lt;&gt; class)</li>
+    <li>Unify API to use String everywhere (instead of String16, String8, etc.).</li>
+    <li>Make String class use String8 natively (utf-8 is now native representation instead of utf-16).</li>
+    <li>Make all enums use &#39;enum class&#39;</li>
+    <li>Resources now load via FileSystem API instead of fopen().</li>
+    <li>FileSystem now required to be defined in Platform API before creating Renderer.</li>
+    <li>Buffer class now accomodates memory-mapped files and destruction callbacks.</li>
+    <li>FileSystem interface has been reorganized to use new Buffer API.</li>
+    <li>Portions of Config have been moved to ViewConfig (now certain options can be set per-View).</li>
+    <li>App::Quit() must now be called manually when using AppCore API.</li>
+    <li>Add Bitmap::LockPixelsSafe() and LockedPixels&lt;&gt; utility class to manage lifetimes.</li>
+    <li>Add WebKitVersionString() to query corresponding WebKit version.</li>
+    <li>Extend AppCore API to enable multi-window support.</li>
+    <li>Re-organize C API into logical header files.</li>
+    <li>Add Renderer::StartRemoteInspectorServer</li>
+    <li>Add Renderer::SetGamepadDetails</li>
+    <li>Add Renderer::FireGamepadEvent</li>
+    <li>Add Renderer::FireGamepadAxisEvent</li>
+    <li>Add Renderer::FireGamepadButtonEvent</li>
+    <li>Add Renderer::RenderOnly</li>
+    <li>Modify Renderer::CreateView signature (options moved to ViewConfig param)</li>
+    <li>Add View::device_scale</li>
+    <li>Add View::set_device_scale</li>
+    <li>Add View::is_accelerated</li>
+    <li>Add View::is_transparent</li>
+    <li>Add View::JavaScriptVM</li>
+    <li>Rename View::inspector to View::CreateLocalInspectorView</li>
+    <li>Modify View::LockJSContext return value (now returns RefPtr&lt;&gt; to manage lifetime)</li>
+    <li>Add ViewListener::OnCreateInspectorView</li>
+    <li>Add ViewListener::OnRequestClose</li>
+    <li>Add WindowListener::OnKeyEvent</li>
+    <li>Add WindowListener::OnMouseEvent</li>
+    <li>Add WindowListener::OnScrollEvent</li>
+    </ul>
+    <h4 id="major-bugfixes">Major Bugfixes</h4>
+    <ul>
+    <li>Fix issue managing clip in CPU and GPU renderers.</li>
+    <li>Fix issue blending alpha in CPU renderer.</li>
+    <li>Fix issue stroking paths in CPU renderer.</li>
+    <li>Fix issue drawing glyphs with complex transformations.</li>
+    <li>Fix issue drawing radial gradients with CPU renderer.</li>
+    <li>Fix issue drawing gradients with more than 12 stops.</li>
+    <li>Fix issue running library off the main thread on macOS.</li>
+    <li>Fix issue rendering paths that begin with an ArcTo command.</li>
+    <li>Fix issue where BGRA byte order was not used on all platforms.</li>
+    <li>Fix issue painting dropdown menus.</li>
+    <li>Fix issue calculating CSS button height.</li>
+    <li>Fix issue displaying box-shadows on native inputs.</li>
+    <li>Fix issue displaying context-menu in web inspector.</li>
+    <li>Fix issue writing LocalStorage database on Windows.</li>
+    <li>Fix issue with KeyboardEvent.key in JavaScript always returning null.</li>
+    <li>Fix issue with LoadListener::OnBeginLoading not passing correct URL.</li>
+    <li>Fix issue with LoadListener::OnFailLoading not being fired on non-200 HTTP status codes.</li>
+    <li>Fix issue resizing windows with GPU acceleration enabled (AppCore).</li>
+    <li>Fix issue calling Window::SetTitle with Unicode strings (AppCore).</li>
+    <li>Fix issue with anti-aliasing when GPU acceleration is enabled on Linux (AppCore).</li>
+    <li>Fix issue with automatic DPI switching on Windows (AppCore).</li>
+    <li>Fix security issue allocating very large render layers.</li>
+    <li>Fix major performance bug in cURL network code.</li>
+    <li>Fix memory leak loading certain File URLs.</li>
+    <li>Fix memory leak when constructing JSString from JSStringRef (AppCore).</li>
+    <li>Fix various crashes and buffer overruns in Bitmap class.</li>
+    <li>Fix crash loading certain Data URLs.</li>
+    <li>Fix crash when Config::bitmap_alignment is 0.</li>
+    <li>Fix crash when encountering certain text-encodings.</li>
+    <li>Fix crash when encountering certain JavaScript code.</li>
+    <li>Fix crash in SQLite database code.</li>
+    <li>Fix crash at process shutdown.</li>
+    </ul>
+    
+    
+    
 
     <h3>Useful Links</h3>
     <dl>
